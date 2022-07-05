@@ -13,7 +13,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useSelector, useDispatch } from 'react-redux';
-import {login} from '../actions'
+import {login, storeUserInfo,getUserInfo} from '../actions'
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 
@@ -35,6 +35,7 @@ function Copyright(props) {
 
 const theme = createTheme();
 
+
 export function SignIn() {
 
 //global store states from redux dev
@@ -44,13 +45,8 @@ const dispatch = useDispatch();
 //UseNavigate
   const navigate = useNavigate();
 
-  let SessionID = sessionStorage.getItem('session_id');// store session in storage
   
-  useEffect(() => {
-    if(SessionID !== ''){
-      navigate('/Dashboard')
-    }
-    })
+ 
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -60,17 +56,25 @@ const dispatch = useDispatch();
       Password: data.get('Password'),
     });
     try{
-        const sendRequest = await fetch("https://my-aisat-portal.herokuapp.com/employee/backend/login.php",{
-            method: "POST",
-            body: data,
-        });
+      //online api
+        // const sendRequest = await fetch("https://my-aisat-portal.herokuapp.com/employee/backend/login.php",{
+        //     method: "POST",
+        //     body: data,
+        // });
+
+      //offline api
+      const sendRequest = await fetch("http://localhost/student_portal/employee/backend/login.php",{
+        method: "POST",
+        body: data,
+    });
         
         const getResponse = await sendRequest.json();
         if(getResponse.statusCode === 201){
          console.log('wrong pass')
         }else{
           dispatch(login());
-          sessionStorage.setItem("session_id", getResponse.statusCode);
+          dispatch(storeUserInfo(getResponse.statusCode));
+          navigate('/Dashboard')
         }
     }catch(e){
       console.log(e)
@@ -130,6 +134,7 @@ const dispatch = useDispatch();
             </Button>
             <Grid container>
               <Grid item xs>
+                {/* <Typography>{user.value.email}</Typography>  */}
                 <Link href="#" variant="body2">
                   Forgot password?
                 </Link>

@@ -9,3 +9,16 @@ export const logout = () =>{
         type: 'SIGN_OUT'
     }
 }
+
+export const storeUserInfo = (value) =>{
+    return{
+        type: 'USER_INFO',
+        value: value
+    }
+}
+
+export const getUserInfo = () =>{
+    return{
+        type: 'GET_USER'
+    }
+}
