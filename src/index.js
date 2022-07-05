@@ -3,18 +3,22 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import {createStore, combineReducers} from 'redux';
-import allReducers from './reducers';
+// import {createStore, combineReducers} from 'redux';
+// import allReducers from './reducers';
+import { store } from './app/store'
 import { Provider } from 'react-redux';
+import StyledEngine, { StyledEngineProvider } from '@mui/styled-engine';
 
-const myStore = createStore(allReducers,window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
+// const myStore = createStore(allReducers,window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <Provider store = {myStore}>
+    <StyledEngineProvider injectFirst>
+    <Provider store = {store}>
       <App />
     </Provider>
+    </StyledEngineProvider>
   </React.StrictMode>
 );
 

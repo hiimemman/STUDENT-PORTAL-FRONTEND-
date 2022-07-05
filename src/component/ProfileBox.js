@@ -7,7 +7,7 @@ import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import { useSelector, useDispatch } from 'react-redux';
-import {logout} from '../actions'
+import {removeUserInfo} from '../actions'
 import { useNavigate } from 'react-router-dom';
 
 export function ProfileBox(){
@@ -35,11 +35,10 @@ const navigate = useNavigate();
             const getResponse = await sendRequest.json();
             if(getResponse.statusCode === 200){
              console.log('Logout Succesfully')
-             sessionStorage.setItem("session_id", '');
-             dispatch(logout());
+             dispatch(removeUserInfo());
              navigate('/LoginEmployee')
             }else{          
-             
+             console.error(getResponse.statusCode)
             }
         }catch(e){
           console.log(e)

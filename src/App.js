@@ -4,6 +4,7 @@ import { Dashboard } from './pages/Dashboard';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Homepage } from './pages/Homepage';
+import { Employees } from './pages/Employees';
 
 
 function App() {
@@ -16,6 +17,7 @@ return (
         <Route path ="/" element ={<Homepage />} />
         <Route path = "/LoginEmployee" element ={<SignIn />}/>
         <Route path = "/Dashboard" element ={<Dashboard />} />
+        <Route path = "/Employees" element ={<Employees/>} />
       </Routes>
     </Router>
   );

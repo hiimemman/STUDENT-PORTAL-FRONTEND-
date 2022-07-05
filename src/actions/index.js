@@ -22,3 +22,22 @@ export const getUserInfo = () =>{
         type: 'GET_USER'
     }
 }
+
+
+export const removeUserInfo = () =>{
+    return{
+        type: 'REMOVE_USER'
+    }
+}
+
+export const openMenu = () =>{
+    return{
+        type: 'OPEN'
+    }
+}
+
+export const closeMenu = () =>{
+    return{
+        type: 'CLOSE'
+    }
+}
