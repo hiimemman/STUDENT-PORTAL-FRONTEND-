@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-   session: null,
+   session: sessionStorage.getItem('user'),
 }
 
 export const userInfo = createSlice({
@@ -12,14 +12,15 @@ export const userInfo = createSlice({
         sessionStorage.setItem("user", JSON.stringify(action.payload)); 
         let x = sessionStorage.getItem('user');// store session in storage
         state.session = x;
+     
         },
         GET_USER: (state) =>{
-          let x = sessionStorage.getItem('user')
+             let x = sessionStorage.getItem('user')
              state.session = x;
         },
         REMOVE_USER: (state)=>{
             let x = sessionStorage.removeItem('user')
-            state.session = null
+            state.session = null 
         },
     },
 })

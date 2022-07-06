@@ -3,21 +3,32 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-// import {createStore, combineReducers} from 'redux';
-// import allReducers from './reducers';
 import { store } from './app/store'
 import { Provider } from 'react-redux';
-import StyledEngine, { StyledEngineProvider } from '@mui/styled-engine';
+import { StyledEngineProvider } from '@mui/styled-engine';
+import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
 
-// const myStore = createStore(allReducers,window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+
+// const THEME = createTheme({
+//   Typography: {
+//    "fontFamily": `"Roboto", "Helvetica", "Arial", sans-serif`,
+//    "fontSize": 124,
+//    "fontWeightLight": 300,
+//    "fontWeightRegular": 400,
+//    "fontWeightMedium": 500
+//   }
+// });
+
 root.render(
   <React.StrictMode>
     <StyledEngineProvider injectFirst>
+    {/* <ThemeProvider theme={THEME}> */}
     <Provider store = {store}>
       <App />
     </Provider>
+    {/* </ThemeProvider> */}
     </StyledEngineProvider>
   </React.StrictMode>
 );

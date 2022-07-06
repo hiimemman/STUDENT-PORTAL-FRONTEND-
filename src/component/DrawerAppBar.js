@@ -1,9 +1,9 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import AppBar from '@mui/material/AppBar';
+// import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
-import Drawer from '@mui/material/Drawer';
+// import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -13,132 +13,144 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-
+import { styled, useTheme } from '@mui/material/styles';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import {Link} from "react-router-dom";
-
-
+import {CLOSE, OPEN} from  '../slice/MenuSlice/MenuState'
+import { useSelector, useDispatch } from 'react-redux';
+import { PageList } from '../component/PageList';
+import Grid from '@mui/material/Grid';
+import { ProfileBox } from './ProfileBox';
+import { CssBaseline } from '@mui/material';
+import MuiDrawer from '@mui/material/Drawer';
+import MuiAppBar from '@mui/material/AppBar';
 const drawerWidth = 240;
-const navItems = ['Home', 'About', 'Contact','Employee','Student'];
+const openedMixin = (theme) => ({
+  width: drawerWidth,
+  transition: theme.transitions.create('width', {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.enteringScreen,
+  }),
+  overflowX: 'hidden',
+});
+
+const closedMixin = (theme) => ({
+  transition: theme.transitions.create('width', {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.leavingScreen,
+  }),
+  overflowX: 'hidden',
+  width: `calc(${theme.spacing(7)} + 1px)`,
+  [theme.breakpoints.up('sm')]: {
+    width: `calc(${theme.spacing(8)} + 1px)`,
+  },
+});
 
 
-export function DrawerAppBar(props) {
-  const { window } = props;
-  const [mobileOpen, setMobileOpen] = React.useState(false);
+
+const AppBar = styled(MuiAppBar, {
+  shouldForwardProp: (prop) => prop !== 'open',
+})(({ theme, open }) => ({
+  zIndex: theme.zIndex.drawer + 1,
+  transition: theme.transitions.create(['width', 'margin'], {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.leavingScreen,
+  }),
+  ...(open && {
+    marginLeft: drawerWidth,
+    width: `calc(100% - ${drawerWidth}px)`,
+    transition: theme.transitions.create(['width', 'margin'], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+  }),
+}));
+
+const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
+  ({ theme, open }) => ({
+    width: drawerWidth,
+    flexShrink: 0,
+    whiteSpace: 'nowrap',
+    boxSizing: 'border-box',
+    ...(open && {
+      ...openedMixin(theme),
+      '& .MuiDrawer-paper': openedMixin(theme),
+    }),
+    ...(!open && {
+      ...closedMixin(theme),
+      '& .MuiDrawer-paper': closedMixin(theme),
+    }),
+  }),
+);
 
 
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
+const DrawerHeader = styled('div')(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'flex-end',
+  padding: theme.spacing(0, 1),
+  // necessary for content to be below app bar
+  ...theme.mixins.toolbar,
+}));
+export function DrawerAppBar() {
+
+  const theme = useTheme();
+ 
+ 
+ //dispatch from redux
+ const dispatch = useDispatch();
+    //check menu state
+    const isOpen = useSelector(state => (state.isOpen.value))
+ 
+  const handleDrawerOpen = () => {
+    dispatch(OPEN())
   };
 
-
-  const drawer = (
-    <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
-      <Typography variant="h6" sx={{ my: 2 }}>
-        MUI
-      </Typography>
-      <Divider />
-      <List>
-        {navItems.map((item) => (
-          <ListItem key={item} disablePadding>
-            <ListItemButton sx={{ textAlign: 'center' }}>
-              <ListItemText primary={item} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-    </Box>
-  );
-
-  const container = window !== undefined ? () => window().document.body : undefined;
+  const handleDrawerClose = () => {
+    dispatch(CLOSE())
+  };
+  
+  // const container = window !== undefined ? () => window().document.body : undefined;
 
   return (
     <>
-    
-    <Box sx={{ display: 'flex' }}>
-      <AppBar component="nav">
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            edge="start"
-            onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { sm: 'none' } }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography
-            variant="h6"
-            component="div"
-            sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
-          >
-            HOMEPAGE
-          </Typography>
-          <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-            {navItems.map((item) => (
-              <Link to = {`/Login${item}`}><Button key={item} sx={{ color: '#fff' }}>
-              {item} 
-            </Button>
-            </Link>
-            ))}
-          </Box>
-        </Toolbar>
-      </AppBar>
-      <Box component="nav">
-        <Drawer
-          container={container}
-          variant="temporary"
-          open={mobileOpen}
-          onClose={handleDrawerToggle}
-          ModalProps={{
-            keepMounted: true, // Better open performance on mobile.
-          }}
+ <AppBar position="fixed" open={isOpen}>   
+      <Toolbar>
+        <IconButton
+          color="inherit"
+          aria-label="open drawer"
+          onClick={handleDrawerOpen}
+          edge="start"
           sx={{
-            display: { xs: 'block', sm: 'none' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+            marginRight: 5,
+            ...(isOpen && { display: 'none' }),
           }}
         >
-          {drawer}
-        </Drawer>
-      </Box>
-      <Box component="main" sx={{ p: 3 }}>
-        <Toolbar />
-        <Typography>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique unde
-          fugit veniam eius, perspiciatis sunt? Corporis qui ducimus quibusdam,
-          aliquam dolore excepturi quae. Distinctio enim at eligendi perferendis in
-          cum quibusdam sed quae, accusantium et aperiam? Quod itaque exercitationem,
-          at ab sequi qui modi delectus quia corrupti alias distinctio nostrum.
-          Minima ex dolor modi inventore sapiente necessitatibus aliquam fuga et. Sed
-          numquam quibusdam at officia sapiente porro maxime corrupti perspiciatis
-          asperiores, exercitationem eius nostrum consequuntur iure aliquam itaque,
-          assumenda et! Quibusdam temporibus beatae doloremque voluptatum doloribus
-          soluta accusamus porro reprehenderit eos inventore facere, fugit, molestiae
-          ab officiis illo voluptates recusandae. Vel dolor nobis eius, ratione atque
-          soluta, aliquam fugit qui iste architecto perspiciatis. Nobis, voluptatem!
-          Cumque, eligendi unde aliquid minus quis sit debitis obcaecati error,
-          delectus quo eius exercitationem tempore. Delectus sapiente, provident
-          corporis dolorum quibusdam aut beatae repellendus est labore quisquam
-          praesentium repudiandae non vel laboriosam quo ab perferendis velit ipsa
-          deleniti modi! Ipsam, illo quod. Nesciunt commodi nihil corrupti cum non
-          fugiat praesentium doloremque architecto laborum aliquid. Quae, maxime
-          recusandae? Eveniet dolore molestiae dicta blanditiis est expedita eius
-          debitis cupiditate porro sed aspernatur quidem, repellat nihil quasi
-          praesentium quia eos, quibusdam provident. Incidunt tempore vel placeat
-          voluptate iure labore, repellendus beatae quia unde est aliquid dolor
-          molestias libero. Reiciendis similique exercitationem consequatur, nobis
-          placeat illo laudantium! Enim perferendis nulla soluta magni error,
-          provident repellat similique cupiditate ipsam, et tempore cumque quod! Qui,
-          iure suscipit tempora unde rerum autem saepe nisi vel cupiditate iusto.
-          Illum, corrupti? Fugiat quidem accusantium nulla. Aliquid inventore commodi
-          reprehenderit rerum reiciendis! Quidem alias repudiandae eaque eveniet
-          cumque nihil aliquam in expedita, impedit quas ipsum nesciunt ipsa ullam
-          consequuntur dignissimos numquam at nisi porro a, quaerat rem repellendus.
-          Voluptates perspiciatis, in pariatur impedit, nam facilis libero dolorem
-          dolores sunt inventore perferendis, aut sapiente modi nesciunt.
+          <MenuIcon />
+        </IconButton>
+        <Typography variant="h6"  className ='font-nunito'sx={{ flexGrow: 1 }}component="div">
+          Employee
         </Typography>
-      </Box>
-    </Box>
+        {/* profile */}
+        <Grid container justifyContent ="flex-end">
+       <ProfileBox />
+        </Grid>
 
+      </Toolbar>
+    </AppBar>
+  <Drawer variant="permanent" open={isOpen}>
+      <DrawerHeader>
+        <IconButton onClick={handleDrawerClose}>
+          {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+        </IconButton>
+      </DrawerHeader>
+      <Divider />
+      {/* List link */}
+     <PageList />
+     
+    </Drawer><DrawerHeader />
+   
     </>
   );
   

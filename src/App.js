@@ -1,15 +1,12 @@
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import { SignIn } from './pages/SignIn';
 import { Dashboard } from './pages/Dashboard';
-import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
 import { Homepage } from './pages/Homepage';
+import { useSelector, useDispatch } from 'react-redux';
+
 import { Employees } from './pages/Employees';
-
-
+import {useNavigate} from 'react-router-dom';
 function App() {
-const isLogin = useSelector(state=>state.isAuth)// return true or false if login
-
 
 return (
     <Router>

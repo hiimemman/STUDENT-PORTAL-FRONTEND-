@@ -7,7 +7,7 @@ import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import { useSelector, useDispatch } from 'react-redux';
-import {removeUserInfo} from '../actions'
+import { REMOVE_USER } from '../slice/UserSession/userSession';
 import { useNavigate } from 'react-router-dom';
 
 export function ProfileBox(){
@@ -15,7 +15,8 @@ export function ProfileBox(){
 const navigate = useNavigate();
 
     const [anchorElUser, setAnchorElUser] = React.useState(null);
-
+  //Current session user
+  const user = useSelector(state => JSON.parse(state.user.session))
   //dispatch from redux
   const dispatch = useDispatch();
 
@@ -35,7 +36,8 @@ const navigate = useNavigate();
             const getResponse = await sendRequest.json();
             if(getResponse.statusCode === 200){
              console.log('Logout Succesfully')
-             dispatch(removeUserInfo());
+             sessionStorage.removeItem('user')
+              dispatch(REMOVE_USER())
              navigate('/LoginEmployee')
             }else{          
              console.error(getResponse.statusCode)
@@ -44,17 +46,18 @@ const navigate = useNavigate();
           console.log(e)
         }
     }
+ 
     return(
         <Box sx={{ flexGrow: 0}} >
         <Tooltip title="Open settings">
           <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-            <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+            <Avatar alt={user.firstname} src="/static/images/avatar/2.jpg" />
           </IconButton>
         </Tooltip>
         <Menu
           sx={{ mt: '45px' }}
           id="menu-appbar"
-          anchorEl={anchorElUser}s
+          anchorEl={anchorElUser}
           anchorOrigin={{
             vertical: 'top',
             horizontal: 'right',
@@ -67,14 +70,10 @@ const navigate = useNavigate();
           open={Boolean(anchorElUser)}
           onClose={handleCloseUserMenu}
         >
-          {/* {settings.map((setting) => (
-            <MenuItem key={setting} onClick={handleCloseUserMenu}>
-              <Typography textAlign="center">{setting}</Typography>
-            </MenuItem>
-          ))} */}
-        <MenuItem>Profile</MenuItem>
-        <MenuItem >My account</MenuItem>
-        <MenuItem onClick ={logOut}>Logout</MenuItem>
+      
+        <MenuItem className ='font-nunito'>Profile</MenuItem>
+        <MenuItem className ='font-nunito'>My account</MenuItem>
+        <MenuItem onClick ={logOut} className ='font-nunito'>Logout</MenuItem>
         </Menu>
       </Box>
     )
