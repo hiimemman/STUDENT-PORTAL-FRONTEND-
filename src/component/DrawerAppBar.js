@@ -1,9 +1,6 @@
-import * as React from 'react';
 import PropTypes from 'prop-types';
-// import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
-// import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -25,6 +22,8 @@ import { ProfileBox } from './ProfileBox';
 import { CssBaseline } from '@mui/material';
 import MuiDrawer from '@mui/material/Drawer';
 import MuiAppBar from '@mui/material/AppBar';
+import {useState} from 'react';
+
 const drawerWidth = 240;
 const openedMixin = (theme) => ({
   width: drawerWidth,
@@ -96,8 +95,7 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 export function DrawerAppBar() {
 
   const theme = useTheme();
- 
- 
+
  //dispatch from redux
  const dispatch = useDispatch();
     //check menu state
@@ -130,11 +128,11 @@ export function DrawerAppBar() {
           <MenuIcon />
         </IconButton>
         <Typography variant="h6"  className ='font-nunito'sx={{ flexGrow: 1 }}component="div">
-          Employee
+          
         </Typography>
         {/* profile */}
         <Grid container justifyContent ="flex-end">
-       <ProfileBox />
+       <ProfileBox  onMouseEnter={handleDrawerOpen}/>
         </Grid>
 
       </Toolbar>
@@ -148,8 +146,8 @@ export function DrawerAppBar() {
       <Divider />
       {/* List link */}
      <PageList />
-     
-    </Drawer><DrawerHeader />
+    </Drawer>
+    <DrawerHeader />
    
     </>
   );

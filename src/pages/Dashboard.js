@@ -7,7 +7,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { DrawerAppBar } from '../component/DrawerAppBar';
 import { CssBaseline } from '@mui/material';
-
+// import myLogo from './aisat-logo.svg'
 export function Dashboard(){
   //UseNavigate
     const navigate = useNavigate();

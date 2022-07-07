@@ -14,8 +14,6 @@ import { Skeleton, Typography } from '@mui/material';
 import { DrawerAppBar } from '../component/DrawerAppBar';
 import { Container } from '@mui/system';
 
-
-
 export  function Employees() {
   const theme = useTheme();
 
@@ -33,7 +31,9 @@ const user = useSelector(state => JSON.parse(state.user.session))
      navigate('/LoginEmployee')
     } 
    })
- 
+ let x = 'sDsd'
+
+ console.log(x.toUpperCase(0))
 
   return (
     <>{user !== null ?  (
@@ -53,7 +53,6 @@ const user = useSelector(state => JSON.parse(state.user.session))
     height={690}
   />
   )}
-   
     </>
   );
 }
