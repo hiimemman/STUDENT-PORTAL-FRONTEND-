@@ -5,7 +5,6 @@ import Avatar from '@mui/material/Avatar';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
 import { useSelector, useDispatch } from 'react-redux';
 import { REMOVE_USER } from '../slice/UserSession/userSession';
 import { useNavigate } from 'react-router-dom';
@@ -38,7 +37,7 @@ const navigate = useNavigate();
              console.log('Logout Succesfully')
              sessionStorage.removeItem('user')
               dispatch(REMOVE_USER())
-             navigate('/LoginEmployee')
+             navigate('/loginemployee')
             }else{          
              console.error(getResponse.statusCode)
             }
