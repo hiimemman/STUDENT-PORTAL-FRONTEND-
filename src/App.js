@@ -10,9 +10,9 @@ return (
     <Router>
       <Routes>
         <Route path ="/" element ={<Homepage />} />
-        <Route path = "/LoginEmployee" element ={<SignIn />}/>
-        <Route path = "/Dashboard" element ={<Dashboard />} />
-        <Route path = "/Employees" element ={<Employees/>} />
+        <Route path = "/loginemployee" element ={<SignIn />}/>
+        <Route path = "/employee/dashboard" element ={<Dashboard />} />
+        <Route path = "/employee/employees" element ={<Employees/>} />
       </Routes>
     </Router>
   );

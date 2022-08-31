@@ -35,7 +35,7 @@ return(
     <List>
        <Tooltip title="Dashboard" placement="right-start">
     <ListItem  disablePadding sx={{ display: 'block' }} className="transition ease-in-out delay-2 hover:bg-slate-300 duration-300">
-      <ListItemButton onClick ={()=> navigate('/Dashboard')} onMouseEnter = {handleDrawerOpen} onMouseLeave ={handleDrawerClose}
+      <ListItemButton onClick ={()=> navigate('/employee/dashboard')} onMouseEnter = {handleDrawerOpen} onMouseLeave ={handleDrawerClose}
         sx={{
           minHeight: 48,
           justifyContent: isOpen ? 'initial' : 'center',
@@ -62,7 +62,7 @@ return(
     <Tooltip title="Employee list" placement="right-start">
     <ListItem  disablePadding sx={{ display: 'block'}} className="transition ease-in-out delay-2 hover:bg-slate-300  duration-300">
   
-      <ListItemButton onClick ={()=>navigate('/Employees')}  onMouseEnter = {handleDrawerOpen} onMouseLeave ={handleDrawerClose}
+      <ListItemButton onClick ={()=>navigate('/employee/employees')}  onMouseEnter = {handleDrawerOpen} onMouseLeave ={handleDrawerClose}
         sx={{
           minHeight: 48,
           justifyContent: isOpen ? 'initial' : 'center',

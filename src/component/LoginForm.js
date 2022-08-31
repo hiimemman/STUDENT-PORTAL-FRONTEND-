@@ -13,14 +13,19 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useSelector, useDispatch } from 'react-redux';
-import { PUT_USER, GET_USER,REMOVE_USER } from '../slice/UserSession/userSession';
+import { PUT_USER, GET_USER, REMOVE_USER } from '../slice/UserSession/userSession';
 import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import LoadingButton from '@mui/lab/LoadingButton';
+import { useEffect,useState } from 'react';
+import Snackbar from '@mui/material/Snackbar';
+import Paper from '@mui/material/Paper';
+import MuiAlert from '@mui/material/Alert';
 
-
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 const theme = createTheme();
 export function LoginForm(){
-
     
 //global store states from redux dev
 const isLogin = useSelector(state=>state.isAuth)
@@ -29,8 +34,15 @@ const dispatch = useDispatch();
 //UseNavigate
   const navigate = useNavigate();
 
- 
+  const [isLoading , setisLoading] = useState(false);
 
+  const [open, setOpen] = React.useState(false);// for snackbar
+
+  //snackbar status
+  const [loginStatus, setStatus] = useState("failed");// default is failed for login atttempt alert
+
+  //Message of snackbar
+  const [loginMessage, setMessage ] = useState("Try again");// Default message of alert
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -52,22 +64,52 @@ const dispatch = useDispatch();
     // });
         
         const getResponse = await sendRequest.json();
+        setisLoading(true)
         if(getResponse.statusCode === 201){
-         console.log('wrong pass')
+          setOpen(true);
+          setStatus("error");
+          setMessage("Wrong email or password")
+          setisLoading(false);
         }else{
+          setisLoading(false);
+          setMessage("Log in successfull")
+          setStatus("success");
           dispatch(PUT_USER(getResponse.statusCode));
-          navigate('/Dashboard')
+          setisLoading(false);
+          navigate('employee/dashboard')
         }
     }catch(e){
       console.log(e)
     }
   };
 
+  //Snackbar
+
+ 
+
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
+
+
     return(
         <ThemeProvider theme={theme}>
           <div className=''></div>
         <Container component="main" maxWidth="xs">
           <CssBaseline />
+          <div className='grid h-screen place-items-center'>
+          <Paper  elevation={3}
+  style={{
+    padding: 12,
+    paddingRight: 20,
+    paddingLeft: 20,
+    margin: 8,
+  }}>        
           <Box
             sx={{
               marginTop: 8,
@@ -82,6 +124,7 @@ const dispatch = useDispatch();
             <Typography component="h1" variant="h5">
               Sign in
             </Typography>
+            
             <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
               <TextField
                 margin="normal"
@@ -107,14 +150,17 @@ const dispatch = useDispatch();
                 control={<Checkbox value="remember" color="primary" />}
                 label="Remember me"
               />
-              <Button
+         {isLoading === true ? (<LoadingButton loading variant="outlined">
+  Submit
+</LoadingButton>) : (<Button
                 type="submit"
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
-              >
+                >
                 Sign In
-              </Button>
+              </Button>)}     
+             
               <Grid container>
                 <Grid item xs>
                   {/* <Typography>{user.value.email}</Typography>  */}
@@ -129,8 +175,15 @@ const dispatch = useDispatch();
                 </Grid>
               </Grid>
             </Box>
-          </Box>
-          {/* <Copyright sx={{ mt: 8, mb: 4 }} /> */}
+             </Box>
+            </Paper>
+          </div>
+          {/* Snackbar */}
+            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+             <Alert onClose={handleClose} severity= {loginStatus} sx={{ width: '100%' }}>
+                {loginMessage}
+             </Alert>
+            </Snackbar>
         </Container>
       </ThemeProvider>  
     )
