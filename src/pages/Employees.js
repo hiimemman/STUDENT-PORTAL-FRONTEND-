@@ -35,6 +35,17 @@ const columns = [
     width: 110,
   },
   {
+  field: 'email',
+  headerName: 'Email',
+  width: 110,
+  },
+  {
+    field: 'birthday',
+    headerName: 'Birth day',
+    width: 160,
+    type: 'date',
+  },
+  {
     field: 'fullName',
     headerName: 'Full name',
     description: 'This column has a value getter and is not sortable.',
@@ -59,13 +70,14 @@ useEffect( () => {
       //online api
         const sendRequest = await fetch("https://my-aisat-portal.herokuapp.com/employee/backend/employee-table.php");
         const getResponse = await sendRequest.json();
+        console.log(getResponse)
         if(getResponse.statusCode === 201){
           console.log("error");
         }else{
-  setRows(getResponse)
+  setRows(getResponse);
         }
     }catch(e){
-      console.log(e)
+      console.error(e)
     }
   }
 
