@@ -76,7 +76,7 @@ const dispatch = useDispatch();
           setStatus("success");
           dispatch(PUT_USER(getResponse.statusCode));
           setisLoading(false);
-          navigate('employee/dashboard')
+          navigate('/employee/dashboard')
         }
     }catch(e){
       console.log(e)
