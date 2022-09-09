@@ -13,13 +13,16 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useSelector, useDispatch } from 'react-redux';
-import { PUT_USER, GET_USER, REMOVE_USER } from '../slice/UserSession/userSession';
+import { PUT_USER } from '../slice/UserSession/userSession';
 import { useNavigate } from 'react-router-dom';
 import LoadingButton from '@mui/lab/LoadingButton';
-import { useEffect,useState } from 'react';
+import {useState } from 'react';
 import Snackbar from '@mui/material/Snackbar';
 import Paper from '@mui/material/Paper';
 import MuiAlert from '@mui/material/Alert';
+import Divider from '@mui/material/Divider';
+import LinearProgress from '@mui/material/LinearProgress';
+
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -46,11 +49,8 @@ const dispatch = useDispatch();
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      Email: data.get('Email'),
-      Password: data.get('Password'),
-    });
     try{
+      setisLoading(true);
       //online api
         const sendRequest = await fetch("https://my-aisat-portal.herokuapp.com/employee/backend/login.php",{
             method: "POST",
@@ -64,7 +64,6 @@ const dispatch = useDispatch();
     // });
         
         const getResponse = await sendRequest.json();
-        setisLoading(true)
         if(getResponse.statusCode === 201){
           setOpen(true);
           setStatus("error");
@@ -79,7 +78,8 @@ const dispatch = useDispatch();
           navigate('/employee/dashboard')
         }
     }catch(e){
-      console.log(e)
+      setisLoading(false);
+      setMessage(e);
     }
   };
 
@@ -109,6 +109,7 @@ const dispatch = useDispatch();
     paddingRight: 20,
     paddingLeft: 20,
     margin: 8,
+    borderRadius: 10,
   }}>        
           <Box
             sx={{
@@ -124,8 +125,8 @@ const dispatch = useDispatch();
             <Typography component="h1" variant="h5">
               Sign in
             </Typography>
-            
             <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+            {isLoading === true ? (<LinearProgress />) : (<Divider />)}
               <TextField
                 margin="normal"
                 required
@@ -150,16 +151,15 @@ const dispatch = useDispatch();
                 control={<Checkbox value="remember" color="primary" />}
                 label="Remember me"
               />
-         {isLoading === true ? (<LoadingButton loading variant="outlined">
-  Submit
-</LoadingButton>) : (<Button
+       <Button
                 type="submit"
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
+               
                 >
                 Sign In
-              </Button>)}     
+              </Button>    
              
               <Grid container>
                 <Grid item xs>
