@@ -1,10 +1,9 @@
 import * as React from 'react';
-import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { Skeleton, Typography } from '@mui/material';
+import { Skeleton } from '@mui/material';
 import { DrawerAppBar } from '../component/DrawerAppBar';
 import Paper from '@mui/material/Paper';
 import { useEffect, useState } from 'react';
@@ -12,6 +11,7 @@ import { DataGrid, GridToolbar, useGridApiContext  } from '@mui/x-data-grid';
 import LinearProgress from '@mui/material/LinearProgress';
 import Select from '@mui/material/Select';
 import PropTypes from 'prop-types';
+import Avatar from "@mui/material/Avatar";
 
 //Drowdown cell
 function SelectEditInputCell(props) {
@@ -63,7 +63,15 @@ const columns = [
   {
     field: 'profile_url',
     headerName: 'Photo',
-    width: 110,
+    width: 60,
+    renderCell: (params) => {
+      console.log(params.value);
+      return (
+        <>
+          <Avatar src={params.value} />
+        </>
+      );
+    }
   },
   {
     field: 'fullName',
@@ -127,21 +135,12 @@ useEffect( () => {
   getAllEmployee();
 }, []);
 
-// const { data } = useDemoData({
-//   dataSet: 'Employee',
-//   visibleFields: VISIBLE_FIELDS,
-//   rowLength: 100,
-// });
-
-
-
-  const theme = useTheme();
 
 //get user
 const user = useSelector(state => JSON.parse(state.user.session))
 
   //check menu state
-  const isOpen = useSelector(state => (state.isOpen.value))
+  // const isOpen = useSelector(state => (state.isOpen.value))
 
  
   //Navigate
