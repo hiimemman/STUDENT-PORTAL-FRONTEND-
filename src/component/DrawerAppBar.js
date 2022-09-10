@@ -14,6 +14,8 @@ import Grid from '@mui/material/Grid';
 import { ProfileBox } from './ProfileBox';
 import MuiDrawer from '@mui/material/Drawer';
 import MuiAppBar from '@mui/material/AppBar';
+import Brightness4Icon from '@mui/icons-material/Brightness4';
+import Brightness7Icon from '@mui/icons-material/Brightness7';
 
 const drawerWidth = 240;
 const openedMixin = (theme) => ({
@@ -123,6 +125,11 @@ export function DrawerAppBar() {
         </Typography>
         {/* profile */}
         <Grid container justifyContent ="flex-end">
+          <div className='mx-6'> 
+             <IconButton sx={{ ml: 1 }}  color="inherit">
+              {theme.palette.mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
+             </IconButton>
+          </div> 
        <ProfileBox  onMouseEnter={handleDrawerOpen}/>
         </Grid>
 
@@ -130,6 +137,7 @@ export function DrawerAppBar() {
     </AppBar>
   <Drawer variant="permanent" open={isOpen}>
       <DrawerHeader>
+        
         <IconButton onClick={handleDrawerClose}>
           {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
         </IconButton>

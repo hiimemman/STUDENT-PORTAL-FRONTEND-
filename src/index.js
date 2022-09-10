@@ -21,14 +21,20 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 //   }
 // });
 
+const darkTheme = createTheme({
+  palette: {
+    mode: 'dark',
+  },
+});
+
 root.render(
   <React.StrictMode>
     <StyledEngineProvider injectFirst>
-    {/* <ThemeProvider theme={THEME}> */}
+    <ThemeProvider theme={darkTheme}>
     <Provider store = {store}>
       <App />
     </Provider>
-    {/* </ThemeProvider> */}
+    </ThemeProvider>
     </StyledEngineProvider>
   </React.StrictMode>
 );
