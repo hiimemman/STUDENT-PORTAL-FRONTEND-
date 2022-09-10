@@ -2,8 +2,8 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { Skeleton } from '@mui/material';
+import { Link, useNavigate } from 'react-router-dom';
+import { Chip, Skeleton } from '@mui/material';
 import { DrawerAppBar } from '../component/DrawerAppBar';
 import Paper from '@mui/material/Paper';
 import { useEffect, useState } from 'react';
@@ -12,9 +12,9 @@ import LinearProgress from '@mui/material/LinearProgress';
 import Select from '@mui/material/Select';
 import PropTypes from 'prop-types';
 import Avatar from "@mui/material/Avatar";
-
-//Drowdown cell
-function SelectEditInputCell(props) {
+import CheckIcon from '@mui/icons-material/Check';
+//Edit Position
+function EditPosition(props) {
   const { id, value, field } = props;
   const apiRef = useGridApiContext();
 
@@ -38,7 +38,7 @@ function SelectEditInputCell(props) {
   );
 }
 
-SelectEditInputCell.propTypes = {
+EditPosition.propTypes = {
   /**
    * The column field of the cell that triggered the event.
    */
@@ -54,15 +54,64 @@ SelectEditInputCell.propTypes = {
   value: PropTypes.any,
 };
 
-const renderSelectEditInputCell = (params) => {
-  return <SelectEditInputCell {...params} />;
+const renderEditPosition = (params) => {
+  return <EditPosition {...params} />;
+};
+// End of edit position via cell
+
+//Edit status via cell
+function EditStatus(props) {
+  const { id, value, field } = props;
+  const apiRef = useGridApiContext();
+
+  const handleChange = async (event) => {
+    await apiRef.current.setEditCellValue({ id, field, value: event.target.value });
+    apiRef.current.stopCellEditMode({ id, field });
+  };
+
+  return (
+    <>
+      <Select
+      value={value}
+      onChange={handleChange}
+      size="small"
+      sx={{ height: 1 , width: 150}}
+      native
+      autoFocus
+    >
+      <option><Chip icon={<CheckIcon/>} label="active" color ="success"/></option>
+      <option><Chip icon={<CheckIcon/>} label="inactive" color ="error"/></option>
+    </Select>
+    </>
+  
+  );
+}
+
+EditStatus.propTypes = {
+  /**
+   * The column field of the cell that triggered the event.
+   */
+  field: PropTypes.string.isRequired,
+  /**
+   * The grid row id.
+   */
+  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  /**
+   * The cell value.
+   * If the column has `valueGetter`, use `params.row` to directly access the fields.
+   */
+  value: PropTypes.any,
 };
 
+const renderEditStatus = (params) => {
+  return <EditStatus {...params} />;
+};
+//End of edit status via cell
 
 const columns = [
   {
     field: 'profile_url',
-    headerName: 'Photo',
+    headerName: 'Avatar',
     width: 60,
     renderCell: (params) => {
       console.log(params.value);
@@ -86,13 +135,18 @@ const columns = [
     field: 'email',
     headerName: 'Email',
     width: 150,
-    type: 'email',
     editable: true,
+    renderCell: (cellValues) => {
+      console.log(cellValues.value)
+      return(
+        <a href={cellValues.value}>{cellValues.value}</a>
+      );
+    }
     },
     {
       field: 'position',
       headerName: 'Position',
-      renderEditCell: renderSelectEditInputCell,
+      renderEditCell: renderEditPosition,
       width: 150,
       editable: true,
     },
@@ -102,6 +156,23 @@ const columns = [
       width: 150,
       type: 'date',
       editable: true,
+    },
+    {
+      field: 'status',
+      headerName: 'Status',
+      renderEditCell: renderEditStatus,
+      width: 150,
+      editable: true,
+      renderCell: (cellValues) => {
+        console.log(cellValues.value)
+        return(
+        <>
+      {cellValues.value == "active" ? (<Chip icon={<CheckIcon/>} label="active" color ="success" size = "small" variant = "outlined"/>) : (<Chip icon={<CheckIcon/>} label="inactive" color ="error" size = "small" variant = "outlined"/>)}
+            
+      
+        </>
+        );//end of return
+      }
     },
 ];
 
