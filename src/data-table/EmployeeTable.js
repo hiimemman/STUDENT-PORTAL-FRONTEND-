@@ -1,6 +1,4 @@
-
-import * as React from 'react';
-import { DataGrid, GridToolbar, useGridApiContext  } from '@mui/x-data-grid';
+import { DataGrid, GridToolbarContainer, useGridApiContext, GridToolbarColumnsButton, GridToolbarFilterButton, GridToolbarDensitySelector, GridToolbarExport  } from '@mui/x-data-grid';
 import LinearProgress from '@mui/material/LinearProgress';
 import Select from '@mui/material/Select';
 import PropTypes from 'prop-types';
@@ -9,6 +7,41 @@ import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import { Chip } from '@mui/material';
 import { useEffect, useState } from 'react';
+import Button from '@mui/material/Button';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import { AddForm } from '../forms/AddForm';
+import { useSelector, useDispatch } from 'react-redux';
+import {OPEN, CLOSE} from '../slice/FormSlice/FormSlice'
+import {EMPLOYEE} from '../slice/FormType/FormType'
+
+//Toolbar
+function CustomToolbar() {
+
+  //dispatch from redux
+const dispatch = useDispatch();
+
+ //Current session user
+ const formState = useSelector(state => (state.isOpenForm.value));
+ //Open Popper
+const openPopper = () =>{
+  dispatch(EMPLOYEE());
+  dispatch(OPEN());
+  console.log(formState)
+} 
+
+
+  return (<>
+  <AddForm  open ={formState}/> 
+    <GridToolbarContainer>
+      <Button variant="text" startIcon = {<PersonAddIcon />} onClick = {openPopper}> Add</Button>
+      <GridToolbarColumnsButton />
+      <GridToolbarFilterButton />
+      <GridToolbarDensitySelector />
+      <GridToolbarExport />
+    </GridToolbarContainer>
+  </>
+  );
+}
 
 //Edit Position
 function EditPosition(props) {
@@ -111,7 +144,7 @@ function EditPosition(props) {
       headerName: 'Avatar',
       width: 80,
       renderCell: (params) => {
-        console.log(params.value);
+      
         return (
           <>
             <Avatar src={params.value} />
@@ -160,7 +193,7 @@ function EditPosition(props) {
         width: 140,
         editable: true,
         renderCell: (cellValues) => {
-          console.log(cellValues.value)
+          
           return(
           <>
         {cellValues.value == "active" ? (<Chip icon={<CheckIcon/>} label="active  " color ="success" size = "small" variant = "outlined"/>) : (<Chip icon={<CloseIcon/>} label="inactive" color ="error" size = "small" variant = "outlined"/>)}
@@ -194,9 +227,9 @@ export function EmployeeTable() {
           const getResponse = await sendRequest.json();
           isLoading(false)
           if(getResponse.statusCode === 201){
-            console.log("error");
+          
           }else{
-            console.log(getResponse)
+         
             //if succesfully retrieve data
             isLoading(false)
             setRows(getResponse);
@@ -210,6 +243,6 @@ export function EmployeeTable() {
   }, []);
  
   return(
-    <DataGrid components={{ Toolbar: GridToolbar, LoadingOverlay: LinearProgress, }} loading = {loading} rows = {rows} columns={columns}  experimentalFeatures={{ newEditingApi: true }}/> 
+    <DataGrid components={{ Toolbar: CustomToolbar, LoadingOverlay: LinearProgress, }} loading = {loading} rows = {rows} columns={columns}  experimentalFeatures={{ newEditingApi: true }}/> 
   );
 }

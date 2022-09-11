@@ -59,8 +59,6 @@ const [value, setValue] = React.useState('1');//default tab
             <TabPanel value="2">Item Two</TabPanel>
             <TabPanel value="3">3</TabPanel>
           </TabContext>
-            
-          
        </div>
     
   </Paper>

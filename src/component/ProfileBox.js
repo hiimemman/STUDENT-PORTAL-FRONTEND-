@@ -8,6 +8,7 @@ import IconButton from '@mui/material/IconButton';
 import { useSelector, useDispatch } from 'react-redux';
 import { REMOVE_USER } from '../slice/UserSession/userSession';
 import { useNavigate } from 'react-router-dom';
+import Skeleton from '@mui/material/Skeleton';
 
 export function ProfileBox(){
 //UseNavigate
@@ -47,7 +48,8 @@ const navigate = useNavigate();
     }
  
     return(
-        <Box sx={{ flexGrow: 0}} >
+      <>
+      {user.firstname !== null ? (<Box sx={{ flexGrow: 0}} >
         <Tooltip title="Open settings">
           <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
             <Avatar alt={user.firstname} src= {user.profile_url} />
@@ -74,6 +76,8 @@ const navigate = useNavigate();
         <MenuItem className ='font-nunito'>My account</MenuItem>
         <MenuItem onClick ={logOut} className ='font-nunito'>Logout</MenuItem>
         </Menu>
-      </Box>
-    )
+      </Box>) : (<Skeleton variant="circular" width={40} height={40} />)}
+ 
+      </>
+    );
 }
