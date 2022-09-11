@@ -134,7 +134,6 @@ function EditPosition(props) {
       width: 200,
       editable: true,
       renderCell: (cellValues) => {
-        console.log(cellValues.value)
         return(
           <a href={cellValues.value}>{cellValues.value}</a>
         );
@@ -158,7 +157,7 @@ function EditPosition(props) {
         field: 'status',
         headerName: 'Status',
         renderEditCell: renderEditStatus,
-        width: 170,
+        width: 140,
         editable: true,
         renderCell: (cellValues) => {
           console.log(cellValues.value)
@@ -170,6 +169,14 @@ function EditPosition(props) {
           </>
           );//end of return
         }
+      },
+
+      {
+        field: 'added_at',
+        headerName: 'Date Created',
+        width: 200,
+        type: 'date',
+        editable: false,
       },
   ];
 

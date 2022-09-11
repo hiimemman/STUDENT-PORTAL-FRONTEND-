@@ -8,11 +8,21 @@ import { DrawerAppBar } from '../component/DrawerAppBar';
 import Paper from '@mui/material/Paper';
 import { useEffect} from 'react';
 import { EmployeeTable } from '../data-table/EmployeeTable';
+import TabContext from '@mui/lab/TabContext';
+import TabList from '@mui/lab/TabList';
+import TabPanel from '@mui/lab/TabPanel';
+import Tab from '@mui/material/Tab';
 
 export  function Employees() {
 //get user
 const user = useSelector(state => JSON.parse(state.user.session))
 
+
+const [value, setValue] = React.useState('1');//default tab
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
   //Navigate
   const navigate = useNavigate();
   useEffect(() =>{
@@ -36,9 +46,21 @@ const user = useSelector(state => JSON.parse(state.user.session))
   }}>
        <div className="flex flex-col justify-evenly">
              <h2 className ='font-nunito font-bold'>Employees</h2>
-             <div style={{ height: 400, width: '100%' }}>
-             <EmployeeTable />
-         </div>     
+          
+             <TabContext value={value}>
+        <Box sx={{ borderBottom: 1, borderColor: 'divider' } }>
+            <TabList onChange={handleChange} aria-label="lab API tabs example" >
+                <Tab label="Data Table" value="1" />
+                <Tab label="PROFILE" value="2" />
+                <Tab label="HISTORY" value="3" />
+             </TabList>
+            </Box>
+        <TabPanel value="1"  style={{height: '400px'}}><EmployeeTable /></TabPanel>
+            <TabPanel value="2">Item Two</TabPanel>
+            <TabPanel value="3">3</TabPanel>
+          </TabContext>
+            
+          
        </div>
     
   </Paper>
