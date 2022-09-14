@@ -112,8 +112,8 @@ const theme = useTheme();
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
               Employee Form
             </Typography>
-            <Button autoFocus color="inherit" onClick={handleClose}>
-              save
+            <Button autoFocus variant="outlined"  color= "inherit" onClick={handleClose}>
+              Submit
             </Button>
           </Toolbar>
         </AppBar>

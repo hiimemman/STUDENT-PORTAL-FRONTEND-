@@ -28,13 +28,14 @@ const lightTheme = createTheme({
     mode: 'light',
   },
 })
-useEffect(() =>{
-  if(selectedTheme === 'lightTheme'){
-    setTheme(lightTheme)
+ useEffect(() =>{
+ if(selectedTheme === 'lightTheme'){
+   setTheme(lightTheme)
   }else{
-    setTheme(darkTheme)
-  }
-},[selectedTheme, lightTheme, darkTheme])
+ setTheme(darkTheme)
+  } 
+},[selectedTheme])
+
  //current theme
  const [currentTheme, setTheme] = useState(lightTheme); 
 
