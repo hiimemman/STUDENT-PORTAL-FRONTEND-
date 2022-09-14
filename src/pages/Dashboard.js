@@ -18,7 +18,7 @@ useEffect(() =>{
   if(user === null){
    navigate('/LoginEmployee')
   } 
- })
+ },[])
     return(
       <>
       {user !== null ?  (

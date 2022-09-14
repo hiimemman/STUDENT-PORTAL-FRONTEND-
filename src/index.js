@@ -5,12 +5,11 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { store } from './app/store'
 import { Provider } from 'react-redux';
-import { StyledEngineProvider } from '@mui/styled-engine';
-import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
 
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+
 
 // const THEME = createTheme({
 //   Typography: {
@@ -22,21 +21,24 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 //   }
 // });
 
-const darkTheme = createTheme({
-  palette: {
-    mode: 'dark',
-  },
-});
+// const darkTheme = createTheme({
+//   palette: {
+//     mode: 'dark',
+//   },
+// });
+
+// const lightTheme = createTheme({
+//   palette: {
+//     mode: 'light',
+//   },
+// });
+
 
 root.render(
   <React.StrictMode>
-    <StyledEngineProvider injectFirst>
-    <ThemeProvider theme={darkTheme}>
-    <Provider store = {store}>
-      <App />
+    <Provider store = {store}>  
+           <App />       
     </Provider>
-    </ThemeProvider>
-    </StyledEngineProvider>
   </React.StrictMode>
 );
 

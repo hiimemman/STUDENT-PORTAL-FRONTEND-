@@ -58,7 +58,7 @@ function EditPosition(props) {
         value={value}
         onChange={handleChange}
         size="small"
-        sx={{ height: 1 , width: 150}}
+        sx={{ height: 1 , width: 170}}
         native
         autoFocus
       >

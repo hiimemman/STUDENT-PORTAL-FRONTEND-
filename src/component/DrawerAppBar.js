@@ -8,7 +8,6 @@ import { styled, useTheme } from '@mui/material/styles';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import {CLOSE, OPEN} from  '../slice/MenuSlice/MenuState'
-import { useSelector, useDispatch } from 'react-redux';
 import { PageList } from '../component/PageList';
 import Grid from '@mui/material/Grid';
 import { ProfileBox } from './ProfileBox';
@@ -16,6 +15,8 @@ import MuiDrawer from '@mui/material/Drawer';
 import MuiAppBar from '@mui/material/AppBar';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
+import { useSelector, useDispatch } from 'react-redux';
+import { DARK, LIGHT } from '../slice/ThemeMode/ThemeMode';
 
 const drawerWidth = 240;
 const openedMixin = (theme) => ({
@@ -93,6 +94,9 @@ export function DrawerAppBar() {
  const dispatch = useDispatch();
     //check menu state
     const isOpen = useSelector(state => (state.isOpen.value))
+
+    //check current theme
+    const selectedTheme = useSelector(state =>(state.selectedTheme.value))
  
   const handleDrawerOpen = () => {
     dispatch(OPEN())
@@ -103,6 +107,14 @@ export function DrawerAppBar() {
   };
   
   // const container = window !== undefined ? () => window().document.body : undefined;
+const changeTheme = () =>{
+  if(selectedTheme === 'darkTheme'){
+    dispatch(LIGHT());
+  }else{
+    dispatch(DARK())
+  }
+}
+
 
   return (
     <>
@@ -126,8 +138,8 @@ export function DrawerAppBar() {
         {/* profile */}
         <Grid container justifyContent ="flex-end">
           <div className='mx-6'> 
-             <IconButton sx={{ ml: 1 }}  color="inherit">
-              {theme.palette.mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
+             <IconButton sx={{ ml: 1 }}  color="inherit" onClick={changeTheme}>
+              {selectedTheme === 'darkTheme' ? <Brightness7Icon /> : <Brightness4Icon />}
              </IconButton>
           </div> 
        <ProfileBox  onMouseEnter={handleDrawerOpen}/>

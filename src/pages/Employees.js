@@ -29,7 +29,7 @@ const [value, setValue] = React.useState('1');//default tab
     if(user === null){
      navigate('/LoginEmployee')
     } 
-   })
+   },[])
 
   return (
     <>{user !== null ?  (
