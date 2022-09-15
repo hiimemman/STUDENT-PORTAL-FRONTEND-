@@ -18,6 +18,7 @@ import Brightness7Icon from '@mui/icons-material/Brightness7';
 import { useSelector, useDispatch } from 'react-redux';
 import { DARK, LIGHT } from '../slice/ThemeMode/ThemeMode';
 
+
 const drawerWidth = 240;
 const openedMixin = (theme) => ({
   width: drawerWidth,

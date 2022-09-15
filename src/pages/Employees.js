@@ -36,15 +36,15 @@ const [value, setValue] = React.useState('1');//default tab
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
        <DrawerAppBar />
-       <Paper elevation={3}
+       {/* <Paper elevation={2}
   style={{
     width: '100%',
-    padding: 20,
+    padding: 0,
     marginTop: 70,
     marginRight: 20,
     borderRadius: 10,
-  }}>
-       <div className="flex flex-col justify-evenly">
+  }}> */}
+       <div className="flex flex-col justify-evenly" style={{width:'100%'}}>
              <h2 className ='font-nunito font-bold'>Employees</h2>
           
              <TabContext value={value}>
@@ -55,14 +55,14 @@ const [value, setValue] = React.useState('1');//default tab
                 <Tab label="HISTORY" value="3" />
              </TabList>
             </Box>
-        <TabPanel value="1"  style={{height: '400px'}}><EmployeeTable /></TabPanel>
+        <TabPanel value="1"  style={{height: 'auto'}}><EmployeeTable /></TabPanel>
             <TabPanel value="2">Item Two</TabPanel>
             <TabPanel value="3">3</TabPanel>
           </TabContext>
        </div>
     
-  </Paper>
-     
+  {/* </Paper>
+      */}
    </Box>) :  
    (<Skeleton
     sx={{ bgcolor: 'grey.900' }}
