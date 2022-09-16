@@ -16,20 +16,22 @@ import GroupsIcon from '@mui/icons-material/Groups';
 import AnnouncementIcon from '@mui/icons-material/Announcement';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import HandymanIcon from '@mui/icons-material/Handyman';
-import {useState} from 'react';
-
-
+import {DASHBOARD, EMPLOYEE} from '../slice/PageSlice/PageSlice';
+import { useEffect } from 'react';
 
 export function PageList(){
 
 
-  const [selectedIndex, setSelectedIndex] = useState(1);
+  
 
    //navigate
 const navigate = useNavigate();
 
 //check menu state
 const isOpen = useSelector(state => (state.isOpen.value))
+
+//page current state
+const currentPage = useSelector(state => (state.selectedPage.value));
 
  //dispatch from redux
  const dispatch = useDispatch();
@@ -42,7 +44,14 @@ const isOpen = useSelector(state => (state.isOpen.value))
     dispatch(CLOSE())
   };
 
- 
+useEffect(() => {
+if(currentPage === 'dashboard'){
+  navigate('/employee/dashboard');
+}
+if(currentPage === 'employee'){
+  navigate('/employee/employees')
+}
+}, [currentPage]);
 
 return(
   <>
@@ -51,7 +60,7 @@ return(
 
     <ListItem  disablePadding sx={{ display: 'block' }} className="transition ease-in-out delay-2 hover:bg-slate-300 duration-300">
   
-      <ListItemButton selected={selectedIndex === 0} onClick ={async ()=> { await setSelectedIndex(0);if(selectedIndex === 0){navigate('/employee/dashboard');}}} onMouseEnter = {handleDrawerOpen} onMouseLeave ={handleDrawerClose}
+      <ListItemButton onClick ={ ()=>dispatch(DASHBOARD()) } selected={currentPage === 'dashboard'}  onMouseEnter = {handleDrawerOpen} onMouseLeave ={handleDrawerClose}
         sx={{
           minHeight: 48,
           justifyContent: isOpen ? 'initial' : 'center',
@@ -78,8 +87,7 @@ return(
     <Tooltip title="Student list" placement="right-start">
     <ListItem  disablePadding sx={{ display: 'block'}} className="transition ease-in-out delay-2 hover:bg-slate-300  duration-300">
   
-      <ListItemButton selected={selectedIndex === 1} onClick ={async ()=>{ await setSelectedIndex(1); if(selectedIndex === 1){
-navigate('/employee/employees');}  }}  onMouseEnter = {handleDrawerOpen} onMouseLeave ={handleDrawerClose}
+      <ListItemButton onClick ={ ()=>dispatch(EMPLOYEE())} selected={currentPage === 'employee'}   onMouseEnter = {handleDrawerOpen} onMouseLeave ={handleDrawerClose}
         sx={{
           minHeight: 48,
           justifyContent: isOpen ? 'initial' : 'center',

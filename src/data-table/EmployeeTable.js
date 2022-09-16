@@ -13,6 +13,7 @@ import { AddForm } from '../forms/AddForm';
 import { useSelector, useDispatch } from 'react-redux';
 import {OPEN, CLOSE} from '../slice/FormSlice/FormSlice'
 import {EMPLOYEE} from '../slice/FormType/FormType'
+import {PUT_EMPLOYEE} from '../slice/FormSelectedRow/EmployeeSelected'
 
 //Toolbar
 function CustomToolbar() {
@@ -214,6 +215,8 @@ function EditPosition(props) {
   ];
 
 export function EmployeeTable() {
+    //dispatch from redux
+const dispatch = useDispatch();
     const [rows, setRows] = useState([]);
     const [loading, isLoading] = useState(false);
   
@@ -238,11 +241,19 @@ export function EmployeeTable() {
         console.error(e)
       }
     }
-  
     getAllEmployee();
-  }, []);
+  }, [setRows]);
  
   return(
-    <DataGrid components={{ Toolbar: CustomToolbar, LoadingOverlay: LinearProgress, }} loading = {loading} rows = {rows} columns={columns}  experimentalFeatures={{ newEditingApi: true }} style ={{height:'500px'}}/> 
+    <DataGrid components={{ Toolbar: CustomToolbar, LoadingOverlay: LinearProgress, }} loading = {loading} rows = {rows} columns={columns}  experimentalFeatures={{ newEditingApi: true }} style ={{height:'500px'}}
+      onSelectionModelChange={(ids) => {
+      const selectedIDs = new Set(ids);
+      const selectedRowData = rows.filter((row) =>
+        selectedIDs.has(row.id.toString())
+      );
+      dispatch(PUT_EMPLOYEE(selectedRowData[0]))
+      console.log(selectedRowData[0]);
+    }}
+    /> 
   );
 }

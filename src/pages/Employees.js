@@ -1,4 +1,4 @@
-import * as React from 'react';
+
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
 import { useSelector } from 'react-redux';
@@ -12,13 +12,14 @@ import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import Tab from '@mui/material/Tab';
+import { useState, Suspense } from 'react';
 
 export  function Employees() {
 //get user
 const user = useSelector(state => JSON.parse(state.user.session))
 
 
-const [value, setValue] = React.useState('1');//default tab
+const [value, setValue] = useState('1');//default tab
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -29,7 +30,7 @@ const [value, setValue] = React.useState('1');//default tab
     if(user === null){
      navigate('/LoginEmployee')
     } 
-   },[])
+   },[user])
 
   return (
     <>{user !== null ?  (
@@ -44,6 +45,11 @@ const [value, setValue] = React.useState('1');//default tab
     marginRight: 20,
     borderRadius: 10,
   }}> */}
+<Suspense fallback = {
+   <Skeleton variant="rectangular" width="100%">
+   <div style={{ paddingTop: '57%' }} />
+ </Skeleton>
+} >
        <div className="flex flex-col justify-evenly" style={{width:'100%'}}>
              <h2 className ='font-nunito font-bold'>Employees</h2>
           
@@ -55,12 +61,14 @@ const [value, setValue] = React.useState('1');//default tab
                 <Tab label="HISTORY" value="3" />
              </TabList>
             </Box>
-        <TabPanel value="1"  style={{height: 'auto'}}><EmployeeTable /></TabPanel>
+        <TabPanel value="1"  style={{height: 'auto'}}>
+          <EmployeeTable />
+          </TabPanel>
             <TabPanel value="2">Item Two</TabPanel>
             <TabPanel value="3">3</TabPanel>
           </TabContext>
        </div>
-    
+</Suspense>
   {/* </Paper>
       */}
    </Box>) :  
