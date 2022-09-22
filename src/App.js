@@ -6,8 +6,8 @@ import { useState, useEffect } from 'react';
 
 import { SignIn } from './pages/SignIn';
 import { Dashboard } from './pages/Dashboard';
-import { Homepage } from './pages/Homepage';
 import { Employees } from './pages/Employees';
+import { Homepage } from './homepage/Homepage';
 
 
 

@@ -14,6 +14,7 @@ import { useState, Suspense } from 'react';
 import Badge from '@mui/material/Badge';
 import MailIcon from '@mui/icons-material/Mail';
 import Avatar from "@mui/material/Avatar";
+import { EmployeeView } from '../viewprofile/EmployeeView';
 
 export  function Employees() {
 //Selected Employee
@@ -62,13 +63,11 @@ const [value, setValue] = useState('1');//default tab
         <Box sx={{ borderBottom: 1, borderColor: 'divider' } }>
             <TabList onChange={handleChange} aria-label="lab API tabs example" >
                 <Tab label="DATA TABLE" value="1" />
-                <Tab value="2" label={employee !== null ? ( <Badge badgeContent={
+                {employee !== null ? (<Tab value="2" label={<Badge badgeContent={
                 <Avatar src={employee.profile_url} sx={{ width: 30, height: 30  }}/> } >
                   PROFILE
-                </Badge>
-                ) : (
-                  <div>PROFILE</div>
-                )}/>
+                </Badge>} />) : (<Tab value="2" label ="PROFILE" disabled />)}
+                
                 <Tab label="HISTORY" value="3" />
              </TabList>
             </Box>
@@ -76,7 +75,7 @@ const [value, setValue] = useState('1');//default tab
           <EmployeeTable />
           </TabPanel>
             <TabPanel value="2">
-          124      
+          <EmployeeView /> 
             </TabPanel>
             <TabPanel value="3">3</TabPanel>
           </TabContext>
