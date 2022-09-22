@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-    value: false,
+    value: null,
  }
  
  export const employeeSelect = createSlice({
@@ -9,7 +9,7 @@ const initialState = {
      initialState,
      reducers:{
         PUT_EMPLOYEE: (state, action) =>{
-            state.session = action.payload;
+            state.value = action.payload;
         },
      },
  })

@@ -3,8 +3,6 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -15,14 +13,14 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useSelector, useDispatch } from 'react-redux';
 import { PUT_USER } from '../slice/UserSession/userSession';
 import { useNavigate } from 'react-router-dom';
-import LoadingButton from '@mui/lab/LoadingButton';
 import {useState } from 'react';
 import Snackbar from '@mui/material/Snackbar';
 import Paper from '@mui/material/Paper';
 import MuiAlert from '@mui/material/Alert';
 import Divider from '@mui/material/Divider';
 import LinearProgress from '@mui/material/LinearProgress';
-
+import validator from 'validator'
+import { PaperLine } from './PaperLine';
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -43,46 +41,54 @@ const dispatch = useDispatch();
 
   //snackbar status
   const [loginStatus, setStatus] = useState("failed");// default is failed for login atttempt alert
+  //If email is correct
+  const [emailValid, setEmailValid] = useState("");
 
   //Message of snackbar
   const [loginMessage, setMessage ] = useState("Try again");// Default message of alert
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    try{
-      setisLoading(true);
-      //online api
-        const sendRequest = await fetch("https://my-aisat-portal.herokuapp.com/employee/backend/login.php",{
-            method: "POST",
-            body: data,
-        });
-
-      //offline api
-    //   const sendRequest = await fetch("http://localhost/student_portal/employee/backend/login.php",{
-    //     method: "POST",
-    //     body: data,
-    // });
-        
-        const getResponse = await sendRequest.json();
-        if(getResponse.statusCode === 201){
-          setOpen(true);
-          setStatus("error");
-          setMessage("Wrong email or password")
-          setisLoading(false);
-        }else{
-          setisLoading(false);
-          setMessage("Log in successfull")
-          setStatus("success");
-          dispatch(PUT_USER(getResponse.statusCode));
-          setisLoading(false);
-          navigate('/employee/dashboard')
-        }
-    }catch(e){
-      setisLoading(false);
-      setMessage(e);
+    if(emailValid === true){
+      const data = new FormData(event.currentTarget);
+      try{
+        setisLoading(true);
+        //online api
+          const sendRequest = await fetch("https://my-aisat-portal.herokuapp.com/employee/backend/login.php",{
+              method: "POST",
+              body: data,
+          });
+  
+        //offline api
+      //   const sendRequest = await fetch("http://localhost/student_portal/employee/backend/login.php",{
+      //     method: "POST",
+      //     body: data,
+      // });
+          
+          const getResponse = await sendRequest.json();
+          if(getResponse.statusCode === 201){
+            setOpen(true);
+            setStatus("error");
+            setMessage("Wrong email or password")
+            setisLoading(false);
+          }else{
+            setisLoading(false);
+            setMessage("Log in successfull")
+            setStatus("success");
+            dispatch(PUT_USER(getResponse.statusCode));
+            setisLoading(false);
+            navigate('/employee/dashboard')
+          }
+      }catch(e){
+        setisLoading(false);
+        setMessage(e);
+      }
+    }else{
+      //else call snackbar says error
+      setMessage("Wrong  email or password");
     }
-  };
-
+    
+  
+  }
   //Snackbar
 
  
@@ -92,33 +98,43 @@ const dispatch = useDispatch();
     if (reason === 'clickaway') {
       return;
     }
-
     setOpen(false);
   };
 
 
+  const emailValidator = (email) =>{
+    if (validator.isEmail(email.target.value)) {
+      setEmailValid(true);
+    } else {
+      setEmailValid(false);
+      setMessage('Enter valid Email!');
+    }
+  }
+
     return(
         <ThemeProvider theme={theme}>
-          <div className=''></div>
         <Container component="main" maxWidth="xs">
+         
           <CssBaseline />
+         
           <div className='grid h-screen place-items-center'>
-          <Paper  elevation={3}
+          <Paper  elevation={1}
   style={{
-    padding: 12,
-    paddingRight: 20,
-    paddingLeft: 20,
-    margin: 8,
     borderRadius: 10,
-  }}>        
+  }} >        
+  <PaperLine/>
+  {isLoading === true ? (<LinearProgress />) : ("")}
           <Box
             sx={{
-              marginTop: 8,
+              paddingTop:5,
+              paddingRight: 3,
+              paddingLeft: 3,
+              paddingBottom:5,
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
             }}
-          >
+          > 
             <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
               <LockOutlinedIcon />
             </Avatar>
@@ -126,18 +142,33 @@ const dispatch = useDispatch();
               Sign in
             </Typography>
             <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-            {isLoading === true ? (<LinearProgress />) : (<Divider />)}
-              <TextField
+            <Divider />
+              {emailValid === false ? (<TextField
+              error
                 margin="normal"
                 required
                 fullWidth
                 id="Email"
-                label="Email Address"
+                label="Email"
                 name="Email"
                 autoComplete="email"
                 autoFocus
-              />
+                helperText = {emailValid === false ? ("Invalid Email") : ("")}
+                onKeyUp ={emailValidator}
+              />) : (<TextField
+                margin="normal"
+                required
+                fullWidth
+                id="Email"
+                label="Email"
+                name="Email"
+                autoComplete="email"
+                autoFocus
+                helperText = {emailValid === false ? ("Invalid Email") : ("")}
+                onKeyUp ={emailValidator}
+              />)}
               <TextField
+              
                 margin="normal"
                 required
                 fullWidth
@@ -146,11 +177,12 @@ const dispatch = useDispatch();
                 type="password"
                 id="Password"
                 autoComplete="current-password"
+                
               />
-              <FormControlLabel
+              {/* <FormControlLabel
                 control={<Checkbox value="remember" color="primary" />}
                 label="Remember me"
-              />
+              /> */}
        <Button
                 type="submit"
                 fullWidth
@@ -168,11 +200,11 @@ const dispatch = useDispatch();
                     Forgot password?
                   </Link>
                 </Grid>
-                <Grid item>
+                {/* <Grid item>
                   <Link href="#" variant="body2">
                     {"Don't have an account? Sign Up"}
                   </Link>
-                </Grid>
+                </Grid> */}
               </Grid>
             </Box>
              </Box>

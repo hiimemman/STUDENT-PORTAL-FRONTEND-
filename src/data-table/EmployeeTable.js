@@ -27,7 +27,6 @@ const dispatch = useDispatch();
 const openPopper = () =>{
   dispatch(EMPLOYEE());
   dispatch(OPEN());
-  console.log(formState)
 } 
 
 
@@ -252,7 +251,6 @@ const dispatch = useDispatch();
         selectedIDs.has(row.id.toString())
       );
       dispatch(PUT_EMPLOYEE(selectedRowData[0]))
-      console.log(selectedRowData[0]);
     }}
     /> 
   );
