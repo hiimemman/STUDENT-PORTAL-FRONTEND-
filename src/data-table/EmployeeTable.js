@@ -142,7 +142,7 @@ function EditPosition(props) {
     {
       field: 'profile_url',
       headerName: 'Avatar',
-      width: 80,
+      width: 100,
       renderCell: (params) => {
       
         return (
@@ -157,14 +157,14 @@ function EditPosition(props) {
       headerName: 'Full name',
       description: 'This column has a value getter and is not sortable.',
       sortable: true,
-      width: 220,
+      width: 240,
       valueGetter: (params) =>
         `${params.row.firstname || ''} ${params.row.middlename || ''} ${params.row.lastname || ''}`,
     },
     {
       field: 'email',
       headerName: 'Email',
-      width: 200,
+      width: 220,
       editable: true,
       renderCell: (cellValues) => {
         return(
@@ -182,7 +182,7 @@ function EditPosition(props) {
       {
         field: 'birthday',
         headerName: 'Birth Date',
-        width: 150,
+        width: 170,
         type: 'date',
         editable: true,
       },
@@ -190,7 +190,7 @@ function EditPosition(props) {
         field: 'status',
         headerName: 'Status',
         renderEditCell: renderEditStatus,
-        width: 140,
+        width: 160,
         editable: true,
         renderCell: (cellValues) => {
           
@@ -207,7 +207,7 @@ function EditPosition(props) {
       {
         field: 'added_at',
         headerName: 'Date Created',
-        width: 200,
+        width: 190,
         type: 'date',
         editable: false,
       },
@@ -244,6 +244,7 @@ const dispatch = useDispatch();
   }, [setRows]);
  
   return(
+    <>
     <DataGrid components={{ Toolbar: CustomToolbar, LoadingOverlay: LinearProgress, }} loading = {loading} rows = {rows} columns={columns}  experimentalFeatures={{ newEditingApi: true }} style ={{height:'500px'}}
       onSelectionModelChange={(ids) => {
       const selectedIDs = new Set(ids);
@@ -253,5 +254,6 @@ const dispatch = useDispatch();
       dispatch(PUT_EMPLOYEE(selectedRowData[0]))
     }}
     /> 
+    </>
   );
 }

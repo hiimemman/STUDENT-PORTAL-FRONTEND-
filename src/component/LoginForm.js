@@ -122,8 +122,8 @@ const dispatch = useDispatch();
   style={{
     borderRadius: 10,
   }} >        
-  <PaperLine/>
-  {isLoading === true ? (<LinearProgress />) : ("")}
+  {/* <PaperLine/> */}
+  {isLoading === true ? (<LinearProgress className ="rounded-t-xl p-1" />) : ("")}
           <Box
             sx={{
               paddingTop:5,

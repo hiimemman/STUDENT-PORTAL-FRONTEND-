@@ -71,13 +71,13 @@ const [value, setValue] = useState('1');//default tab
                 <Tab label="HISTORY" value="3" />
              </TabList>
             </Box>
-        <TabPanel value="1"  style={{height: 'auto'}}>
+        <TabPanel value="1"  style={{height: 'auto'}} sx ={{marginLeft:'-24px'}}>
           <EmployeeTable />
           </TabPanel>
-            <TabPanel value="2">
+            <TabPanel value="2" sx ={{marginLeft:'-24px'}}>
           <EmployeeView /> 
             </TabPanel>
-            <TabPanel value="3">3</TabPanel>
+            <TabPanel value="3" sx ={{marginLeft:'-24px'}}>3</TabPanel>
           </TabContext>
        </div>
 </Suspense>

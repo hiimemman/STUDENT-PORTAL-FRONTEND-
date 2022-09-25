@@ -1,6 +1,6 @@
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import { StyledEngineProvider } from '@mui/styled-engine';
-import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useSelector, useDispatch } from 'react-redux';
 import { useState, useEffect } from 'react';
 
@@ -21,12 +21,22 @@ function App() {
   palette: {
     mode: 'dark',
   },
+  typography: {
+    fontFamily: [
+      "Open Sans",
+    ].join(",")
+  }
 })
 
 const lightTheme = createTheme({
   palette: {
     mode: 'light',
   },
+  typography: {
+    fontFamily: [
+      "Open Sans",
+    ].join(",")
+  }
 })
  useEffect(() =>{
  if(selectedTheme === 'lightTheme'){
