@@ -165,12 +165,7 @@ function EditPosition(props) {
       field: 'email',
       headerName: 'Email',
       width: 220,
-      editable: true,
-      renderCell: (cellValues) => {
-        return(
-          <a href={cellValues.value}>{cellValues.value}</a>
-        );
-      }
+      editable: false,
       },
       {
         field: 'position',
