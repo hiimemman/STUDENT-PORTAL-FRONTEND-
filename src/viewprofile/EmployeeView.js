@@ -1,9 +1,8 @@
-import { Button, Divider, FormControl, InputBase,  NativeSelect, TextField, Typography } from '@mui/material';
+import { Alert, Button, Divider, FormControl, InputBase,  NativeSelect, Snackbar, TextField, Typography } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import Grid2 from '@mui/material/Unstable_Grid2'; // Grid2 version 2
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import {PUT_EMPLOYEE} from '../slice/FormSelectedRow/EmployeeSelected'
 import Avatar from '@mui/material/Avatar';
 import { styled } from '@mui/material/styles';
 import Badge from '@mui/material/Badge';
@@ -19,16 +18,23 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import validator from 'validator' 
 import SaveIcon from '@mui/icons-material/Save';
 import { LoadingButton } from '@mui/lab';
+import {PUT_EMPLOYEE} from '../slice/FormSelectedRow/EmployeeSelected'
 
 export function EmployeeView(){
 
     //Selected Employee
 const employee = useSelector(state => state.employeeSelected.value);
 
-//Put employee date for updating
-const [editEmployee, setEditEmployee] = useState('');
   //dispatch from redux
   const dispatch = useDispatch();
+
+//Valid Firstname
+const [validFname, setValidFname] = useState(true);
+
+//Valid Lastname
+const [validLname, setValidLname] = useState(true);
+//Valid Address
+const [validAddress, setValidAddress] = useState(true);
 
 //Valid contact
 const [validContact, setValidContact] = useState(true);
@@ -37,6 +43,24 @@ const [validContact, setValidContact] = useState(true);
 const [isLoading, setisLoading] = useState(false);
 
 
+//Snackbar
+const [open, setOpen] = useState(false);// for snackbar
+
+//snackbar status
+const [loginStatus, setStatus] = useState("failed");// default is failed for login atttempt alert
+
+
+//Message of snackbar
+const [loginMessage, setMessage ] = useState("Try again");// Default message of alert
+
+const handleClose = (event, reason) => {
+  if (reason === 'clickaway') {
+    return;
+  }
+  setOpen(false);
+};
+
+//End of snackbar
 
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
@@ -49,13 +73,7 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
   }));
   
 
- const handleChange = (props) =>{
-   console.log(props.target.name +" " +props.target.value);
-    setEditEmployee(prevState => ({
-        ...prevState,
-        [props.target.name]: props.target.value
-    }));
- }
+
  
 
   const contactValidator = (props) =>{
@@ -63,15 +81,39 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
     const isValidPhoneNumber = validator.isMobilePhone(props.target.value)
     if(isValidPhoneNumber && (props.target.value).toString().length === 11){
         setValidContact(true)
-        setEditEmployee(prevState => ({
-            ...prevState,
-            [props.target.name]: props.target.value
-        }));
+      
     }else{
         setValidContact(false)
     }
 }
 
+const firstNameValidator = (props) =>{
+  const Length = (props.target.value).toString().length;
+  if(Length > 250 || Length <= 0){
+    setValidFname(false);
+  }else{
+    setValidFname(true)
+  }
+}
+
+
+const lastNameValidator = (props) =>{
+  const Length = (props.target.value).toString().length;
+  if(Length > 250 || Length <= 0){
+    setValidLname(false);
+  }else{
+    setValidLname(true)
+  }
+}
+
+const addressValidator = (props) =>{
+  const Length = (props.target.value).toString().length;
+  if(Length > 250 || Length <= 0){
+    setValidAddress(false);
+  }else{
+    setValidAddress(true)
+  }
+}
 const BootstrapInput = styled(InputBase)(({ theme }) => ({
     'label + &': {
       marginTop: theme.spacing(3),
@@ -108,12 +150,13 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
   //submit form
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if(validContact=== true){
+    if(validContact && validFname && validLname && validAddress){
       const data = new FormData(event.target);
-      data.append('Email', editEmployee.email);
-      for (var pair of data.entries()) {
-        console.log(pair[0]+ ' - ' + pair[1]); 
-    }
+      // console.log(employee.email)
+      data.append('Email', employee.email);
+    //   for (var pair of data.entries()) {
+    //     console.log(pair[0]+ ' - ' + pair[1]); 
+    // }
       try{
         setisLoading(true);
         //online api
@@ -124,51 +167,32 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
           
           const getResponse = await sendRequest.json();
           if(getResponse.statusCode !== 201){
-            // setOpen(true);
-            // setStatus("error");
-            // setMessage("Wrong email or password")
-            dispatch(PUT_EMPLOYEE(getResponse.statusCode[0]));
-            console.log(employee);
+            dispatch(PUT_EMPLOYEE(getResponse.statusCode));
+            setOpen(true);
+            setStatus("success");
+            setMessage("Updated Successfully")
             setisLoading(false);
+           
           }else{
             // setisLoading(false);
-            // setMessage("Log in successfull")
-            // setStatus("success");
+            setMessage("Action Failed")
+            setStatus("error");
             setisLoading(false);
           }
+          
       }catch(e){
         setisLoading(false);
         // setMessage(e);
       }
     }else{
-      //else call snackbar says error
-    //   setMessage("Wrong  email or password");
+      setOpen(true);
+      setStatus("warning");
+      setMessage("Please check your inputs and try again")
     }
   }
-
-//   useEffect(()=>{
-//     const recheckAcc = async () =>{
-//         const formData = new FormData();
-//         formData.append("Email", employee.email);
-//         const sendRequest = await fetch("https://my-aisat-portal.herokuapp.com/employee/backend/employee-view.php",{
-//             method: "POST",
-//             body: formData,
-//         });
-
-//         const getResponse = await sendRequest.json();
-
-//         if(getResponse.statusCode !== "No email received"){
-//           await setEditEmployee(employee);
-//           await dispatch(PUT_EMPLOYEE(editEmployee));
-//         }else{
-            
-//         }    
-//     }
-
-//     recheckAcc();
-// },[setEditEmployee]);
-
  
+
+  
     return(
         <>
              <Paper elevation={1} sx ={{width:'500 ', paddingTop:'1.5rem'}} className ="rounded-xl">
@@ -187,7 +211,7 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
                     </Box>       
              </Paper >
              <Paper elevation={1} sx ={{width:'500 ', padding:'1.5rem',marginTop:'1.5rem'}} className ="rounded-xl">
-              <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+              <Box component="form" onSubmit={handleSubmit}  sx={{ mt: 1 }}>
         
               <Typography variant ="h4" >About</Typography>
               <TextField defaultValue = {employee.about} name ="About"  id ="About" fullWidth inputProps={{ 'aria-label': 'description' }} variant="standard" />
@@ -200,8 +224,11 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
             <Typography variant ="overline" noWrap sx={{fontSize:'15px'}}>Firstname:  </Typography>
             </Grid2>
             <Grid2 item xs={5}> 
-            <Input defaultValue = {employee.firstname} name ="Firstname" id="Firstname" sx={{fontSize:'15px'}} fullWidth inputProps={{ 'aria-label': 'description' }}  onKeyUp = {handleChange}/>
-            </Grid2>
+            {validFname === true ? (<TextField defaultValue = {employee.firstname} name ="Firstname" id="Firstname" sx={{fontSize:'15px'}} variant="standard" onChange ={firstNameValidator}fullWidth inputProps={{ 'aria-label': 'description' }} />
+          ) : 
+          (<TextField error defaultValue = {employee.firstname}  name ="Firstname" id="Firstname" sx={{fontSize:'15px'}}helperText ="Must not be empty" variant="standard" onChange ={firstNameValidator} fullWidth inputProps={{ 'aria-label': 'description' }} />
+          )}
+             </Grid2>
          </Grid2>
 
          <Grid2 container spacing={2} sx ={{marginLeft:'0px', marginTop: '10px'}}>
@@ -209,7 +236,7 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
             <Typography variant ="overline" noWrap sx={{fontSize:'15px'}}>Middlename:  </Typography>
             </Grid2>
             <Grid2 item xs={5}> 
-            <Input defaultValue = {employee.middlename} name ="Middlename" id="Middlename" sx={{fontSize:'15px'}} fullWidth inputProps={{ 'aria-label': 'description' }}  onKeyUp = {handleChange}/>
+            <TextField variant ="standard" defaultValue = {employee.middlename} name ="Middlename" id="Middlename" sx={{fontSize:'15px'}} fullWidth inputProps={{ 'aria-label': 'description' }}  />
             </Grid2>
          </Grid2>
            
@@ -218,7 +245,10 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
             <Typography variant ="overline" noWrap sx={{fontSize:'15px'}}>Lastname:  </Typography>
             </Grid2>
             <Grid2 item xs={5}> 
-            <Input defaultValue = {employee.lastname} name ="Lastname" id="Lastname"  sx={{fontSize:'15px'}}fullWidth inputProps={{ 'aria-label': 'description' }}  onKeyUp = {handleChange}/>
+            {validLname === true ? (<TextField defaultValue = {employee.lastname} name ="Lastname" id="Lastname" sx={{fontSize:'15px'}} variant="standard" onChange ={lastNameValidator}fullWidth inputProps={{ 'aria-label': 'description' }} />
+          ) : 
+          (<TextField error defaultValue = {employee.lastname}  name ="Lastname" id="Lastname" sx={{fontSize:'15px'}}helperText ="Must not be empty" variant="standard" onChange ={lastNameValidator} fullWidth inputProps={{ 'aria-label': 'description' }} />
+          )}
             </Grid2>
          </Grid2>
 
@@ -238,6 +268,7 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
             <Grid2 item xs={5}> 
            
         <NativeSelect
+        fullWidth
           id="Position"
           defaultValue={employee.position}
           inputProps={{
@@ -256,22 +287,22 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
             <Typography variant ="overline" noWrap sx={{fontSize:'15px'}}>Contact Number:  </Typography>
             </Grid2>
             <Grid2 item xs={5}> 
-            {/* <Input defaultValue = {employee.contact}  sx={{fontSize:'15px'}} inputProps={{ 'aria-label': 'description' }}  onKeyUp = {handleChange} /> */}
+            {/* <Input defaultValue = {employee.contact}  sx={{fontSize:'15px'}} inputProps={{ 'aria-label': 'description' }}  /> */}
 
-            {validContact === false ? (<Input
+            {validContact === false ? (<TextField
               error
               name = "Contact"
               id ="Contact"
                 defaultValue= {employee.contact}
-                helperText = {validContact === false ? ("Invalid Contact") : ("")}
+                helperText = "Invalid Contact"
                 onChange ={contactValidator} fullWidth
-              />) : (<Input
+                variant="standard"
+              />) : (<TextField
               name ="Contact"
                 id="Contact"
-
                 defaultValue= {employee.contact}
-                helperText = {validContact === false ? ("Invalid Contact") : ("")}
                 onChange ={contactValidator} fullWidth
+                variant="standard"
               />)}
             </Grid2>
          </Grid2>
@@ -282,7 +313,7 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
             </Grid2>
             <Grid2 item xs={5}> 
             
-            <Input defaultValue = {employee.birthday} name ="Birthday" type = "date"   id="Birthday" fullWidth sx={{fontSize:'15px'}}   onKeyUp = {handleChange}/>
+            <TextField variant ="standard" defaultValue = {employee.birthday} name ="Birthday" type = "date"   id="Birthday" fullWidth sx={{fontSize:'15px'}}   />
             </Grid2>
          </Grid2>
 
@@ -296,9 +327,10 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
            aria-labelledby="demo-row-radio-buttons-group-label"
            name="Sex"
            id="Sex"
+           defaultValue ={employee.sex}
               >
-           <FormControlLabel value="Female" control={<Radio />} label="Female" onChange ={handleChange} checked={employee.sex === 'Female'} />
-          <FormControlLabel value="Male" control={<Radio />}  label="Male" onChange =    {handleChange} checked={employee.sex === 'Male'} />
+           <FormControlLabel value="Female" control={<Radio />} label="Female" />
+          <FormControlLabel value="Male" control={<Radio />}  label="Male"  />
          </RadioGroup>
          </Grid2>
         </Grid2>
@@ -310,7 +342,10 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
             </Grid2>
             <Grid2 item xs={5}> 
             
-            <Input defaultValue = {employee.address} name ="Address"   id="Address" sx={{fontSize:'15px'}}  fullWidth onKeyUp = {handleChange}/>
+            {validAddress === true ? (<TextField defaultValue = {employee.address} name ="Address" id="Address" sx={{fontSize:'15px'}} variant="standard" onChange ={addressValidator}fullWidth inputProps={{ 'aria-label': 'description' }} />
+          ) : 
+          (<TextField error defaultValue = {employee.firstname}  name ="Address" id="Address" sx={{fontSize:'15px'}}helperText ="Must not be empty" variant="standard" onChange ={addressValidator} fullWidth inputProps={{ 'aria-label': 'description' }} />
+          )}
             </Grid2>
          </Grid2>
          
@@ -320,7 +355,7 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
             </Grid2>
             <Grid2 item xs={5}> 
             
-            <Input defaultValue = {employee.added_at} fullWidth disabled sx={{fontSize:'15px'}}  onKeyUp = {handleChange}/>
+            <TextField variant ="standard" defaultValue = {employee.added_at} fullWidth disabled sx={{fontSize:'15px'}} />
             </Grid2>
          </Grid2>
 
@@ -333,7 +368,7 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
             <Typography variant ="overline"  noWrap sx={{fontSize:'15px'}}>Twitter:  </Typography>
             </Grid2>
             <Grid2 item xs={5}> 
-            <Input defaultValue = {employee.twitterprofile} name ="Twitter" id ="Twitter"  sx={{fontSize:'15px'}} fullWidth inputProps={{ 'aria-label': 'description' }}  onKeyUp = {handleChange}/>
+            <TextField variant ="standard" defaultValue = {employee.twitterprofile} name ="Twitter" id ="Twitter"  sx={{fontSize:'15px'}} fullWidth inputProps={{ 'aria-label': 'description' }} />
             </Grid2>
          </Grid2>
     <Grid2 container spacing={2} sx ={{marginLeft:'0px', marginTop: '10px'}}>
@@ -341,7 +376,7 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
             <Typography variant ="overline" noWrap sx={{fontSize:'15px'}}>Facebook:  </Typography>
             </Grid2>
             <Grid2 item xs={5}> 
-            <Input defaultValue = {employee.facebookprofile} name ="Facebook" id ="Facebook" sx={{fontSize:'15px'}} fullWidth inputProps={{ 'aria-label': 'description' }}  onKeyUp = {handleChange}/>
+            <TextField variant ="standard" defaultValue = {employee.facebookprofile} name ="Facebook" id ="Facebook" sx={{fontSize:'15px'}} fullWidth inputProps={{ 'aria-label': 'description' }} />
             </Grid2>
          </Grid2>
 
@@ -350,7 +385,7 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
             <Typography variant ="overline" noWrap sx={{fontSize:'15px'}}>Instagram:  </Typography>
             </Grid2>
             <Grid2 item xs={5}> 
-            <Input defaultValue = {employee.instagramprofile} name = "Instagram" id ="Instagram"  sx={{fontSize:'15px'}} fullWidth inputProps={{ 'aria-label': 'description' }}  onKeyUp = {handleChange}/>
+            <TextField variant = "standard" defaultValue = {employee.instagramprofile} name = "Instagram" id ="Instagram"  sx={{fontSize:'15px'}} fullWidth inputProps={{ 'aria-label': 'description' }} />
             </Grid2>
          </Grid2>
          <Grid2 container spacing={2} sx ={{marginLeft:'0px', marginTop: '10px'}}>
@@ -358,7 +393,7 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
             <Typography variant ="overline" noWrap sx={{fontSize:'15px'}}>LinkedIn:  </Typography>
             </Grid2>
             <Grid2 item xs={5}> 
-            <Input defaultValue = {employee.linkedinprofile} name ="LinkedIn" id ="LinkedIn"  sx={{fontSize:'15px'}} fullWidth inputProps={{ 'aria-label': 'description' }}  onKeyUp = {handleChange}/>
+            <TextField variant ="standard" defaultValue = {employee.linkedinprofile} name ="LinkedIn" id ="LinkedIn"  sx={{fontSize:'15px'}} fullWidth inputProps={{ 'aria-label': 'description' }} />
             </Grid2>
          </Grid2>
         <Divider />
@@ -375,7 +410,12 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
         </Container>
               </Box>
               </Paper>
-
+  
+      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+             <Alert onClose={handleClose} severity= {loginStatus} sx={{ width: '100%' }}>
+                {loginMessage}
+             </Alert>
+       </Snackbar>
        </>
     )
 }

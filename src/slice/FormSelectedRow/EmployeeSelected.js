@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-    value: null,
+    value: {},
  }
  
  export const employeeSelect = createSlice({
@@ -16,6 +16,6 @@ const initialState = {
  
  
  // Action creators are generated for each case reducer function
- export const { PUT_EMPLOYEE } =employeeSelect.actions
+ export const { PUT_EMPLOYEE } = employeeSelect.actions
  
  export default employeeSelect.reducer

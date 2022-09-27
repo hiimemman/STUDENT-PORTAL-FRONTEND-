@@ -2,7 +2,7 @@ import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import {  Skeleton } from '@mui/material';
+import {  Alert, Skeleton, Snackbar } from '@mui/material';
 import { DrawerAppBar } from '../component/DrawerAppBar';
 import { useEffect} from 'react';
 import { EmployeeTable } from '../data-table/EmployeeTable';
@@ -25,6 +25,24 @@ const user = useSelector(state => JSON.parse(state.user.session))
 
 
 const [value, setValue] = useState('1');//default tab
+
+const [open, setOpen] = useState(false);// for snackbar
+
+//snackbar status
+const [loginStatus, setStatus] = useState("failed");// default is failed for login atttempt alert
+
+
+//Message of snackbar
+const [loginMessage, setMessage ] = useState("Try again");// Default message of alert
+
+const handleClose = (event, reason) => {
+  if (reason === 'clickaway') {
+    return;
+  }
+  setOpen(false);
+};
+
+
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -80,10 +98,16 @@ const [value, setValue] = useState('1');//default tab
             <TabPanel value="3" sx ={{marginLeft:'-24px'}}>3</TabPanel>
           </TabContext>
        </div>
+       <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+             <Alert onClose={handleClose} severity= {loginStatus} sx={{ width: '100%' }}>
+                {loginMessage}
+             </Alert>
+       </Snackbar>
 </Suspense>
   {/* </Paper>
       */}
-   </Box>) :  
+   </Box>
+   ) :  
    (<Skeleton
     sx={{ bgcolor: 'grey.900' }}
     variant="rectangular"

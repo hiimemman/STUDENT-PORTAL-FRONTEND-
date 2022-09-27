@@ -37,12 +37,14 @@ const dispatch = useDispatch();
 
   const [isLoading , setisLoading] = useState(false);
 
+   //If email is correct
+   const [emailValid, setEmailValid] = useState("");
+
   const [open, setOpen] = React.useState(false);// for snackbar
 
   //snackbar status
   const [loginStatus, setStatus] = useState("failed");// default is failed for login atttempt alert
-  //If email is correct
-  const [emailValid, setEmailValid] = useState("");
+ 
 
   //Message of snackbar
   const [loginMessage, setMessage ] = useState("Try again");// Default message of alert
