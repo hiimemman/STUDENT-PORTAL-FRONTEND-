@@ -5,24 +5,21 @@ const initialState = {
  }
  //SELECT A FORM TYPE TO OPEN IN ADD FORM
 //EXAMPLE FORM TYPE === 'employee' IT RETURNS TRUE OR FALSE
- export const formState = createSlice({
-     name:'isOpenForm',
+ export const addFormFor = createSlice({
+     name:'addFormFor',
      initialState,
      reducers:{
-         OPEN: (state) =>{
-        state.value = true
-         },
-         CLOSE: (state) =>{
-           state.value = false
-         },
          ADDEMPLOYEE: (state) =>{
             state.value= 'employee'
+         },
+         CLOSEFORM: (state) =>{
+            state.value = initialState
          },
      },
  })
  
  
  // Action creators are generated for each case reducer function
- export const { OPEN, CLOSE } = formState.actions
+ export const { ADDEMPLOYEE, CLOSEFORM } = addFormFor.actions
  
- export default formState.reducer
+ export default addFormFor.reducer

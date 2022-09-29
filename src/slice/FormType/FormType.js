@@ -4,6 +4,8 @@ const initialState = {
     value: null,
  }
  
+
+
  export const formType = createSlice({
      name:'formType',
      initialState,

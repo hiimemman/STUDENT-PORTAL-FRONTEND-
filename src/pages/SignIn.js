@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Skeleton } from '@mui/material';
 import { useEffect } from 'react';
 import { PUT_USER, REMOVE_USER } from '../slice/UserSession/userSession';
+import { ParticlesBackground } from '../component/ParticlesBackground';
 export function SignIn() {
 
 //get user
@@ -24,13 +25,20 @@ useEffect(() =>{
 
   return (
     <>
+    
    {user !== null ? (<Skeleton
     sx={{ bgcolor: 'grey.900' }}
     variant="rectangular"
     width={1500}
     height={690}
   />
-  ) :  (<LoginForm />)  }
+  ) :  (
+    <>
+    
+    <LoginForm />
+    
+  </>
+  )  }
     </>
   );
 }

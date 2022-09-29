@@ -25,6 +25,9 @@ export function EmployeeView(){
     //Selected Employee
 const employee = useSelector(state => state.employeeSelected.value);
 
+//Current User Session
+const user = useSelector(state => JSON.parse(state.user.session));
+
   //dispatch from redux
   const dispatch = useDispatch();
 
@@ -52,6 +55,7 @@ const [loginStatus, setStatus] = useState("failed");// default is failed for log
 
 //Message of snackbar
 const [loginMessage, setMessage ] = useState("Try again");// Default message of alert
+
 
 const handleClose = (event, reason) => {
   if (reason === 'clickaway') {
@@ -153,7 +157,12 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
     if(validContact && validFname && validLname && validAddress){
       const data = new FormData(event.target);
       // console.log(employee.email)
+      data.append('Status', employee.status);
       data.append('Email', employee.email);
+      data.append('Action', 'Update');
+      data.append('EditorPosition', user.position);
+      data.append('EditorEmail', user.email);
+      data.append('Category', 'Employee');
     //   for (var pair of data.entries()) {
     //     console.log(pair[0]+ ' - ' + pair[1]); 
     // }
@@ -166,6 +175,7 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
           });
           
           const getResponse = await sendRequest.json();
+          console.log(getResponse.statusCode)
           if(getResponse.statusCode !== 201){
             dispatch(PUT_EMPLOYEE(getResponse.statusCode));
             setOpen(true);
@@ -175,8 +185,10 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
            
           }else{
             // setisLoading(false);
-            setMessage("Action Failed")
+            setOpen(true);
             setStatus("error");
+            console.log(getResponse.statusCode)
+            setMessage('Error see console log for error');
             setisLoading(false);
           }
           

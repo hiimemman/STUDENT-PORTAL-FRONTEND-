@@ -5,16 +5,19 @@ import PropTypes from 'prop-types';
 import Avatar from "@mui/material/Avatar";
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
-import { Chip } from '@mui/material';
+import { Alert, Chip, Snackbar } from '@mui/material';
 import { useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
-import { AddForm } from '../forms/AddForm';
+import { AddEmployee } from '../forms/AddEmployee';
 import { useSelector, useDispatch } from 'react-redux';
 import {OPEN, CLOSE} from '../slice/FormSlice/FormSlice'
-import {EMPLOYEE} from '../slice/FormType/FormType'
+import {EMPLOYEE, DEFAULT} from '../slice/FormType/FormType'
+import { ADDEMPLOYEE } from '../slice/AddFormSlice/AddEmployeeSlice/AddEmployeeSlice';
 import {PUT_EMPLOYEE} from '../slice/FormSelectedRow/EmployeeSelected'
-
+import {OPENSNACK, CLOSESNACK} from '../slice/Snackbars/EmployeeTableOpen/EmployeeTableOpen';
+import {SUCCESSSNACK, FAILEDSNACK} from '../slice/Snackbars/EmployeeTableStatus/EmployeeTableStatus'
+import {SUCCESSMESSAGESNACK, FAILEDMESSAGESNACK} from '../slice/Snackbars/EmployeeTableMessage/EmployeeTableMessage'
 //Toolbar
 function CustomToolbar() {
 
@@ -23,15 +26,29 @@ const dispatch = useDispatch();
 
  //Current session user
  const formState = useSelector(state => (state.isOpenForm.value));
- //Open Popper
+
+ //Open snackbar
+const open = useSelector(state => state.openSnackEmp.value);
+
+//Open snackbar
+const statusSnack = useSelector(state => state.snackStatusEmp.value);
+
+//Snackbar Message
+const messageSnack = useSelector(state => state.snackMessageEmp.value);
+
+//Open add form
+const  formOpenType = useSelector(state => state.addForm.value);
+
+ //Open Add form
 const openPopper = () =>{
-  dispatch(EMPLOYEE());
-  dispatch(OPEN());
+  dispatch(ADDEMPLOYEE());
 } 
 
+useEffect(()=>{
+console.log(formOpenType);
+},[formOpenType]);
 
   return (<>
-  <AddForm  open ={formState}/> 
     <GridToolbarContainer>
       <Button variant="text" startIcon = {<PersonAddIcon />} onClick = {openPopper}> Add</Button>
       <GridToolbarColumnsButton />
@@ -39,18 +56,83 @@ const openPopper = () =>{
       <GridToolbarDensitySelector />
       <GridToolbarExport />
     </GridToolbarContainer>
+    <AddEmployee  open ={formOpenType === 'employee'}/> 
   </>
   );
 }
 
 //Edit Position
 function EditPosition(props) {
+  const dispatch = useDispatch();
+  //Selected Employee
+const employee = useSelector(state => state.employeeSelected.value);
+
+//Current User Session
+const user = useSelector(state => JSON.parse(state.user.session));
+
+
+
     const { id, value, field } = props;
     const apiRef = useGridApiContext();
   
     const handleChange = async (event) => {
+
+      
       await apiRef.current.setEditCellValue({ id, field, value: event.target.value });
       apiRef.current.stopCellEditMode({ id, field });
+      try{
+        const dataUpdate = new FormData();
+
+        dataUpdate.append('About', employee.about);
+        dataUpdate.append('Birthday', employee.birthday);
+        dataUpdate.append('Contact', employee.contact);
+        dataUpdate.append('Firstname', employee.firstname);
+        dataUpdate.append('Lastname', employee.lastname);
+        dataUpdate.append('Middlename', employee.middlename);
+        dataUpdate.append('Position', event.target.value);
+        dataUpdate.append('Sex', employee.sex);
+        dataUpdate.append('Status', employee.status);
+        dataUpdate.append('Twitter', employee.twitterprofile);
+        dataUpdate.append('LinkedIn', employee.linkedinprofile);
+        dataUpdate.append('Facebook', employee.facebookprofile);
+        dataUpdate.append('Instagram', employee.instagramprofile);
+        dataUpdate.append('Email', employee.email);
+        dataUpdate.append('Action', 'Update');
+        dataUpdate.append('EditorPosition', user.position);
+        dataUpdate.append('EditorEmail', user.email);
+        dataUpdate.append('Category', 'Employee');
+        const sendRequest = await fetch("https://my-aisat-portal.herokuapp.com/employee/backend/employee-update.php",{
+          method: "POST",
+          body: dataUpdate,
+      });
+      
+      const getResponse = await sendRequest.json();
+      console.log(getResponse.statusCode);
+      if(getResponse.statusCode !== 201){
+        // dispatch(PUT_EMPLOYEE(getResponse.statusCode));
+        // setOpen(true);
+        // setStatus("success");
+        // setMessage("Updated Successfully")
+        // setisLoading(false);
+       dispatch(PUT_EMPLOYEE(getResponse.statusCode))
+       dispatch(OPENSNACK());
+       dispatch(SUCCESSSNACK());
+       dispatch(SUCCESSMESSAGESNACK());
+      }else{
+        dispatch(OPENSNACK());
+        dispatch(FAILEDSNACK());
+        dispatch(FAILEDMESSAGESNACK());
+        // setisLoading(false);
+        // setOpen(true);
+        // setStatus("error");
+        // console.log(getResponse.statusCode)
+        // setMessage('Error see console log for error');
+        // setisLoading(false);
+      }
+      }catch(e){
+
+      }
+     
     };
   
     return (
@@ -93,10 +175,70 @@ function EditPosition(props) {
   function EditStatus(props) {
     const { id, value, field } = props;
     const apiRef = useGridApiContext();
-  
+    const dispatch = useDispatch();
+  //Selected Employee
+const employee = useSelector(state => state.employeeSelected.value);
+
+//Current User Session
+const user = useSelector(state => JSON.parse(state.user.session));
+
     const handleChange = async (event) => {
+      
       await apiRef.current.setEditCellValue({ id, field, value: event.target.value });
       apiRef.current.stopCellEditMode({ id, field });
+      console.log(event.target.value)
+      try{
+        const dataUpdate = new FormData();
+
+        dataUpdate.append('About', employee.about);
+        dataUpdate.append('Birthday', employee.birthday);
+        dataUpdate.append('Contact', employee.contact);
+        dataUpdate.append('Firstname', employee.firstname);
+        dataUpdate.append('Lastname', employee.lastname);
+        dataUpdate.append('Middlename', employee.middlename);
+        dataUpdate.append('Position', employee.position);
+        dataUpdate.append('Sex', employee.sex);
+        dataUpdate.append('Status', event.target.value);
+        dataUpdate.append('Twitter', employee.twitterprofile);
+        dataUpdate.append('LinkedIn', employee.linkedinprofile);
+        dataUpdate.append('Facebook', employee.facebookprofile);
+        dataUpdate.append('Instagram', employee.instagramprofile);
+        dataUpdate.append('Email', employee.email);
+        dataUpdate.append('Action', 'Update');
+        dataUpdate.append('EditorPosition', user.position);
+        dataUpdate.append('EditorEmail', user.email);
+        dataUpdate.append('Category', 'Employee');
+        const sendRequest = await fetch("https://my-aisat-portal.herokuapp.com/employee/backend/employee-update.php",{
+          method: "POST",
+          body: dataUpdate,
+      });
+      
+      const getResponse = await sendRequest.json();
+      console.log(getResponse.statusCode);
+      if(getResponse.statusCode !== 201){
+        // dispatch(PUT_EMPLOYEE(getResponse.statusCode));
+        // setOpen(true);
+        // setStatus("success");
+        // setMessage("Updated Successfully")
+        // setisLoading(false);
+       dispatch(PUT_EMPLOYEE(getResponse.statusCode))
+       dispatch(OPENSNACK());
+       dispatch(SUCCESSSNACK());
+       dispatch(SUCCESSMESSAGESNACK());
+      }else{
+        dispatch(OPENSNACK());
+        dispatch(FAILEDSNACK());
+        dispatch(FAILEDMESSAGESNACK());
+        // setisLoading(false);
+        // setOpen(true);
+        // setStatus("error");
+        // console.log(getResponse.statusCode)
+        // setMessage('Error see console log for error');
+        // setisLoading(false);
+      }
+      }catch(e){
+
+      }
     };
   
     return (
@@ -164,7 +306,7 @@ function EditPosition(props) {
     {
       field: 'email',
       headerName: 'Email',
-      width: 220,
+      width: 259,
       editable: false,
       },
       {
@@ -172,13 +314,6 @@ function EditPosition(props) {
         headerName: 'Position',
         renderEditCell: renderEditPosition,
         width: 170,
-        editable: true,
-      },
-      {
-        field: 'birthday',
-        headerName: 'Birth Date',
-        width: 170,
-        type: 'date',
         editable: true,
       },
       {
@@ -214,6 +349,19 @@ const dispatch = useDispatch();
     const [rows, setRows] = useState([]);
     const [loading, isLoading] = useState(false);
   
+    //Open snackbar
+    const open = useSelector(state => state.openSnackEmp.value);
+
+    //Open snackbar
+    const statusSnack = useSelector(state => state.snackStatusEmp.value);
+
+    //Snackbar Message
+    const messageSnack = useSelector(state => state.snackMessageEmp.value);
+
+    //Handeclose snackbar
+  const handleClose = () =>{
+    dispatch(CLOSESNACK());
+  }
   // Get all users api
   useEffect( () => {
     const getAllEmployee = async () =>{
@@ -249,6 +397,12 @@ const dispatch = useDispatch();
       dispatch(PUT_EMPLOYEE(selectedRowData[0]))
     }}
     /> 
+
+    <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+             <Alert onClose={handleClose} severity= {statusSnack} sx={{ width: '100%' }}>
+                {messageSnack}
+             </Alert>
+       </Snackbar>
     </>
   );
 }

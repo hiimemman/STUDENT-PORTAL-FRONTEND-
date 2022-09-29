@@ -15,6 +15,8 @@ import Badge from '@mui/material/Badge';
 import MailIcon from '@mui/icons-material/Mail';
 import Avatar from "@mui/material/Avatar";
 import { EmployeeView } from '../viewprofile/EmployeeView';
+import { EmployeeHistory } from '../viewhistory/EmployeeHistory';
+import { ParticlesBackground } from '../component/ParticlesBackground';
 
 export  function Employees() {
 //Selected Employee
@@ -57,7 +59,9 @@ const handleClose = (event, reason) => {
 
   
   return (
-    <>{user !== null ?  (
+    <>
+    <ParticlesBackground/>
+    {user !== null ?  (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
        <DrawerAppBar />
@@ -95,7 +99,9 @@ const handleClose = (event, reason) => {
             <TabPanel value="2" sx ={{marginLeft:'-24px'}}>
           <EmployeeView /> 
             </TabPanel>
-            <TabPanel value="3" sx ={{marginLeft:'-24px'}}>3</TabPanel>
+            <TabPanel value="3" sx ={{marginLeft:'-24px'}}>
+              <EmployeeHistory />
+            </TabPanel>
           </TabContext>
        </div>
        <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>

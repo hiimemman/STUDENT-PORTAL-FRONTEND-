@@ -21,6 +21,7 @@ import Divider from '@mui/material/Divider';
 import LinearProgress from '@mui/material/LinearProgress';
 import validator from 'validator'
 import { PaperLine } from './PaperLine';
+import { ParticlesBackground } from './ParticlesBackground';
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -114,16 +115,19 @@ const dispatch = useDispatch();
   }
 
     return(
+      <>
+     
         <ThemeProvider theme={theme}>
+        <CssBaseline />
         <Container component="main" maxWidth="xs">
-         
-          <CssBaseline />
+        
          
           <div className='grid h-screen place-items-center'>
-          <Paper  elevation={1}
-  style={{
-    borderRadius: 10,
-  }} >        
+          
+          <Paper 
+  sx={{
+    borderRadius: 1,
+  }}>        
   {/* <PaperLine/> */}
   {isLoading === true ? (<LinearProgress className ="rounded-t-xl p-1" />) : ("")}
           <Box
@@ -220,5 +224,6 @@ const dispatch = useDispatch();
             </Snackbar>
         </Container>
       </ThemeProvider>  
-    )
+    </>
+    );
 }

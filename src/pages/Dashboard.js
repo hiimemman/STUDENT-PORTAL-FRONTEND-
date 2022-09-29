@@ -6,6 +6,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { DrawerAppBar } from '../component/DrawerAppBar';
 import { CssBaseline } from '@mui/material';
+import { ParticlesBackground } from '../component/ParticlesBackground';
 // import myLogo from './aisat-logo.svg'
 export function Dashboard(){
   //UseNavigate
@@ -21,6 +22,7 @@ useEffect(() =>{
  },[])
     return(
       <>
+      <ParticlesBackground/>
       {user !== null ?  (
         <Box sx={{ display: 'flex' }}>
         <CssBaseline />
