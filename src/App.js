@@ -8,6 +8,7 @@ import { SignIn } from './pages/SignIn';
 import { Dashboard } from './pages/Dashboard';
 import { Employees } from './pages/Employees';
 import { Homepage } from './homepage/Homepage';
+import { ParticlesBackground } from './component/ParticlesBackground';
 
 
 
@@ -52,18 +53,22 @@ const lightTheme = createTheme({
 
  
 return (
+
   <StyledEngineProvider injectFirst>
         <ThemeProvider theme={currentTheme}> 
+        
     <Router>
       <Routes>
-        <Route path ="/" element ={<Homepage />} />
-        <Route path = "/loginemployee" element ={<SignIn />}/>
-        <Route path = "/employee/dashboard" element ={<Dashboard />} />
-        <Route path = "/employee/employees" element ={<Employees/>} />
+        <Route path ="/" element ={<><ParticlesBackground /><Homepage /></>} />
+        <Route path = "/loginemployee" element ={<><ParticlesBackground /><SignIn /></>}/>
+        <Route path = "/employee/dashboard" element ={<><ParticlesBackground /><Dashboard /></>} />
+        <Route path = "/employee/employees" element ={<><ParticlesBackground /><Employees/></>} /> 
       </Routes>
     </Router>
+    
     </ThemeProvider>
       </StyledEngineProvider>
+    
   );
 }
 

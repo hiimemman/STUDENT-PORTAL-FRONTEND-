@@ -22,7 +22,6 @@ useEffect(() =>{
  },[])
     return(
       <>
-      <ParticlesBackground/>
       {user !== null ?  (
         <Box sx={{ display: 'flex' }}>
         <CssBaseline />

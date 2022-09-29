@@ -53,6 +53,7 @@ const dispatch = useDispatch();
     event.preventDefault();
     if(emailValid === true){
       const data = new FormData(event.currentTarget);
+      
       try{
         setisLoading(true);
         //online api

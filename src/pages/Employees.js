@@ -60,7 +60,9 @@ const handleClose = (event, reason) => {
   
   return (
     <>
-    <ParticlesBackground/>
+  
+    
+   
     {user !== null ?  (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
@@ -78,6 +80,7 @@ const handleClose = (event, reason) => {
    <div style={{ paddingTop: '57%' }} />
  </Skeleton>
 } >
+  
        <div className="flex flex-col justify-evenly" style={{width:'100%'}}>
              <h2 className ='font-nunito font-bold'>Employees</h2>
           

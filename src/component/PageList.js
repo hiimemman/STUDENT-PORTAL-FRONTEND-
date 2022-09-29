@@ -36,7 +36,8 @@ const currentPage = useSelector(state => (state.selectedPage.value));
  const dispatch = useDispatch();
 
   const handleDrawerOpen = () => {  
-      dispatch(OPEN())
+    //Disabled hover open
+      // dispatch(OPEN())
   };
 
   const handleDrawerClose = () => {

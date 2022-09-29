@@ -16,6 +16,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import validator from 'validator'
 import { EventBusyTwoTone } from '@mui/icons-material';
+import { DatePicker } from '@mui/x-date-pickers';
 
 export function AddEmployee(){
   const [scroll, setScroll] = useState('paper');
@@ -27,7 +28,7 @@ const  formOpenType = useSelector(state => state.addForm.value);
   const [position, setPosition] = useState('');
   
   //calendar default value
-  const [birthDay, setbirthDay] = useState('');
+  const [birthDay, setbirthDay] = useState(null);
 
   //Validators
   const [validFname, setValidFname] = useState('');
@@ -133,7 +134,10 @@ const  formOpenType = useSelector(state => state.addForm.value);
  
    const handleSubmitForm = (event) =>{
   event.preventDefault();
-    console.log('sad')
+  const data = new FormData(event.currentTarget);
+  for (var pair of data.entries()) {
+    console.log(pair[0]+ ' - ' + pair[1]); 
+}
    }
  
   return(
@@ -176,7 +180,6 @@ const  formOpenType = useSelector(state => state.addForm.value);
           labelId="demo-simple-select-label"
           id="demo-simple-select"
           name = "Position"
-          value={position}
           label="Position"
           onChange={handleChange}
         >
@@ -192,7 +195,7 @@ const  formOpenType = useSelector(state => state.addForm.value);
         <Grid2 container spacing={3} sx ={{marginLeft:'-10px', marginTop: '10px'}}>
         <Grid2 item xs={6}>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DesktopDatePicker
+          <DatePicker
           required
           label="Birthday*"
           inputFormat="MM/DD/YYYY"
