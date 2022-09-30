@@ -27,6 +27,9 @@ export function AddEmployee(){
   const [scroll, setScroll] = useState('paper');
   //Open add form
 const  formOpenType = useSelector(state => state.addForm.value);
+
+//Current User Session
+const user = useSelector(state => JSON.parse(state.user.session));
   //dispatch from redux
   const dispatch = useDispatch();
 
@@ -148,12 +151,16 @@ if(sexChanged === false){
   setValidSex(true);// to show error that sex is not defined
 }
 
-
+//`action`,`category`,`editor_position`,`editor_email`,`edited_email`
   event.preventDefault();
   if(randomPassword !== '' && birthDay !== '' && birthDay !== null && sexChanged === true && validFname === true && validLname === true && validEmail === true && validContact === true && validAddress === true ){
   const data = new FormData(event.currentTarget);
   data.append('Birthday', birthDay);
   data.append('Password', randomPassword);
+  data.append('Action', 'Create');
+  data.append('EditorPosition', user.position);
+  data.append('EditorEmail', user.email);
+  data.append('Category', 'Employee');
   for (var pair of data.entries()) {
     console.log(pair[0]+ ' - ' + pair[1]); 
   }
