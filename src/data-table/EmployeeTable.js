@@ -116,9 +116,9 @@ const user = useSelector(state => JSON.parse(state.user.session));
         // setMessage("Updated Successfully")
         // setisLoading(false);
        dispatch(PUT_EMPLOYEE(getResponse.statusCode))
+       dispatch(SUCCESSMESSAGESNACK('Updated Succesfully'));
        dispatch(OPENSNACK());
        dispatch(SUCCESSSNACK());
-       dispatch(SUCCESSMESSAGESNACK('Updated Succesfully'));
       }else{
         dispatch(OPENSNACK());
         dispatch(FAILEDSNACK());
@@ -225,7 +225,7 @@ const user = useSelector(state => JSON.parse(state.user.session));
        dispatch(PUT_EMPLOYEE(getResponse.statusCode))
        dispatch(OPENSNACK());
        dispatch(SUCCESSSNACK());
-       dispatch(SUCCESSMESSAGESNACK());
+       dispatch(SUCCESSMESSAGESNACK('Updated Succesfully'));
       }else{
         dispatch(OPENSNACK());
         dispatch(FAILEDSNACK());

@@ -166,6 +166,9 @@ const [loginMessage, setMessage ] = useState("Try again");// Default message of 
 //Submit is Loading
 const [isLoadingSubmit, setisLoadingSubmit] = useState(false);
 
+
+//Get selected fileSave action
+const [actionFileSave, setActionFileSave] = useState('');
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -289,6 +292,7 @@ const [isLoadingSubmit, setisLoadingSubmit] = useState(false);
       setfileSave(JSON.parse(selectedRowData[0]['before_edit']));// convert object into array
       // setOpenDragger((old) => !old)
       setOpenDragger(true)
+      setActionFileSave(selectedRowData[0]['action']);
 }}
     /> 
     {openDragger && (
@@ -297,9 +301,10 @@ const [isLoadingSubmit, setisLoadingSubmit] = useState(false);
           maxHeight: 450, overflow: 'auto'}} className ="rounded-xl">
            <Grid2 container  justifyContent="end">
            {/* <Button variant="text" startIcon = {<RestoreIcon />} onClick = {restoreFile}> Restore</Button> */}
-           <IconButton placeholder ={'Close'}aria-label="delete" size="small" onClick={handleOpenDialog}>
-               <RestoreIcon />
-              </IconButton>
+           {actionFileSave !== 'Create' ? (<IconButton placeholder ={'Close'}aria-label="delete" size="small" onClick={handleOpenDialog}>
+            {console.log("action = " +fileSave.action)}
+            <RestoreIcon />
+            </IconButton>) : (<></>)}
               <IconButton placeholder ={'Close'}aria-label="delete" size="small" onClick={() => setOpenDragger(false)}>
                <CloseIcon />
               </IconButton>
