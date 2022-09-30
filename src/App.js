@@ -59,7 +59,7 @@ return (
         
     <Router>
       <Routes>
-        <Route path ="/" element ={<><ParticlesBackground /><Homepage /></>} />
+        <Route path ="/" element ={<><Homepage /></>} />
         <Route path = "/loginemployee" element ={<><ParticlesBackground /><SignIn /></>}/>
         <Route path = "/employee/dashboard" element ={<><ParticlesBackground /><Dashboard /></>} />
         <Route path = "/employee/employees" element ={<><ParticlesBackground /><Employees/></>} /> 

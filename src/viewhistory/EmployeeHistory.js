@@ -26,16 +26,8 @@ import { useTheme } from '@mui/material/styles';
 //Toolbar
 function CustomToolbar() {
 
-  //dispatch from redux
-const dispatch = useDispatch();
 
- //Current session user
- const formState = useSelector(state => (state.isOpenForm.value));
  //Open Popper
-const openPopper = () =>{
-  dispatch(EMPLOYEE());
-  dispatch(OPEN());
-} 
 
 
   return (<>
@@ -217,7 +209,7 @@ const [isLoadingSubmit, setisLoadingSubmit] = useState(false);
         }
     }
     getData();
-    }, [setRow]);
+    }, [setRow,submitRestore]);
 
  
     useEffect(() =>{

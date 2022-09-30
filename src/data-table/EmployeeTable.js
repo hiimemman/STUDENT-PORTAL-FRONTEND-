@@ -12,12 +12,13 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { AddEmployee } from '../forms/AddEmployee';
 import { useSelector, useDispatch } from 'react-redux';
 import {OPEN, CLOSE} from '../slice/FormSlice/FormSlice'
-import {EMPLOYEE, DEFAULT} from '../slice/FormType/FormType'
+import {EMPLOYEE, DEFAULT, formType} from '../slice/FormType/FormType'
 import { ADDEMPLOYEE } from '../slice/AddFormSlice/AddEmployeeSlice/AddEmployeeSlice';
 import {PUT_EMPLOYEE} from '../slice/FormSelectedRow/EmployeeSelected'
 import {OPENSNACK, CLOSESNACK} from '../slice/Snackbars/EmployeeTableOpen/EmployeeTableOpen';
 import {SUCCESSSNACK, FAILEDSNACK} from '../slice/Snackbars/EmployeeTableStatus/EmployeeTableStatus'
 import {SUCCESSMESSAGESNACK, FAILEDMESSAGESNACK} from '../slice/Snackbars/EmployeeTableMessage/EmployeeTableMessage'
+
 //Toolbar
 function CustomToolbar() {
 
@@ -117,7 +118,7 @@ const user = useSelector(state => JSON.parse(state.user.session));
        dispatch(PUT_EMPLOYEE(getResponse.statusCode))
        dispatch(OPENSNACK());
        dispatch(SUCCESSSNACK());
-       dispatch(SUCCESSMESSAGESNACK());
+       dispatch(SUCCESSMESSAGESNACK('Updated Succesfully'));
       }else{
         dispatch(OPENSNACK());
         dispatch(FAILEDSNACK());
@@ -357,6 +358,8 @@ const dispatch = useDispatch();
 
     //Snackbar Message
     const messageSnack = useSelector(state => state.snackMessageEmp.value);
+    //Open add form
+const  formOpenType = useSelector(state => state.addForm.value);
 
     //Handeclose snackbar
   const handleClose = () =>{
@@ -364,6 +367,7 @@ const dispatch = useDispatch();
   }
   // Get all users api
   useEffect( () => {
+    
     const getAllEmployee = async () =>{
       try{ 
         isLoading(true)
@@ -374,7 +378,6 @@ const dispatch = useDispatch();
           if(getResponse.statusCode === 201){
           
           }else{
-         
             //if succesfully retrieve data
             isLoading(false)
             setRows(getResponse);
@@ -384,7 +387,7 @@ const dispatch = useDispatch();
       }
     }
     getAllEmployee();
-  }, [setRows]);
+  }, [setRows,formOpenType]);
  
   return(
     <>

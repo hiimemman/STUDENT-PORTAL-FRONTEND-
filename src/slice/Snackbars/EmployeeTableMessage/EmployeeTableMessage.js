@@ -8,8 +8,8 @@ const initialState = {
      name:'messageEmployeeTable',
      initialState,
      reducers:{
-         SUCCESSMESSAGESNACK: (state) =>{
-        state.value = 'Updated Successfully'
+         SUCCESSMESSAGESNACK: (state, action) =>{
+        state.value = action.payload
          },
          FAILEDMESSAGESNACK: (state) =>{
            state.value = 'There was an error on your request'

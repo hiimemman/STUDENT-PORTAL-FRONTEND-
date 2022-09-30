@@ -8,7 +8,6 @@ export function  Homepage(){
 const navigate = useNavigate();
     return(
         <>
-        <ParticlesBackground />
         <Button variant="text" onClick ={() => navigate('/loginemployee')}>Text</Button>
         </>
     )

@@ -17,6 +17,11 @@ import dayjs from 'dayjs';
 import validator from 'validator'
 import { EventBusyTwoTone } from '@mui/icons-material';
 import { DatePicker } from '@mui/x-date-pickers';
+import {OPENSNACK, CLOSESNACK} from '../slice/Snackbars/EmployeeTableOpen/EmployeeTableOpen';
+import {SUCCESSSNACK, FAILEDSNACK} from '../slice/Snackbars/EmployeeTableStatus/EmployeeTableStatus'
+import {SUCCESSMESSAGESNACK, FAILEDMESSAGESNACK} from '../slice/Snackbars/EmployeeTableMessage/EmployeeTableMessage'
+
+
 
 export function AddEmployee(){
   const [scroll, setScroll] = useState('paper');
@@ -34,12 +39,13 @@ const  formOpenType = useSelector(state => state.addForm.value);
   const [validFname, setValidFname] = useState('');
   const [validLname, setValidLname] = useState('');
   const [validEmail, setValidEmail] = useState('');;
-  const [validBday, setValidBday] = useState('');
-  const [validSex, setValidSex] = useState('');
+  const [validSex, setValidSex] = useState(false);
   const [validContact, setValidContact] = useState('');
   const [validAddress, setValidAddress] = useState('');
   const [emailHelperText, setEmailHelperText] = useState('');
-  const [errorSex, seterrorSex] = useState(false);
+
+  
+  const [sexChanged, setSexChanged] = useState(false);
 
   const handleChangeFname = (event) =>{
     if((event.target.value).toString().length <= 0){
@@ -85,11 +91,11 @@ const  formOpenType = useSelector(state => state.addForm.value);
   }
 
   const handleChangeBday = (event) =>{
-    setbirthDay(event)
+    setbirthDay(event);
   }
   
   const handleChangeSex = (event) =>{
-
+    setSexChanged(true);
   }
 
   const handleChangeContact = (event) =>{
@@ -110,9 +116,6 @@ const  formOpenType = useSelector(state => state.addForm.value);
     }
   }
 
-
-
-
   const handleChange = (event) => {
     setPosition(event.target.value);
   };
@@ -120,6 +123,7 @@ const  formOpenType = useSelector(state => state.addForm.value);
   
   const handleClose = () => {
     dispatch(CLOSEFORM());
+    // re-renders the component
    };
  
    const descriptionElementRef = useRef(null);
@@ -132,13 +136,53 @@ const  formOpenType = useSelector(state => state.addForm.value);
      }
    }, [formOpenType]);
  
-   const handleSubmitForm = (event) =>{
+const handleSubmitForm = async (event) =>{
+  const randomPassword =
+  Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2);
+  //birthday doesnt define then make it show error
+if(birthDay ===null){
+  setbirthDay('');// to show that birthday is not defined
+}
+console.log("sexchange" + sexChanged)
+if(sexChanged === false){
+  setValidSex(true);// to show error that sex is not defined
+}
+
+
   event.preventDefault();
+  if(randomPassword !== '' && birthDay !== '' && birthDay !== null && sexChanged === true && validFname === true && validLname === true && validEmail === true && validContact === true && validAddress === true ){
   const data = new FormData(event.currentTarget);
+  data.append('Birthday', birthDay);
+  data.append('Password', randomPassword);
   for (var pair of data.entries()) {
     console.log(pair[0]+ ' - ' + pair[1]); 
+  }
+
+  try{
+    const sendRequest = await fetch("https://my-aisat-portal.herokuapp.com/admin-panel/controller/user-create-account.php",{
+              method: "POST",
+              body: data,
+          });
+
+          const getResponse = await sendRequest.json();
+          console.log(getResponse.statusCode);
+          if(getResponse.statusCode === 200){
+            dispatch(CLOSEFORM());
+            dispatch(OPENSNACK());
+            dispatch(SUCCESSSNACK());
+            dispatch(SUCCESSMESSAGESNACK('Created Succesfully'));
+          }else{
+            dispatch(OPENSNACK());
+            dispatch(FAILEDSNACK());
+            dispatch(FAILEDMESSAGESNACK());
+          }
+  }catch(e){
+
+  }
+  }else{
+
+  }
 }
-   }
  
   return(
     <>
@@ -197,7 +241,7 @@ const  formOpenType = useSelector(state => state.addForm.value);
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DatePicker
           required
-          label="Birthday*"
+          label ="Date of Birth"
           inputFormat="MM/DD/YYYY"
           value={birthDay}
           onChange={handleChangeBday}
@@ -208,7 +252,8 @@ const  formOpenType = useSelector(state => state.addForm.value);
            
               
           <Grid2 item xs={5}> 
-          <FormControl error={errorSex}>
+          {console.log("error"+validSex)}
+          <FormControl error={validSex}>
   <FormLabel id="demo-controlled-radio-buttons-group">Gender</FormLabel>
            <RadioGroup
            row
@@ -216,7 +261,7 @@ const  formOpenType = useSelector(state => state.addForm.value);
            name="Sex"
            id="Sex"
            required
-           handleChange = {handleChangeSex}
+           onChange = {handleChangeSex}
               >
            <FormControlLabel value="Female" control={<Radio />} label="Female" />
           <FormControlLabel value="Male" control={<Radio />}  label="Male"  />
