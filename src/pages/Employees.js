@@ -67,14 +67,6 @@ const handleClose = (event, reason) => {
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
        <DrawerAppBar />
-       {/* <Paper elevation={2}
-  style={{
-    width: '100%',
-    padding: 0,
-    marginTop: 70,
-    marginRight: 20,
-    borderRadius: 10,
-  }}> */}
 <Suspense fallback = {
    <Skeleton variant="rectangular" width="100%">
    <div style={{ paddingTop: '57%' }} />

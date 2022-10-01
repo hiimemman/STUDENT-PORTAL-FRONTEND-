@@ -19,6 +19,7 @@ import validator from 'validator'
 import SaveIcon from '@mui/icons-material/Save';
 import { LoadingButton } from '@mui/lab';
 import {PUT_EMPLOYEE} from '../slice/FormSelectedRow/EmployeeSelected'
+import { basedUrl } from '../base-url/based-url';
 
 export function EmployeeView(){
 
@@ -169,7 +170,7 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
       try{
         setisLoading(true);
         //online api
-          const sendRequest = await fetch("https://my-aisat-portal.herokuapp.com/employee/backend/employee-update.php",{
+          const sendRequest = await fetch(basedUrl+"/employee-update.php",{
               method: "POST",
               body: data,
           });

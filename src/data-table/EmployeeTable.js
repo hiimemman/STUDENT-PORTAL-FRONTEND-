@@ -18,6 +18,7 @@ import {PUT_EMPLOYEE} from '../slice/FormSelectedRow/EmployeeSelected'
 import {OPENSNACK, CLOSESNACK} from '../slice/Snackbars/EmployeeTableOpen/EmployeeTableOpen';
 import {SUCCESSSNACK, FAILEDSNACK} from '../slice/Snackbars/EmployeeTableStatus/EmployeeTableStatus'
 import {SUCCESSMESSAGESNACK, FAILEDMESSAGESNACK} from '../slice/Snackbars/EmployeeTableMessage/EmployeeTableMessage'
+import { basedUrl } from '../base-url/based-url'
 
 //Toolbar
 function CustomToolbar() {
@@ -102,7 +103,7 @@ const user = useSelector(state => JSON.parse(state.user.session));
         dataUpdate.append('EditorPosition', user.position);
         dataUpdate.append('EditorEmail', user.email);
         dataUpdate.append('Category', 'Employee');
-        const sendRequest = await fetch("https://my-aisat-portal.herokuapp.com/employee/backend/employee-update.php",{
+        const sendRequest = await fetch(basedUrl+"/employee-update.php",{
           method: "POST",
           body: dataUpdate,
       });
@@ -141,7 +142,7 @@ const user = useSelector(state => JSON.parse(state.user.session));
         value={value}
         onChange={handleChange}
         size="small"
-        sx={{ height: 1 , width: 170}}
+        sx={{ height: 1 , width: 150}}
         native
         autoFocus
       >
@@ -209,7 +210,7 @@ const user = useSelector(state => JSON.parse(state.user.session));
         dataUpdate.append('EditorPosition', user.position);
         dataUpdate.append('EditorEmail', user.email);
         dataUpdate.append('Category', 'Employee');
-        const sendRequest = await fetch("https://my-aisat-portal.herokuapp.com/employee/backend/employee-update.php",{
+        const sendRequest = await fetch(basedUrl+"/employee-update.php",{
           method: "POST",
           body: dataUpdate,
       });
@@ -314,7 +315,7 @@ const user = useSelector(state => JSON.parse(state.user.session));
         field: 'position',
         headerName: 'Position',
         renderEditCell: renderEditPosition,
-        width: 170,
+        width: 150,
         editable: true,
       },
       {
@@ -372,7 +373,7 @@ const  formOpenType = useSelector(state => state.addForm.value);
       try{ 
         isLoading(true)
         //online api
-          const sendRequest = await fetch("https://my-aisat-portal.herokuapp.com/employee/backend/employee-table.php");
+          const sendRequest = await fetch(basedUrl+"/employee-table.php");
           const getResponse = await sendRequest.json();
           isLoading(false)
           if(getResponse.statusCode === 201){

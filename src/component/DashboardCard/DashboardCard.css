@@ -1,0 +1,19 @@
+.container {
+    width: auto;
+    height: 100px;
+    transform-style: flat;
+  }
+  
+  .container > div {
+    position: absolute;
+    width: auto;
+    height: 100px;
+    background: grey;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    will-change: transform;
+    cursor: pointer;
+  }
+  

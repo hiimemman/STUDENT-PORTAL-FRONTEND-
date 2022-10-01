@@ -22,6 +22,7 @@ import Grid2 from '@mui/material/Unstable_Grid2'; // Grid2 version 2
 import RestoreIcon from '@mui/icons-material/Restore';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
+import {basedUrl} from '../base-url/based-url'
 
 //Toolbar
 function CustomToolbar() {
@@ -201,7 +202,7 @@ const [actionFileSave, setActionFileSave] = useState('');
     useEffect(() =>{
     const getData = async () =>{
       isLoading(true)
-        const sendRequest = await fetch("https://my-aisat-portal.herokuapp.com/employee/backend/employee-history.php");
+        const sendRequest = await fetch(basedUrl+"/employee-history.php");
         const getResponse = await sendRequest.json();
 
         if(getResponse === 201){
@@ -242,7 +243,7 @@ const [actionFileSave, setActionFileSave] = useState('');
         dataRestore.append('EditorPosition', user.position);
         dataRestore.append('EditorEmail', user.email);
         dataRestore.append('Category', 'Employee');
-        const sendRequest = await fetch("https://my-aisat-portal.herokuapp.com/employee/backend/employee-update.php",{
+        const sendRequest = await fetch(basedUrl+"/employee-update.php",{
           method: "POST",
           body: dataRestore,
       });

@@ -17,6 +17,7 @@ import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import { useSelector, useDispatch } from 'react-redux';
 import { DARK, LIGHT } from '../slice/ThemeMode/ThemeMode';
+import Grid2 from '@mui/material/Unstable_Grid2/Grid2';
 
 
 const drawerWidth = 240;
@@ -98,6 +99,9 @@ export function DrawerAppBar() {
 
     //check current theme
     const selectedTheme = useSelector(state =>(state.selectedTheme.value))
+
+    //page current state
+const currentPage = useSelector(state => (state.selectedPage.value));
  
   const handleDrawerOpen = () => {
     dispatch(OPEN())
@@ -134,13 +138,19 @@ const changeTheme = () =>{
           <MenuIcon />
         </IconButton>
         <Typography variant="h6"  className ='font-nunito'sx={{ flexGrow: 1 }}component="div">
-          
+          {/* LOGO HERE */}
         </Typography>
+          <Grid container justifyContent="flex-end" display ='flex'>
+          <Typography variant = "h5" className ='font-nunito'>
+            {currentPage.charAt(0).toUpperCase() + currentPage.slice(1)}
+          </Typography>
+          </Grid>
+
         {/* profile */}
         <Grid container justifyContent ="flex-end">
           <div className='mx-6'> 
              <IconButton sx={{ ml: 1 }}  color="inherit" onClick={changeTheme}>
-              {selectedTheme === 'darkTheme' ? <Brightness7Icon /> : <Brightness4Icon />}
+              {selectedTheme !== 'darkTheme' ? (<Brightness4Icon />) : (<Brightness7Icon />)}
              </IconButton>
           </div> 
        <ProfileBox  onMouseEnter={handleDrawerOpen}/>
