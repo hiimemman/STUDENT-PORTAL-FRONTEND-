@@ -14,7 +14,7 @@ function Stack({ image, background, open,title }) {
     const cards = useSprings(5, [0, 1, 2, 3, 4].map(i => ({ opacity: 0.2 + i / 5, z: open ? (i / 5) * 80 : 0 })))
     return (
       <div class="container" >
-         <p style ={{zIndex:1,}}className= "font-bold text-xl text-slate-100  hover:text-sky-400 absolute top-0 left-2" >
+         <p style ={{zIndex:1,}}className= "font-bold text- text-slate-100  hover:text-sky-400 absolute top-0 left-2" >
           {title}
         </p>
         {cards.map(({ z, opacity }, index) => (

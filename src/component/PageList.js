@@ -15,7 +15,9 @@ import GroupsIcon from '@mui/icons-material/Groups';
 import AnnouncementIcon from '@mui/icons-material/Announcement';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import HandymanIcon from '@mui/icons-material/Handyman';
-import {DASHBOARD, EMPLOYEE} from '../slice/PageSlice/PageSlice';
+import {DASHBOARD, EMPLOYEE,STUDENT, SUBJECT} from '../slice/PageSlice/PageSlice';
+import SubjectIcon from '@mui/icons-material/Subject';
+import SchoolIcon from '@mui/icons-material/School';
 import { useEffect } from 'react';
 
 export function PageList(){
@@ -51,6 +53,12 @@ if(currentPage === 'dashboard'){
 if(currentPage === 'employee'){
   navigate('/employee/employees')
 }
+if(currentPage === 'student'){
+  navigate('/employee/student')
+}
+if(currentPage === 'subject'){
+  navigate('/employee/subject')
+}
 }, [currentPage]);
 
 return(
@@ -84,7 +92,7 @@ return(
     </ListItem>
 </Tooltip>
 
-    <Tooltip title="Student list" placement="right-start">
+    <Tooltip title="Employee list" placement="right-start">
     <ListItem  disablePadding sx={{ display: 'block'}} className="transition ease-in-out delay-2 hover:bg-slate-300  duration-300">
   
       <ListItemButton onClick ={ ()=>dispatch(EMPLOYEE())} selected={currentPage === 'employee'}   onMouseEnter = {handleDrawerOpen} onMouseLeave ={handleDrawerClose}
@@ -104,15 +112,16 @@ return(
         >
         <PeopleAltIcon />
         </ListItemIcon>
-        { isOpen ?  <Typography className ='font-nunito text-lg' >Employees</Typography> : <p></p> }  
+        { isOpen ?  <Typography className ='font-nunito text-lg' >Employee(s)</Typography> : <p></p> }  
       </ListItemButton>
     
     </ListItem>
   </Tooltip>
+
   <Tooltip title="Student list" placement="right-start">
     <ListItem  disablePadding sx={{ display: 'block'}} className="transition ease-in-out delay-2 hover:bg-slate-300  duration-300">
   
-      <ListItemButton onClick ={()=>navigate('/employee/employees')}  onMouseEnter = {handleDrawerOpen} onMouseLeave ={handleDrawerClose}
+      <ListItemButton onClick ={ ()=>dispatch(STUDENT())} selected={currentPage === 'student'}   onMouseEnter = {handleDrawerOpen} onMouseLeave ={handleDrawerClose}
         sx={{
           minHeight: 48,
           justifyContent: isOpen ? 'initial' : 'center',
@@ -127,13 +136,40 @@ return(
             justifyContent: 'center',
           }}
         >
-        <Person3Icon />
+        <SchoolIcon />
         </ListItemIcon>
-        { isOpen ?  <Typography className ='font-nunito text-lg' >Students</Typography> : <p></p> }  
+        { isOpen ?  <Typography className ='font-nunito text-lg' >Student(s)</Typography> : <p></p> }  
       </ListItemButton>
     
     </ListItem>
   </Tooltip>
+
+  <Tooltip title="Subject(s)" placement="right-start">
+    <ListItem  disablePadding sx={{ display: 'block'}} className="transition ease-in-out delay-2 hover:bg-slate-300  duration-300">
+  
+      <ListItemButton onClick ={ ()=>dispatch(SUBJECT())} selected={currentPage === 'subject'}   onMouseEnter = {handleDrawerOpen} onMouseLeave ={handleDrawerClose}
+        sx={{
+          minHeight: 48,
+          justifyContent: isOpen ? 'initial' : 'center',
+          px: 2.5,
+        }}
+      >
+        
+        <ListItemIcon
+          sx={{
+            minWidth: 0,
+            mr: isOpen ? 3 : 'auto',
+            justifyContent: 'center',
+          }}
+        >
+        <SubjectIcon />
+        </ListItemIcon>
+        { isOpen ?  <Typography className ='font-nunito text-lg' >Subject</Typography> : <p></p> }  
+      </ListItemButton>
+    
+    </ListItem>
+  </Tooltip>
+
   <Tooltip title="Student list" placement="right-start">
     <ListItem  disablePadding sx={{ display: 'block'}} className="transition ease-in-out delay-2 hover:bg-slate-300  duration-300">
   

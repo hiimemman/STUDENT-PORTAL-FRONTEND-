@@ -40,10 +40,10 @@ useEffect(() =>{
              <Grid2 container spacing={2}>
                 <Grid2 xs={3}>
                   <DashboardCard image ={"https://uploads.codesandbox.io/uploads/user/b3e56831-8b98-4fee-b941-0e27f39883ab/9qWx-1.png"} title ={'EMPLOYEE ACCOUNT(S)'} content ={'5'} />
-               </Grid2>
-               <Grid2 xs={3}>
+                </Grid2>
+                <Grid2 xs={3}>
                   <DashboardCard image ={"https://uploads.codesandbox.io/uploads/user/b3e56831-8b98-4fee-b941-0e27f39883ab/9qWx-1.png"} title ={'STUDENT ACCOUNT(S)'} content ={'5'} />
-               </Grid2>
+                </Grid2>
              </Grid2>
              
 </div> 
