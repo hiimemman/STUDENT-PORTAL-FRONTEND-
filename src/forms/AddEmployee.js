@@ -146,7 +146,6 @@ const handleSubmitForm = async (event) =>{
 if(birthDay ===null){
   setbirthDay('');// to show that birthday is not defined
 }
-console.log("sexchange" + sexChanged)
 if(sexChanged === false){
   setValidSex(true);// to show error that sex is not defined
 }
@@ -161,9 +160,7 @@ if(sexChanged === false){
   data.append('EditorPosition', user.position);
   data.append('EditorEmail', user.email);
   data.append('Category', 'Employee');
-  for (var pair of data.entries()) {
-    console.log(pair[0]+ ' - ' + pair[1]); 
-  }
+  
 
   try{
     const sendRequest = await fetch("https://my-aisat-portal.herokuapp.com/admin-panel/controller/user-create-account.php",{
@@ -172,7 +169,7 @@ if(sexChanged === false){
           });
 
           const getResponse = await sendRequest.json();
-          console.log(getResponse.statusCode);
+         
           if(getResponse.statusCode === 200){
             dispatch(CLOSEFORM());
             dispatch(OPENSNACK());
@@ -259,7 +256,7 @@ if(sexChanged === false){
            
               
           <Grid2 item xs={5}> 
-          {console.log("error"+validSex)}
+         
           <FormControl error={validSex}>
   <FormLabel id="demo-controlled-radio-buttons-group">Gender</FormLabel>
            <RadioGroup

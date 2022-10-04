@@ -58,7 +58,7 @@ console.log(formOpenType);
       <GridToolbarDensitySelector />
       <GridToolbarExport />
     </GridToolbarContainer>
-    <AddEmployee  open ={formOpenType === 'employee'}/> 
+    <AddEmployee  open ={formOpenType === 'subject'}/> 
   </>
   );
 }

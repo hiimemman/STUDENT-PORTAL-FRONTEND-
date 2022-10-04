@@ -23,6 +23,6 @@ const initialState = {
  
  
  // Action creators are generated for each case reducer function
- export const { OPEN, CLOSE } = formState.actions
+ export const { OPEN, CLOSE,ADDEMPLOYEE } = formState.actions
  
  export default formState.reducer

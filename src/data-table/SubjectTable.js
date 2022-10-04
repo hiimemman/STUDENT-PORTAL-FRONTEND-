@@ -5,8 +5,8 @@ import PropTypes from 'prop-types';
 import Avatar from "@mui/material/Avatar";
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
-import { Alert, Chip, Snackbar } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { Alert, Chip, Dialog, DialogActions, DialogContent, DialogTitle, Snackbar } from '@mui/material';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import Button from '@mui/material/Button';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { AddEmployee } from '../forms/AddEmployee';
@@ -20,6 +20,7 @@ import {OPENSNACK, CLOSESNACK} from '../slice/Snackbars/EmployeeTableOpen/Employ
 import {SUCCESSSNACK, FAILEDSNACK} from '../slice/Snackbars/EmployeeTableStatus/EmployeeTableStatus'
 import {SUCCESSMESSAGESNACK, FAILEDMESSAGESNACK} from '../slice/Snackbars/EmployeeTableMessage/EmployeeTableMessage'
 import { basedUrl } from '../base-url/based-url'
+import { AddSubject } from '../forms/AddSubject';
 
 //Toolbar
 function CustomToolbar() {
@@ -40,16 +41,12 @@ const statusSnack = useSelector(state => state.snackStatusEmp.value);
 const messageSnack = useSelector(state => state.snackMessageEmp.value);
 
 //Open add form
-const  formOpenType = useSelector(state => state.addForm.value);
+const  [openAddSub, setOpenAddSub] = useState(false);
 
  //Open Add form
 const openPopper = () =>{
-  dispatch(ADDEMPLOYEE());
+  setOpenAddSub(true)
 } 
-
-useEffect(()=>{
-
-},[formOpenType]);
 
   return (<>
     <GridToolbarContainer>
@@ -59,266 +56,67 @@ useEffect(()=>{
       <GridToolbarDensitySelector />
       <GridToolbarExport />
     </GridToolbarContainer>
-    <AddEmployee  open ={formOpenType === 'employee'}/> 
+    <AddSubject open = {openAddSub} />
   </>
   );
 }
 
-//Edit Position
-function EditSubjectName(props) {
-  const dispatch = useDispatch();
-  //Selected Subject
-const subject = useSelector(state => state.subjectSelected.value);
 
-//Current User Session
-const user = useSelector(state => JSON.parse(state.user.session));
+const useFakeMutation = () => {
+  return useCallback(
+    (user) =>
+      new Promise((resolve, reject) =>
+        setTimeout(() => {
+          if (user.name?.trim() === '') {
+            reject();
+          } else {
+            resolve(user);
+          }
+        }, 200),
+      ),
+    [],
+  );
+};
 
-
-
-    const { id, value, field } = props;
-    const apiRef = useGridApiContext();
-  
-    const handleChange = async (event) => {
-
-      
-      await apiRef.current.setEditCellValue({ id, field, value: event.target.value });
-      apiRef.current.stopCellEditMode({ id, field });
-      try{
-        const dataUpdate = new FormData();
-
-        dataUpdate.append('ID',subject.id);
-        dataUpdate.append('Subject_Code', subject.subject_code);
-        dataUpdate.append('Subject_Name', event.target.value);
-        dataUpdate.append('Units', subject.units);
-        dataUpdate.append('Amount', subject.amount);
-        dataUpdate.append('Status', subject.status);
-        dataUpdate.append('Action', 'Update');
-        dataUpdate.append('EditorPosition', user.position);
-        dataUpdate.append('EditorEmail', user.email);
-        dataUpdate.append('Category', 'Subject');
-        const sendRequest = await fetch(basedUrl+"/subject-update.php",{
-          method: "POST",
-          body: dataUpdate,
-      });
-      
-      const getResponse = await sendRequest.json();
-  
-      if(getResponse.statusCode !== 201){
-        // dispatch(PUT_EMPLOYEE(getResponse.statusCode));
-        // setOpen(true);
-        // setStatus("success");
-        // setMessage("Updated Successfully")
-        // setisLoading(false);
-       dispatch(PUT_SUBJECT(getResponse.statusCode))
-       dispatch(SUCCESSMESSAGESNACK('Updated Succesfully'));
-       dispatch(OPENSNACK());
-       dispatch(SUCCESSSNACK());
-      }else{
-        dispatch(OPENSNACK());
-        dispatch(FAILEDSNACK());
-        dispatch(FAILEDMESSAGESNACK());
-        // setisLoading(false);
-        // setOpen(true);
-        // setStatus("error");
-        // console.log(getResponse.statusCode)
-        // setMessage('Error see console log for error');
-        // setisLoading(false);
-      }
-      }catch(e){
-
-      }
-     
-    };
-  
-    return (
-      <Select
-        value={value}
-        onChange={handleChange}
-        size="small"
-        sx={{ height: 1 , width: 150}}
-        native
-        autoFocus
-      >
-        <option>Admin</option>
-        <option>Registrar</option>
-      </Select>
-    );
+function computeMutation(newRow, oldRow) {
+  if (newRow.subject_name !== oldRow.subject_name) {
+   
+    return `Subject name from '${oldRow.subject_name}' to '${newRow.subject_name}'`;
   }
-  
-  EditSubjectName.propTypes = {
-    /**
-     * The column field of the cell that triggered the event.
-     */
-    field: PropTypes.string.isRequired,
-    /**
-     * The grid row id.
-     */
-    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-    /**
-     * The cell value.
-     * If the column has `valueGetter`, use `params.row` to directly access the fields.
-     */
-    value: PropTypes.any,
-  };
-  
-  const renderEditSubjectName = (params) => {
-    return <EditSubjectName {...params} />;
-  };
-  // End of SubjectName via cell
-  
-  //Edit status via cell
-  function EditStatus(props) {
-    const { id, value, field } = props;
-    const apiRef = useGridApiContext();
-    const dispatch = useDispatch();
-  //Selected Employee
-const employee = useSelector(state => state.employeeSelected.value);
-
-//Current User Session
-const user = useSelector(state => JSON.parse(state.user.session));
-
-    const handleChange = async (event) => {
-      
-      await apiRef.current.setEditCellValue({ id, field, value: event.target.value });
-      apiRef.current.stopCellEditMode({ id, field });
-  
-      try{
-        const dataUpdate = new FormData();
-
-        dataUpdate.append('About', employee.about);
-        dataUpdate.append('Birthday', employee.birthday);
-        dataUpdate.append('Contact', employee.contact);
-        dataUpdate.append('Firstname', employee.firstname);
-        dataUpdate.append('Lastname', employee.lastname);
-        dataUpdate.append('Middlename', employee.middlename);
-        dataUpdate.append('Position', employee.position);
-        dataUpdate.append('Sex', employee.sex);
-        dataUpdate.append('Status', event.target.value);
-        dataUpdate.append('Twitter', employee.twitterprofile);
-        dataUpdate.append('LinkedIn', employee.linkedinprofile);
-        dataUpdate.append('Facebook', employee.facebookprofile);
-        dataUpdate.append('Instagram', employee.instagramprofile);
-        dataUpdate.append('Email', employee.email);
-        dataUpdate.append('Action', 'Update');
-        dataUpdate.append('EditorPosition', user.position);
-        dataUpdate.append('EditorEmail', user.email);
-        dataUpdate.append('Category', 'Employee');
-        const sendRequest = await fetch(basedUrl+"/employee-update.php",{
-          method: "POST",
-          body: dataUpdate,
-      });
-      
-      const getResponse = await sendRequest.json();
-  
-      if(getResponse.statusCode !== 201){
-        // dispatch(PUT_EMPLOYEE(getResponse.statusCode));
-        // setOpen(true);
-        // setStatus("success");
-        // setMessage("Updated Successfully")
-        // setisLoading(false);
-       dispatch(PUT_EMPLOYEE(getResponse.statusCode))
-       dispatch(OPENSNACK());
-       dispatch(SUCCESSSNACK());
-       dispatch(SUCCESSMESSAGESNACK('Updated Succesfully'));
-      }else{
-        dispatch(OPENSNACK());
-        dispatch(FAILEDSNACK());
-        dispatch(FAILEDMESSAGESNACK());
-        // setisLoading(false);
-        // setOpen(true);
-        // setStatus("error");
-        // console.log(getResponse.statusCode)
-        // setMessage('Error see console log for error');
-        // setisLoading(false);
-      }
-      }catch(e){
-
-      }
-    };
-  
-    return (
-      <>
-        <Select
-        value={value}
-        onChange={handleChange}
-        size="small"
-        sx={{ height: 1 , width: 170}}
-        native
-        autoFocus
-      >
-        <option><CheckIcon/>active</option>
-        <option><CloseIcon />inactive</option>
-      </Select>
-      </>
-    
-    );
+  if (newRow.status !== oldRow.status) {
+   
+    return `Status from '${oldRow.status}' to '${newRow.status}'`;
   }
+  if (newRow.units !== oldRow.units) {
   
-  EditStatus.propTypes = {
-    /**
-     * The column field of the cell that triggered the event.
-     */
-    field: PropTypes.string.isRequired,
-    /**
-     * The grid row id.
-     */
-    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-    /**
-     * The cell value.
-     * If the column has `valueGetter`, use `params.row` to directly access the fields.
-     */
-    value: PropTypes.any,
-  };
+    return `Units from '${oldRow.units || ''}' to '${newRow.units || ''}'`;
+  }
+  if (newRow.amount !== oldRow.amount) {
   
-  const renderEditStatus = (params) => {
-    return <EditStatus {...params} />;
-  };
-  //End of edit status via cell
-  
-  const columns = [
-    {
-      field: 'subject_code',
-      headerName: 'Subject code',
-      width: 150,
-     editable: false,
-    },
-      {
-        field: 'subject_name',
-        headerName: 'Subject name',
-        renderEditCell: renderEditSubjectName,
-        width: 150,
-        editable: true,
-      },
-      {
-        field: 'status',
-        headerName: 'Status',
-        renderEditCell: renderEditStatus,
-        width: 160,
-        editable: true,
-        renderCell: (cellValues) => {
-          return(
-          <>
-        {cellValues.value == "active" ? (<Chip icon={<CheckIcon/>} label="active  " color ="success" size = "small" variant = "outlined"/>) : (<Chip icon={<CloseIcon/>} label="inactive" color ="error" size = "small" variant = "outlined"/>)}
+    return `Amount from '${oldRow.amount || ''}' to '${newRow.amount || ''}'`;
+  }
+  return null;
+}
 
-          </>
-          );//end of return
-        }
-      },
-
-      {
-        field: 'added_at',
-        headerName: 'Date Created',
-        width: 190,
-        type: 'date',
-        editable: false,
-      },
-  ];
-
-export function SubjectTable() {
+export function SubjectTable() {  
     //dispatch from redux
-const dispatch = useDispatch();
+    const dispatch = useDispatch();
     const [rows, setRows] = useState([]);
     const [loading, isLoading] = useState(false);
+
+    const mutateRow = useFakeMutation();
+
+  const noButtonRef = useRef(null);
+
+  const [promiseArguments, setPromiseArguments] = useState(null);
+  const [snackbar, setSnackbar] = useState(null);
+
+  const handleCloseSnackbar = () => setSnackbar(null);
+
+
+  //Selected sub
+  const [selectedSub, setSelectedSub] = useState(null);
+
   
     //Open snackbar
     const open = useSelector(state => state.openSnackEmp.value);
@@ -331,10 +129,10 @@ const dispatch = useDispatch();
     //Open add form
 const  formOpenType = useSelector(state => state.addForm.value);
 
-    //Handeclose snackbar
-  const handleClose = () =>{
-    dispatch(CLOSESNACK());
-  }
+//Current User Session
+const user = useSelector(state => JSON.parse(state.user.session));
+
+   
   // Get all users api
   useEffect( () => {
     
@@ -348,7 +146,6 @@ const  formOpenType = useSelector(state => state.addForm.value);
           if(getResponse.statusCode === 201){
           
           }else{
-            console.log(getResponse);
             //if succesfully retrieve data
             isLoading(false)
             setRows(getResponse);
@@ -360,23 +157,214 @@ const  formOpenType = useSelector(state => state.addForm.value);
     getAllEmployee();
   }, [setRows,formOpenType]);
  
+
+  
+//Edit status via cell
+function EditStatus(props) {
+  const { id, value, field } = props;
+  const apiRef = useGridApiContext();
+  
+  const handleChange = async(event) =>{
+    
+    await apiRef.current.setEditCellValue({ id, field, value: event.target.value });
+      apiRef.current.stopCellEditMode({ id, field });
+  
+}
+
+  return (
+    <>
+      <Select
+      value={value}
+      onChange={handleChange}
+      size="small"
+      sx={{ height: 1 , width: 260}}
+      native
+      autoFocus
+    >
+      <option><CheckIcon/>active</option>
+      <option><CloseIcon />inactive</option>
+    </Select>
+    </>
+  
+  );
+}
+
+EditStatus.propTypes = {
+  /**
+   * The column field of the cell that triggered the event.
+   */
+  field: PropTypes.string.isRequired,
+  /**
+   * The grid row id.
+   */
+  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  /**
+   * The cell value.
+   * If the column has `valueGetter`, use `params.row` to directly access the fields.
+   */
+  value: PropTypes.any,
+};
+
+const renderEditStatus = (params) => {
+  return <EditStatus {...params} />;
+};
+//End of edit status via cell
+
+  
+ 
+  const columns = [
+    {
+      field: 'subject_code',
+      headerName: 'Subject code',
+      width: 250,
+     editable: false,
+    },
+    {
+        field: 'subject_name',
+        headerName: 'Subject name',
+        width: 250,
+        editable: true,
+      },
+      {
+        field: 'units',
+        headerName: 'Units',
+        width: 150,
+        type: 'number',
+        editable: true,
+      },
+      {
+        field: 'amount',
+        headerName: 'Amount',
+        width: 200,
+        type: 'number',
+        editable: true,
+      },
+      {
+        field: 'status',
+        headerName: 'Status',
+        renderEditCell: renderEditStatus,
+        width: 260,
+        editable: true,
+        renderCell: (cellValues) => {
+          return(
+          <>
+        {cellValues.value == "active" ? (<Chip icon={<CheckIcon/>} label="active  " color ="success" size = "small" variant = "outlined"/>) : (<Chip icon={<CloseIcon/>} label="inactive" color ="error" size = "small" variant = "outlined"/>)}
+
+          </>
+          );//end of return
+        }
+      },
+  ];
+
+  const processRowUpdate = useCallback(
+    (newRow, oldRow) =>
+      new Promise((resolve, reject) => {
+        const mutation = computeMutation(newRow, oldRow);
+        if (mutation) {
+          // Save the arguments to resolve or reject the promise later
+          setPromiseArguments({ resolve, reject, newRow, oldRow });
+        } else {
+          resolve(oldRow); // Nothing was changed
+        }
+      }),
+    [],
+  );
+
+
+  const handleNo = () => {
+    const { oldRow, resolve } = promiseArguments;
+    resolve(oldRow); // Resolve with the old row to not update the internal state
+    setPromiseArguments(null);
+  };
+
+  const handleYes = async () => {
+    const { newRow, oldRow, reject, resolve } = promiseArguments;
+
+
+    try {
+      // Make the HTTP request to save in the backend
+      const dataUpdate = new FormData();
+      dataUpdate.append('ID', newRow['id']);
+      dataUpdate.append('Subject_Code', newRow['subject_code']);
+      dataUpdate.append('Subject_Name', newRow['subject_name']);
+      dataUpdate.append('Units', newRow['units']);
+      dataUpdate.append('Amount', newRow['amount']);
+      dataUpdate.append('Status', newRow['status']);
+      dataUpdate.append('Action', 'Update');
+      dataUpdate.append('EditorPosition', user.position);
+      dataUpdate.append('EditorEmail', user.email);
+      dataUpdate.append('Category', 'Subject');
+      const response = await mutateRow(newRow);
+      const sendRequest = await fetch(basedUrl+"/subject-update.php",{
+        method: "POST",
+        body: dataUpdate,
+    });
+    
+    const getResponse = await sendRequest.json();
+    console.log(getResponse.statusCode);
+    if(getResponse.statusCode !== 201){
+      setSnackbar({ children: 'Update successfully', severity: 'success' });
+      resolve(response);
+      setPromiseArguments(null);
+    }else{
+      setSnackbar({ children: "Field can't be empty", severity: 'error' });
+      reject(oldRow);
+      setPromiseArguments(null);
+    }
+    } catch (error) {
+      setSnackbar({ children: "Field can't be empty", severity: 'error' });
+      reject(oldRow);
+      setPromiseArguments(null);
+    }
+  };
+
+  const handleEntered = () => {
+    // The `autoFocus` is not used because, if used, the same Enter that saves
+    // the cell triggers "No". Instead, we manually focus the "No" button once
+    // the dialog is fully open.
+    // noButtonRef.current?.focus();
+  };
+
+  const renderConfirmDialog = () => {
+    if (!promiseArguments) {
+      console.log(!promiseArguments)
+      return null;
+    }
+    const { newRow, oldRow } = promiseArguments;
+    const mutation = computeMutation(newRow, oldRow);
+
+    return (
+      <Dialog
+        maxWidth="xs"
+        TransitionProps={{ onEntered: handleEntered }}
+        open={!!promiseArguments}
+      >
+        <DialogTitle>Are you sure?</DialogTitle>
+        <DialogContent dividers>
+          {`Pressing 'Yes' will change ${mutation}.`}
+        </DialogContent>
+        <DialogActions>
+          <Button ref={noButtonRef} onClick={handleNo}>
+            No
+          </Button>
+          <Button onClick={handleYes}>Yes</Button>
+        </DialogActions>
+      </Dialog>
+    );
+  };
+  
   return(
     <>
+     {renderConfirmDialog()}
     <DataGrid components={{ Toolbar: CustomToolbar, LoadingOverlay: LinearProgress, }} loading = {loading} rows = {rows} columns={columns}  experimentalFeatures={{ newEditingApi: true }} style ={{height:'500px'}}
-     onSelectionModelChange={(ids) => {
-        const selectedIDs = new Set(ids);
-        const selectedRowData = rows.filter((row) =>
-          selectedIDs.has(row.id.toString())
-        );
-        dispatch(PUT_SUBJECT(selectedRowData[0]))
-      }}
+     processRowUpdate={processRowUpdate}
     /> 
-
-    <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-             <Alert onClose={handleClose} severity= {statusSnack} sx={{ width: '100%' }}>
-                {messageSnack}
-             </Alert>
-       </Snackbar>
+ {!!snackbar && (
+        <Snackbar open onClose={handleCloseSnackbar} autoHideDuration={6000}>
+          <Alert {...snackbar} onClose={handleCloseSnackbar} />
+        </Snackbar>
+      )}
     </>
   );
+
 }
