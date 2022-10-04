@@ -10,12 +10,9 @@ import { CLOSEFORM } from '../slice/AddFormSlice/AddEmployeeSlice/AddEmployeeSli
 import Grid2 from '@mui/material/Unstable_Grid2'; // Grid2 version 2
 import { Container, Divider, FormControl, FormControlLabel, FormHelperText, FormLabel, InputLabel, MenuItem, Radio, RadioGroup, Select, TextField, Typography } from '@mui/material';
 import { Box } from '@mui/system';
-import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import dayjs from 'dayjs';
 import validator from 'validator'
-import { EventBusyTwoTone } from '@mui/icons-material';
 import { DatePicker } from '@mui/x-date-pickers';
 import {OPENSNACK, CLOSESNACK} from '../slice/Snackbars/EmployeeTableOpen/EmployeeTableOpen';
 import {SUCCESSSNACK, FAILEDSNACK} from '../slice/Snackbars/EmployeeTableStatus/EmployeeTableStatus'

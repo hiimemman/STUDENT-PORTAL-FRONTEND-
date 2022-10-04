@@ -11,6 +11,7 @@ import statusEmployeeTable from '../slice/Snackbars/EmployeeTableStatus/Employee
 import messageEmployeeTable from '../slice/Snackbars/EmployeeTableMessage/EmployeeTableMessage'
 import addFormFor from '../slice/AddFormSlice/AddEmployeeSlice/AddEmployeeSlice'
 import { subjectSelect } from '../slice/FormSelectedRow/SubjectSelected'
+import addFormSub from '../slice/AddFormSlice/AddSubjectSlice/AddSubjectSlice'
 
 export const store = configureStore({
   reducer: {
@@ -26,5 +27,6 @@ export const store = configureStore({
     snackMessageEmp: messageEmployeeTable,
     addForm: addFormFor,
     subjectSelected: subjectSelect,
+    addFormSub: addFormSub,
   },
 })

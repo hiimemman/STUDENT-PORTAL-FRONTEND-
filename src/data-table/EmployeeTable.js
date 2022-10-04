@@ -36,7 +36,7 @@ const openPopper = () =>{
       <GridToolbarDensitySelector />
       <GridToolbarExport />
     </GridToolbarContainer>
-    <AddEmployee  open ={formOpenType === 'subject'}/> 
+    <AddEmployee  open ={formOpenType === 'employee'}/> 
   </>
   );
 }

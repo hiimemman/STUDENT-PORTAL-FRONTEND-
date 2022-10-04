@@ -9,46 +9,12 @@ import { Alert, Chip, Dialog, DialogActions, DialogContent, DialogTitle, Snackba
 import { useEffect, useState, useCallback, useRef } from 'react';
 import Button from '@mui/material/Button';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
-import { AddEmployee } from '../forms/AddEmployee';
 import { useSelector, useDispatch } from 'react-redux';
-import {OPEN, CLOSE} from '../slice/FormSlice/FormSlice'
-import {EMPLOYEE, DEFAULT, formType} from '../slice/FormType/FormType'
-import { ADDEMPLOYEE } from '../slice/AddFormSlice/AddEmployeeSlice/AddEmployeeSlice';
-import {PUT_EMPLOYEE} from '../slice/FormSelectedRow/EmployeeSelected'
-import { PUT_SUBJECT } from '../slice/FormSelectedRow/SubjectSelected';
-import {OPENSNACK, CLOSESNACK} from '../slice/Snackbars/EmployeeTableOpen/EmployeeTableOpen';
-import {SUCCESSSNACK, FAILEDSNACK} from '../slice/Snackbars/EmployeeTableStatus/EmployeeTableStatus'
-import {SUCCESSMESSAGESNACK, FAILEDMESSAGESNACK} from '../slice/Snackbars/EmployeeTableMessage/EmployeeTableMessage'
 import { basedUrl } from '../base-url/based-url'
 import { AddSubject } from '../forms/AddSubject';
-
-//Toolbar
-function CustomToolbar() {
-
-  //dispatch from redux
-const dispatch = useDispatch();
+import { ADDSUBJECT } from '../slice/AddFormSlice/AddSubjectSlice/AddSubjectSlice';
 
 
-//Open add form
-const  [openAddSub, setOpenAddSub] = useState(false);
-
- //Open Add form
-const openPopper = () =>{
-  setOpenAddSub(true)
-} 
-
-  return (<>
-    <GridToolbarContainer>
-      <Button variant="text" startIcon = {<PersonAddIcon />} onClick = {openPopper}> Add</Button>
-      <GridToolbarColumnsButton />
-      <GridToolbarFilterButton />
-      <GridToolbarDensitySelector />
-      <GridToolbarExport />
-    </GridToolbarContainer>
-    {/* <AddSubject open = {openAddSub} /> */}
-  </>
-  );
-}
 
 
 const useFakeMutation = () => {
@@ -348,3 +314,29 @@ const renderEditStatus = (params) => {
   );
 
 }
+
+//Toolbar
+function CustomToolbar() {
+
+    //dispatch from redux
+const dispatch = useDispatch();
+
+//Open add form
+const  formOpenType = useSelector(state => state.addFormSub.value);
+
+ //Open Add form
+const openPopper = () =>{
+  dispatch(ADDSUBJECT());
+} 
+    return (<>
+      <GridToolbarContainer>
+        <Button variant="text" startIcon = {<PersonAddIcon />} onClick = {openPopper}> Add</Button>
+        <GridToolbarColumnsButton />
+        <GridToolbarFilterButton />
+        <GridToolbarDensitySelector />
+        <GridToolbarExport />
+      </GridToolbarContainer>
+      <AddSubject open = {formOpenType === 'subject' } />
+    </>
+    );
+  }
