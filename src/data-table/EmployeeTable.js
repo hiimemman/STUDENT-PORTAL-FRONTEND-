@@ -5,38 +5,20 @@ import PropTypes from 'prop-types';
 import Avatar from "@mui/material/Avatar";
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
-import { Alert, Chip, Snackbar } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { Alert, Chip, Dialog, DialogActions, DialogContent, DialogTitle, Snackbar } from '@mui/material';
 import Button from '@mui/material/Button';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { AddEmployee } from '../forms/AddEmployee';
 import { useSelector, useDispatch } from 'react-redux';
-import {OPEN, CLOSE} from '../slice/FormSlice/FormSlice'
-import {EMPLOYEE, DEFAULT, formType} from '../slice/FormType/FormType'
 import { ADDEMPLOYEE } from '../slice/AddFormSlice/AddEmployeeSlice/AddEmployeeSlice';
 import {PUT_EMPLOYEE} from '../slice/FormSelectedRow/EmployeeSelected'
-import {OPENSNACK, CLOSESNACK} from '../slice/Snackbars/EmployeeTableOpen/EmployeeTableOpen';
-import {SUCCESSSNACK, FAILEDSNACK} from '../slice/Snackbars/EmployeeTableStatus/EmployeeTableStatus'
-import {SUCCESSMESSAGESNACK, FAILEDMESSAGESNACK} from '../slice/Snackbars/EmployeeTableMessage/EmployeeTableMessage'
 import { basedUrl } from '../base-url/based-url'
-
+import { useEffect, useState, useCallback, useRef } from 'react';
 //Toolbar
 function CustomToolbar() {
 
   //dispatch from redux
 const dispatch = useDispatch();
-
- //Current session user
- const formState = useSelector(state => (state.isOpenForm.value));
-
- //Open snackbar
-const open = useSelector(state => state.openSnackEmp.value);
-
-//Open snackbar
-const statusSnack = useSelector(state => state.snackStatusEmp.value);
-
-//Snackbar Message
-const messageSnack = useSelector(state => state.snackMessageEmp.value);
 
 //Open add form
 const  formOpenType = useSelector(state => state.addForm.value);
@@ -45,10 +27,6 @@ const  formOpenType = useSelector(state => state.addForm.value);
 const openPopper = () =>{
   dispatch(ADDEMPLOYEE());
 } 
-
-useEffect(()=>{
-console.log(formOpenType);
-},[formOpenType]);
 
   return (<>
     <GridToolbarContainer>
@@ -63,77 +41,99 @@ console.log(formOpenType);
   );
 }
 
-//Edit Position
+
+
+  const useFakeMutation = () => {
+    return useCallback(
+      (user) =>
+        new Promise((resolve, reject) =>
+          setTimeout(() => {
+            if (user.name?.trim() === '') {
+              reject();
+            } else {
+              resolve(user);
+            }
+          }, 200),
+        ),
+      [],
+    );
+  };
+  
+  function computeMutation(newRow, oldRow) {
+    if (newRow.position !== oldRow.position) {
+     
+      return `Position from '${oldRow.position}' to '${newRow.position}'`;
+    }
+    if (newRow.status !== oldRow.status) {
+     
+      return `Status from '${oldRow.status}' to '${newRow.status}'`;
+    }
+    return null;
+  }
+
+export function EmployeeTable() {
+    //dispatch from redux
+const dispatch = useDispatch();
+    const [rows, setRows] = useState([]);
+    const [loading, isLoading] = useState(false);
+
+    //Selected Employee
+  const employee = useSelector(state => state.employeeSelected.value);
+  
+  //Current User Session
+  const user = useSelector(state => JSON.parse(state.user.session));
+  
+    //Open add form
+const  formOpenType = useSelector(state => state.addForm.value);
+
+const mutateRow = useFakeMutation();
+
+  const noButtonRef = useRef(null);
+
+  const [promiseArguments, setPromiseArguments] = useState(null);
+  const [snackbar, setSnackbar] = useState(null);
+
+  const handleCloseSnackbar = () => setSnackbar(null);
+
+
+    //Handeclose snackbar
+  const handleClose = () =>{
+    
+  }
+  // Get all users api
+  useEffect( () => {
+    
+    const getAllEmployee = async () =>{
+      try{ 
+        isLoading(true)
+        //online api
+          const sendRequest = await fetch(basedUrl+"/employee-table.php");
+          const getResponse = await sendRequest.json();
+          isLoading(false)
+          if(getResponse.statusCode === 201){
+          
+          }else{
+            //if succesfully retrieve data
+            isLoading(false)
+            setRows(getResponse);
+          }
+      }catch(e){
+        console.error(e)
+      }
+    }
+    getAllEmployee();
+  }, [setRows,formOpenType]);
+ 
+
+  //Edit Position
 function EditPosition(props) {
-  const dispatch = useDispatch();
-  //Selected Employee
-const employee = useSelector(state => state.employeeSelected.value);
-
-//Current User Session
-const user = useSelector(state => JSON.parse(state.user.session));
-
-
 
     const { id, value, field } = props;
     const apiRef = useGridApiContext();
   
     const handleChange = async (event) => {
-
-      
       await apiRef.current.setEditCellValue({ id, field, value: event.target.value });
       apiRef.current.stopCellEditMode({ id, field });
-      try{
-        const dataUpdate = new FormData();
-
-        dataUpdate.append('About', employee.about);
-        dataUpdate.append('Birthday', employee.birthday);
-        dataUpdate.append('Contact', employee.contact);
-        dataUpdate.append('Firstname', employee.firstname);
-        dataUpdate.append('Lastname', employee.lastname);
-        dataUpdate.append('Middlename', employee.middlename);
-        dataUpdate.append('Position', event.target.value);
-        dataUpdate.append('Sex', employee.sex);
-        dataUpdate.append('Status', employee.status);
-        dataUpdate.append('Twitter', employee.twitterprofile);
-        dataUpdate.append('LinkedIn', employee.linkedinprofile);
-        dataUpdate.append('Facebook', employee.facebookprofile);
-        dataUpdate.append('Instagram', employee.instagramprofile);
-        dataUpdate.append('Email', employee.email);
-        dataUpdate.append('Action', 'Update');
-        dataUpdate.append('EditorPosition', user.position);
-        dataUpdate.append('EditorEmail', user.email);
-        dataUpdate.append('Category', 'Employee');
-        const sendRequest = await fetch(basedUrl+"/employee-update.php",{
-          method: "POST",
-          body: dataUpdate,
-      });
-      
-      const getResponse = await sendRequest.json();
-      console.log(getResponse.statusCode);
-      if(getResponse.statusCode !== 201){
-        // dispatch(PUT_EMPLOYEE(getResponse.statusCode));
-        // setOpen(true);
-        // setStatus("success");
-        // setMessage("Updated Successfully")
-        // setisLoading(false);
-       dispatch(PUT_EMPLOYEE(getResponse.statusCode))
-       dispatch(SUCCESSMESSAGESNACK('Updated Succesfully'));
-       dispatch(OPENSNACK());
-       dispatch(SUCCESSSNACK());
-      }else{
-        dispatch(OPENSNACK());
-        dispatch(FAILEDSNACK());
-        dispatch(FAILEDMESSAGESNACK());
-        // setisLoading(false);
-        // setOpen(true);
-        // setStatus("error");
-        // console.log(getResponse.statusCode)
-        // setMessage('Error see console log for error');
-        // setisLoading(false);
-      }
-      }catch(e){
-
-      }
      
     };
   
@@ -177,70 +177,13 @@ const user = useSelector(state => JSON.parse(state.user.session));
   function EditStatus(props) {
     const { id, value, field } = props;
     const apiRef = useGridApiContext();
-    const dispatch = useDispatch();
-  //Selected Employee
-const employee = useSelector(state => state.employeeSelected.value);
-
-//Current User Session
-const user = useSelector(state => JSON.parse(state.user.session));
 
     const handleChange = async (event) => {
       
       await apiRef.current.setEditCellValue({ id, field, value: event.target.value });
       apiRef.current.stopCellEditMode({ id, field });
       console.log(event.target.value)
-      try{
-        const dataUpdate = new FormData();
-
-        dataUpdate.append('About', employee.about);
-        dataUpdate.append('Birthday', employee.birthday);
-        dataUpdate.append('Contact', employee.contact);
-        dataUpdate.append('Firstname', employee.firstname);
-        dataUpdate.append('Lastname', employee.lastname);
-        dataUpdate.append('Middlename', employee.middlename);
-        dataUpdate.append('Position', employee.position);
-        dataUpdate.append('Sex', employee.sex);
-        dataUpdate.append('Status', event.target.value);
-        dataUpdate.append('Twitter', employee.twitterprofile);
-        dataUpdate.append('LinkedIn', employee.linkedinprofile);
-        dataUpdate.append('Facebook', employee.facebookprofile);
-        dataUpdate.append('Instagram', employee.instagramprofile);
-        dataUpdate.append('Email', employee.email);
-        dataUpdate.append('Action', 'Update');
-        dataUpdate.append('EditorPosition', user.position);
-        dataUpdate.append('EditorEmail', user.email);
-        dataUpdate.append('Category', 'Employee');
-        const sendRequest = await fetch(basedUrl+"/employee-update.php",{
-          method: "POST",
-          body: dataUpdate,
-      });
-      
-      const getResponse = await sendRequest.json();
-      console.log(getResponse.statusCode);
-      if(getResponse.statusCode !== 201){
-        // dispatch(PUT_EMPLOYEE(getResponse.statusCode));
-        // setOpen(true);
-        // setStatus("success");
-        // setMessage("Updated Successfully")
-        // setisLoading(false);
-       dispatch(PUT_EMPLOYEE(getResponse.statusCode))
-       dispatch(OPENSNACK());
-       dispatch(SUCCESSSNACK());
-       dispatch(SUCCESSMESSAGESNACK('Updated Succesfully'));
-      }else{
-        dispatch(OPENSNACK());
-        dispatch(FAILEDSNACK());
-        dispatch(FAILEDMESSAGESNACK());
-        // setisLoading(false);
-        // setOpen(true);
-        // setStatus("error");
-        // console.log(getResponse.statusCode)
-        // setMessage('Error see console log for error');
-        // setisLoading(false);
-      }
-      }catch(e){
-
-      }
+    
     };
   
     return (
@@ -345,54 +288,114 @@ const user = useSelector(state => JSON.parse(state.user.session));
       },
   ];
 
-export function EmployeeTable() {
-    //dispatch from redux
-const dispatch = useDispatch();
-    const [rows, setRows] = useState([]);
-    const [loading, isLoading] = useState(false);
-  
-    //Open snackbar
-    const open = useSelector(state => state.openSnackEmp.value);
+  const processRowUpdate = useCallback(
+    (newRow, oldRow) =>
+      new Promise((resolve, reject) => {
+        const mutation = computeMutation(newRow, oldRow);
+        if (mutation) {
+          // Save the arguments to resolve or reject the promise later
+          setPromiseArguments({ resolve, reject, newRow, oldRow });
+        } else {
+          resolve(oldRow); // Nothing was changed
+        }
+      }),
+    [],
+  );
 
-    //Open snackbar
-    const statusSnack = useSelector(state => state.snackStatusEmp.value);
 
-    //Snackbar Message
-    const messageSnack = useSelector(state => state.snackMessageEmp.value);
-    //Open add form
-const  formOpenType = useSelector(state => state.addForm.value);
+  const handleNo = () => {
+    const { oldRow, resolve } = promiseArguments;
+    resolve(oldRow); // Resolve with the old row to not update the internal state
+    setPromiseArguments(null);
+  };
 
-    //Handeclose snackbar
-  const handleClose = () =>{
-    dispatch(CLOSESNACK());
-  }
-  // Get all users api
-  useEffect( () => {
-    
-    const getAllEmployee = async () =>{
-      try{ 
-        isLoading(true)
-        //online api
-          const sendRequest = await fetch(basedUrl+"/employee-table.php");
-          const getResponse = await sendRequest.json();
-          isLoading(false)
-          if(getResponse.statusCode === 201){
-          
-          }else{
-            //if succesfully retrieve data
-            isLoading(false)
-            setRows(getResponse);
-          }
-      }catch(e){
-        console.error(e)
-      }
+  const handleYes = async () => {
+    const { newRow, oldRow, reject, resolve } = promiseArguments;
+    try {
+      // Make the HTTP request to save in the backend
+      const dataUpdate = new FormData();
+     
+      dataUpdate.append('About', newRow['about']);
+      dataUpdate.append('Birthday', newRow['birthday']);
+      dataUpdate.append('Contact', newRow['contact']);
+      dataUpdate.append('Firstname', newRow['firstname']);
+      dataUpdate.append('Lastname', newRow['lastname']);
+      dataUpdate.append('Middlename', newRow['middlename']);
+      dataUpdate.append('Position', newRow['position']);
+      dataUpdate.append('Sex', newRow['sex']);
+      dataUpdate.append('Status', newRow['status']);
+      dataUpdate.append('Twitter', newRow['twitterprofile']);
+      dataUpdate.append('LinkedIn', newRow['linkedinprofile']);
+      dataUpdate.append('Facebook', newRow['facebookprofile']);
+      dataUpdate.append('Instagram', newRow['instagramprofile']);
+      dataUpdate.append('Email', newRow['email']);
+      dataUpdate.append('Action', 'Update');
+      dataUpdate.append('EditorPosition', user.position);
+      dataUpdate.append('EditorEmail', user.email);
+      dataUpdate.append('Category', 'Employee');
+      const sendRequest = await fetch(basedUrl+"/employee-update.php",{
+        method: "POST",
+        body: dataUpdate,
+    });
+    const response = await mutateRow(newRow);
+    const getResponse = await sendRequest.json();
+    console.log(getResponse.statusCode);
+    if(getResponse.statusCode !== 201){
+      setSnackbar({ children: 'Update successfully', severity: 'success' });
+      resolve(response);
+      setPromiseArguments(null);
+    }else{
+      setSnackbar({ children: "Field can't be empty", severity: 'error' });
+      reject(oldRow);
+      setPromiseArguments(null);
     }
-    getAllEmployee();
-  }, [setRows,formOpenType]);
- 
+    } catch (error) {
+      setSnackbar({ children: "Field can't be empty", severity: 'error' });
+      reject(oldRow);
+      setPromiseArguments(null);
+    }
+  };
+
+  const handleEntered = () => {
+    // The `autoFocus` is not used because, if used, the same Enter that saves
+    // the cell triggers "No". Instead, we manually focus the "No" button once
+    // the dialog is fully open.
+    // noButtonRef.current?.focus();
+  };
+
+  const renderConfirmDialog = () => {
+    if (!promiseArguments) {
+      console.log(!promiseArguments)
+      return null;
+    }
+    const { newRow, oldRow } = promiseArguments;
+    const mutation = computeMutation(newRow, oldRow);
+
+    return (
+      <Dialog
+        maxWidth="xs"
+        TransitionProps={{ onEntered: handleEntered }}
+        open={!!promiseArguments}
+      >
+        <DialogTitle>Are you sure?</DialogTitle>
+        <DialogContent dividers>
+          {`Pressing 'Yes' will change ${mutation}.`}
+        </DialogContent>
+        <DialogActions>
+          <Button ref={noButtonRef} onClick={handleNo}>
+            No
+          </Button>
+          <Button onClick={handleYes}>Yes</Button>
+        </DialogActions>
+      </Dialog>
+    );
+  };
+  
   return(
     <>
+    {renderConfirmDialog()}
     <DataGrid components={{ Toolbar: CustomToolbar, LoadingOverlay: LinearProgress, }} loading = {loading} rows = {rows} columns={columns}  experimentalFeatures={{ newEditingApi: true }} style ={{height:'500px'}}
+      processRowUpdate={processRowUpdate}
       onSelectionModelChange={(ids) => {
       const selectedIDs = new Set(ids);
       const selectedRowData = rows.filter((row) =>
@@ -401,12 +404,11 @@ const  formOpenType = useSelector(state => state.addForm.value);
       dispatch(PUT_EMPLOYEE(selectedRowData[0]))
     }}
     /> 
-
-    <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-             <Alert onClose={handleClose} severity= {statusSnack} sx={{ width: '100%' }}>
-                {messageSnack}
-             </Alert>
-       </Snackbar>
+{!!snackbar && (
+        <Snackbar open onClose={handleCloseSnackbar} autoHideDuration={6000}>
+          <Alert {...snackbar} onClose={handleCloseSnackbar} />
+        </Snackbar>
+      )}
     </>
   );
 }

@@ -35,14 +35,11 @@ const user = useSelector(state => JSON.parse(state.user.session));
  const [openForm, setOpenForm] = useState(props.open);
   const [validSubjectCode, setValidSubjectCode] = useState('');;
 
-  const [subjectCodeHelperText, setSubjectCodeHelperText] = useState('');
-
   
   
   const handleChangeEmail = async (event) =>{
     if((event.target.value).toString().length <= 0 || !validator.isEmail(event.target.value)){
       setValidSubjectCode(false);
-      setSubjectCodeHelperText('Invalid Email');
     }else{
       try{
         const data = new FormData();
@@ -57,11 +54,9 @@ const user = useSelector(state => JSON.parse(state.user.session));
         setValidSubjectCode(true);
       }else{
         setValidSubjectCode(false);
-        setEmailHelperText('Email already exist!');
       }
       }catch(e){
         setValidSubjectCode(false);
-        setEmailHelperText('Server problem!');
       }  
     }
   }
@@ -87,7 +82,8 @@ const handleSubmitForm = async (event) =>{
  
 //`action`,`category`,`editor_position`,`editor_email`,`edited_email`
   event.preventDefault();
-  if(valid){
+  if(validSubjectCode){
+  const data = new FormData();
   data.append('Action', 'Create');
   data.append('EditorPosition', user.position);
   data.append('EditorEmail', user.email);
@@ -123,7 +119,7 @@ const handleSubmitForm = async (event) =>{
   return(
     <>
     
-      <Dialog
+      {/* <Dialog
         open={openForm}
         onClose={handleClose}
         scroll={scroll}
@@ -150,7 +146,7 @@ const handleSubmitForm = async (event) =>{
         </DialogActions>
        
       </Dialog>
-      
+       */}
     </>
   )
 }

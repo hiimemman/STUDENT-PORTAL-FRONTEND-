@@ -28,17 +28,6 @@ function CustomToolbar() {
   //dispatch from redux
 const dispatch = useDispatch();
 
- //Current session user
- const formState = useSelector(state => (state.isOpenForm.value));
-
- //Open snackbar
-const open = useSelector(state => state.openSnackEmp.value);
-
-//Open snackbar
-const statusSnack = useSelector(state => state.snackStatusEmp.value);
-
-//Snackbar Message
-const messageSnack = useSelector(state => state.snackMessageEmp.value);
 
 //Open add form
 const  [openAddSub, setOpenAddSub] = useState(false);
@@ -56,7 +45,7 @@ const openPopper = () =>{
       <GridToolbarDensitySelector />
       <GridToolbarExport />
     </GridToolbarContainer>
-    <AddSubject open = {openAddSub} />
+    {/* <AddSubject open = {openAddSub} /> */}
   </>
   );
 }
@@ -117,15 +106,6 @@ export function SubjectTable() {
   //Selected sub
   const [selectedSub, setSelectedSub] = useState(null);
 
-  
-    //Open snackbar
-    const open = useSelector(state => state.openSnackEmp.value);
-
-    //Open snackbar
-    const statusSnack = useSelector(state => state.snackStatusEmp.value);
-
-    //Snackbar Message
-    const messageSnack = useSelector(state => state.snackMessageEmp.value);
     //Open add form
 const  formOpenType = useSelector(state => state.addForm.value);
 
