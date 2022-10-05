@@ -11,6 +11,8 @@ import { Homepage } from './homepage/Homepage';
 import {Student} from './pages/Student';
 import {Subject} from './pages/Subject';
 import { ParticlesBackground } from './component/ParticlesBackground';
+import { Course } from './pages/Course';
+import { Faculty } from './pages/Faculty';
 
 
 
@@ -67,6 +69,8 @@ return (
         <Route path = "/employee/employees" element ={<><ParticlesBackground /><Employees/></>} /> 
         <Route path = "/employee/student" element ={<><ParticlesBackground /><Student/></>} />
         <Route path = "/employee/subject" element ={<><ParticlesBackground /><Subject/></>} /> 
+        <Route path = "/employee/course" element ={<><ParticlesBackground /><Faculty/></>} />
+        <Route path = "/employee/course" element ={<><ParticlesBackground /><Course/></>} />
       </Routes>
     </Router>
     

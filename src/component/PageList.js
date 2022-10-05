@@ -15,10 +15,11 @@ import GroupsIcon from '@mui/icons-material/Groups';
 import AnnouncementIcon from '@mui/icons-material/Announcement';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import HandymanIcon from '@mui/icons-material/Handyman';
-import {DASHBOARD, EMPLOYEE,STUDENT, SUBJECT} from '../slice/PageSlice/PageSlice';
-import SubjectIcon from '@mui/icons-material/Subject';
+import {DASHBOARD, EMPLOYEE,STUDENT, SUBJECT, COURSE, FACULTY} from '../slice/PageSlice/PageSlice';
 import SchoolIcon from '@mui/icons-material/School';
+import BiotechIcon from '@mui/icons-material/Biotech';
 import { useEffect } from 'react';
+import Diversity3Icon from '@mui/icons-material/Diversity3';
 
 export function PageList(){
 
@@ -59,6 +60,12 @@ if(currentPage === 'student'){
 if(currentPage === 'subject'){
   navigate('/employee/subject')
 }
+if(currentPage === 'faculty'){
+  navigate('/employee/faculty')
+}
+if(currentPage === 'course'){
+  navigate('/employee/course')
+}
 }, [currentPage]);
 
 return(
@@ -92,7 +99,7 @@ return(
     </ListItem>
 </Tooltip>
 
-    <Tooltip title="Employee list" placement="right-start">
+    <Tooltip title="Employee(s)" placement="right-start">
     <ListItem  disablePadding sx={{ display: 'block'}} className="transition ease-in-out delay-2 hover:bg-slate-300  duration-300">
   
       <ListItemButton onClick ={ ()=>dispatch(EMPLOYEE())} selected={currentPage === 'employee'}   onMouseEnter = {handleDrawerOpen} onMouseLeave ={handleDrawerClose}
@@ -118,7 +125,7 @@ return(
     </ListItem>
   </Tooltip>
 
-  <Tooltip title="Student list" placement="right-start">
+  <Tooltip title="Student(s)" placement="right-start">
     <ListItem  disablePadding sx={{ display: 'block'}} className="transition ease-in-out delay-2 hover:bg-slate-300  duration-300">
   
       <ListItemButton onClick ={ ()=>dispatch(STUDENT())} selected={currentPage === 'student'}   onMouseEnter = {handleDrawerOpen} onMouseLeave ={handleDrawerClose}
@@ -162,18 +169,42 @@ return(
             justifyContent: 'center',
           }}
         >
-        <SubjectIcon />
+        <BiotechIcon />
         </ListItemIcon>
         { isOpen ?  <Typography className ='font-nunito text-lg' >Subject</Typography> : <p></p> }  
       </ListItemButton>
     
     </ListItem>
   </Tooltip>
-
-  <Tooltip title="Student list" placement="right-start">
+  <Tooltip title="Faculty" placement="right-start">
     <ListItem  disablePadding sx={{ display: 'block'}} className="transition ease-in-out delay-2 hover:bg-slate-300  duration-300">
   
-      <ListItemButton onClick ={()=>navigate('/employee/employees')}  onMouseEnter = {handleDrawerOpen} onMouseLeave ={handleDrawerClose}
+      <ListItemButton onClick ={() => dispatch(FACULTY())}  selected={currentPage === 'faculty'} onMouseEnter = {handleDrawerOpen} onMouseLeave ={handleDrawerClose}
+        sx={{
+          minHeight: 48,
+          justifyContent: isOpen ? 'initial' : 'center',
+          px: 2.5,
+        }}
+      >
+        
+        <ListItemIcon
+          sx={{
+            minWidth: 0,
+            mr: isOpen ? 3 : 'auto',
+            justifyContent: 'center',
+          }}
+        >
+        <Diversity3Icon />
+        </ListItemIcon>
+        { isOpen ?  <Typography className ='font-nunito text-lg' >Faculty</Typography> : <p></p> }  
+      </ListItemButton>
+    
+    </ListItem>
+  </Tooltip>
+  <Tooltip title="Course(s)" placement="right-start">
+    <ListItem  disablePadding sx={{ display: 'block'}} className="transition ease-in-out delay-2 hover:bg-slate-300  duration-300">
+  
+      <ListItemButton onClick ={() => dispatch(COURSE())}  selected={currentPage === 'course'} onMouseEnter = {handleDrawerOpen} onMouseLeave ={handleDrawerClose}
         sx={{
           minHeight: 48,
           justifyContent: isOpen ? 'initial' : 'center',
@@ -195,7 +226,7 @@ return(
     
     </ListItem>
   </Tooltip>
-  <Tooltip title="Student list" placement="right-start">
+  <Tooltip title="Section" placement="right-start">
     <ListItem  disablePadding sx={{ display: 'block'}} className="transition ease-in-out delay-2 hover:bg-slate-300  duration-300">
   
       <ListItemButton onClick ={()=>navigate('/employee/employees')}  onMouseEnter = {handleDrawerOpen} onMouseLeave ={handleDrawerClose}
@@ -215,7 +246,7 @@ return(
         >
         <GroupsIcon />
         </ListItemIcon>
-        { isOpen ?  <Typography className ='font-nunito text-lg' >Course</Typography> : <p></p> }  
+        { isOpen ?  <Typography className ='font-nunito text-lg' >Section</Typography> : <p></p> }  
       </ListItemButton>
     
     </ListItem>

@@ -17,8 +17,9 @@ import Avatar from "@mui/material/Avatar";
 import { EmployeeHistory } from '../viewhistory/EmployeeHistory';
 import { SubjectTable } from '../data-table/SubjectTable';
 import { SubjectHistory } from '../viewhistory/SubjectHistory';
+import { CourseTable } from '../data-table/CourseTable';
 
-export  function Subject() {
+export  function Course() {
 //Selected Employee
 const employee = useSelector(state => state.employeeSelected.value)
 
@@ -84,7 +85,7 @@ const handleClose = (event, reason) => {
              </TabList>
             </Box>
         <TabPanel value="1"  style={{height: 'auto'}} sx ={{marginLeft:'-24px'}}>
-          <SubjectTable />
+          <CourseTable />
           </TabPanel>
             <TabPanel value="2" sx ={{marginLeft:'-24px'}}>
               <SubjectHistory />
