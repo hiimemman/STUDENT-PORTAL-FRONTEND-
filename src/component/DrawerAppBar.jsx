@@ -8,7 +8,7 @@ import { styled, useTheme } from '@mui/material/styles';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import {CLOSE, OPEN} from  '../slice/MenuSlice/MenuState'
-import { PageList } from '../component/PageList';
+import { PageList } from './PageList';
 import Grid from '@mui/material/Grid';
 import { ProfileBox } from './ProfileBox';
 import MuiDrawer from '@mui/material/Drawer';

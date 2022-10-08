@@ -11,8 +11,8 @@ import Button from '@mui/material/Button';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { useSelector, useDispatch } from 'react-redux';
 import { basedUrl } from '../base-url/based-url'
-import { AddSubject } from '../forms/AddSubject';
-import { ADDSUBJECT } from '../slice/AddFormSlice/AddSubjectSlice/AddSubjectSlice';
+import { ADDFORMCOURSE } from '../slice/AddFormSlice/AddCourseSlice/AddCourseSlice';
+import { AddCourse } from '../forms/AddCourse';
 
 
 
@@ -34,31 +34,27 @@ const useFakeMutation = () => {
 };
 
 function computeMutation(newRow, oldRow) {
-  if (newRow.subject_name !== oldRow.subject_name) {
+  if (newRow.description !== oldRow.description) {
    
-    return `Subject name from '${oldRow.subject_name}' to '${newRow.subject_name}'`;
+    return `Description from '${oldRow.description}' to '${newRow.description}'`;
   }
   if (newRow.status !== oldRow.status) {
    
     return `Status from '${oldRow.status}' to '${newRow.status}'`;
   }
-  if (newRow.units !== oldRow.units) {
+  if (newRow.course_faculty !== oldRow.course) {
   
-    return `Units from '${oldRow.units || ''}' to '${newRow.units || ''}'`;
-  }
-  if (newRow.amount !== oldRow.amount) {
-  
-    return `Amount from '${oldRow.amount || ''}' to '${newRow.amount || ''}'`;
+    return `Faculty from '${oldRow.course_faculty || ''}' to '${newRow.course_faculty || ''}'`;
   }
   return null;
 }
 
-export function FacultyTable() {  
+export function CourseTable() {  
     //dispatch from redux
     const dispatch = useDispatch();
     const [rows, setRows] = useState([]);
     const [loading, isLoading] = useState(false);
-
+    const [activeFaculty, setActiveFaculty] = useState(null);
     const mutateRow = useFakeMutation();
 
   const noButtonRef = useRef(null);
@@ -68,12 +64,8 @@ export function FacultyTable() {
 
   const handleCloseSnackbar = () => setSnackbar(null);
 
-
-  //Selected sub
-  const [selectedSub, setSelectedSub] = useState(null);
-
-    //Open add form
-const  formOpenType = useSelector(state => state.addForm.value);
+ //Open add form
+const  formOpenType = useSelector(state => state.addFormCourse.value);
 
 //Current User Session
 const user = useSelector(state => JSON.parse(state.user.session));
@@ -82,11 +74,11 @@ const user = useSelector(state => JSON.parse(state.user.session));
   // Get all users api
   useEffect( () => {
     
-    const getAllEmployee = async () =>{
+    const getAllData = async () =>{
       try{ 
         isLoading(true)
         //online api
-          const sendRequest = await fetch(basedUrl+"/subject-table.php");
+          const sendRequest = await fetch(basedUrl+"/course-table.php");
           const getResponse = await sendRequest.json();
           isLoading(false)
           if(getResponse.statusCode === 201){
@@ -100,8 +92,75 @@ const user = useSelector(state => JSON.parse(state.user.session));
         console.error(e)
       }
     }
-    getAllEmployee();
+    getAllData();
   }, [setRows,formOpenType]);
+
+  useEffect(()=>{
+    const getActiveFaculty = async()=>{
+     try{
+       const sendRequestFaculty = await fetch(basedUrl+"/all-faculty-active.php");
+       const getResponseFaculty = await sendRequestFaculty.json();
+       console.log("response"+getResponseFaculty)
+        setActiveFaculty(getResponseFaculty);
+     }catch(e){
+       console.log("error")
+       }
+     }
+     getActiveFaculty()
+   },[setActiveFaculty])
+   
+
+  //Edit faculty via cell
+function EditFaculty(props) {
+  const { id, value, field } = props;
+  const apiRef = useGridApiContext();
+  
+  const handleChange = async(event) =>{
+    
+    await apiRef.current.setEditCellValue({ id, field, value: event.target.value });
+      apiRef.current.stopCellEditMode({ id, field });
+  
+}
+
+
+
+  return (
+    <>
+      <Select
+      value={value}
+      onChange={handleChange}
+      size="small"
+      sx={{ height: 1 , width: 260}}
+      native
+      autoFocus
+    >
+      {activeFaculty.map((faculties) =><option key ={faculties.id}>{faculties.faculty_name}</option>)}
+    </Select>
+    </>
+  
+  );
+}
+
+EditFaculty.propTypes = {
+  /**
+   * The column field of the cell that triggered the event.
+   */
+  field: PropTypes.string.isRequired,
+  /**
+   * The grid row id.
+   */
+  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  /**
+   * The cell value.
+   * If the column has `valueGetter`, use `params.row` to directly access the fields.
+   */
+  value: PropTypes.any,
+};
+
+const renderEditFaculty = (params) => {
+  return <EditFaculty {...params} />;
+};
+//End of edit status via cell
  
 
   
@@ -160,30 +219,23 @@ const renderEditStatus = (params) => {
  
   const columns = [
     {
-      field: 'subject_code',
-      headerName: 'Subject code',
-      width: 250,
+      field: 'course_name',
+      headerName: 'Course',
+      width: 170,
      editable: false,
     },
     {
-        field: 'subject_name',
-        headerName: 'Subject name',
+        field: 'description',
+        headerName: 'Description',
+        width: 430,
+        editable: true,
+      },
+      {
+        field: 'course_faculty',
+        headerName: 'Faculty',
+        renderEditCell: renderEditFaculty,
         width: 250,
-        editable: true,
-      },
-      {
-        field: 'units',
-        headerName: 'Units',
-        width: 150,
-        type: 'number',
-        editable: true,
-      },
-      {
-        field: 'amount',
-        headerName: 'Amount',
-        width: 200,
-        type: 'number',
-        editable: true,
+       editable: true,
       },
       {
         field: 'status',
@@ -195,7 +247,6 @@ const renderEditStatus = (params) => {
           return(
           <>
         {cellValues.value == "active" ? (<Chip icon={<CheckIcon/>} label="active  " color ="success" size = "small" variant = "outlined"/>) : (<Chip icon={<CloseIcon/>} label="inactive" color ="error" size = "small" variant = "outlined"/>)}
-
           </>
           );//end of return
         }
@@ -226,22 +277,20 @@ const renderEditStatus = (params) => {
   const handleYes = async () => {
     const { newRow, oldRow, reject, resolve } = promiseArguments;
 
-
     try {
       // Make the HTTP request to save in the backend
       const dataUpdate = new FormData();
       dataUpdate.append('ID', newRow['id']);
-      dataUpdate.append('Subject_Code', newRow['subject_code']);
-      dataUpdate.append('Subject_Name', newRow['subject_name']);
-      dataUpdate.append('Units', newRow['units']);
-      dataUpdate.append('Amount', newRow['amount']);
+      dataUpdate.append('Course_Name', newRow['course_name']);
+      dataUpdate.append('Description', newRow['description']);
+      dataUpdate.append('Course_Faculty', newRow['course_faculty']);
       dataUpdate.append('Status', newRow['status']);
       dataUpdate.append('Action', 'Update');
       dataUpdate.append('EditorPosition', user.position);
       dataUpdate.append('EditorEmail', user.email);
-      dataUpdate.append('Category', 'Subject');
+      dataUpdate.append('Category', 'Course');
       const response = await mutateRow(newRow);
-      const sendRequest = await fetch(basedUrl+"/subject-update.php",{
+      const sendRequest = await fetch(basedUrl+"/course-update.php",{
         method: "POST",
         body: dataUpdate,
     });
@@ -301,6 +350,8 @@ const renderEditStatus = (params) => {
   
   return(
     <>
+    {console.log('Here'+ activeFaculty)}
+    {activeFaculty !== null ? (<AddCourse open = {formOpenType === 'course' } faculties ={activeFaculty} />) : (<></>)}
      {renderConfirmDialog()}
     <DataGrid components={{ Toolbar: CustomToolbar, LoadingOverlay: LinearProgress, }} loading = {loading} rows = {rows} columns={columns}  experimentalFeatures={{ newEditingApi: true }} style ={{height:'500px'}}
      processRowUpdate={processRowUpdate}
@@ -316,17 +367,17 @@ const renderEditStatus = (params) => {
 }
 
 //Toolbar
-function CustomToolbar() {
+function CustomToolbar(props) {
 
     //dispatch from redux
 const dispatch = useDispatch();
 
 //Open add form
-const  formOpenType = useSelector(state => state.addFormSub.value);
+const  formOpenType = useSelector(state => state.addFormCourse.value);
 
  //Open Add form
 const openPopper = () =>{
-  dispatch(ADDSUBJECT());
+  dispatch(ADDFORMCOURSE());
 } 
     return (<>
       <GridToolbarContainer>
@@ -336,7 +387,6 @@ const openPopper = () =>{
         <GridToolbarDensitySelector />
         <GridToolbarExport />
       </GridToolbarContainer>
-      <AddSubject open = {formOpenType === 'subject' } />
     </>
     );
   }

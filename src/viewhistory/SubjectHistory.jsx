@@ -190,7 +190,7 @@ const [actionFileSave, setActionFileSave] = useState('');
         dataRestore.append('Action', 'Restore');
         dataRestore.append('EditorPosition', user.position);
         dataRestore.append('EditorEmail', user.email);
-        dataRestore.append('Category', 'Employee');
+        dataRestore.append('Category', 'Subject');
         const sendRequest = await fetch(basedUrl+"/subject-update.php",{
           method: "POST",
           body: dataRestore,

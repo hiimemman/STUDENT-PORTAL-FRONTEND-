@@ -10,9 +10,10 @@ import openEmployeeTable from '../slice/Snackbars/EmployeeTableOpen/EmployeeTabl
 import statusEmployeeTable from '../slice/Snackbars/EmployeeTableStatus/EmployeeTableStatus'
 import messageEmployeeTable from '../slice/Snackbars/EmployeeTableMessage/EmployeeTableMessage'
 import addFormFor from '../slice/AddFormSlice/AddEmployeeSlice/AddEmployeeSlice'
-import { subjectSelect } from '../slice/FormSelectedRow/SubjectSelected'
+import  subjectSelect  from  '../slice/FormSelectedRow/SubjectSelected'
 import addFormSub from '../slice/AddFormSlice/AddSubjectSlice/AddSubjectSlice'
-
+import addFaculty from '../slice/AddFormSlice/AddFacultySlice/AddFacultySlice'
+import addCourse from '../slice/AddFormSlice/AddCourseSlice/AddCourseSlice'
 export const store = configureStore({
   reducer: {
     user: userInfo,
@@ -28,5 +29,7 @@ export const store = configureStore({
     addForm: addFormFor,
     subjectSelected: subjectSelect,
     addFormSub: addFormSub,
+    addFormFaculty: addFaculty,
+    addFormCourse: addCourse,
   },
 })

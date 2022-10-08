@@ -53,7 +53,7 @@ function computeMutation(newRow, oldRow) {
   return null;
 }
 
-export function CourseTable() {  
+export function SubjectTable() {  
     //dispatch from redux
     const dispatch = useDispatch();
     const [rows, setRows] = useState([]);
@@ -82,11 +82,11 @@ const user = useSelector(state => JSON.parse(state.user.session));
   // Get all users api
   useEffect( () => {
     
-    const getAllData = async () =>{
+    const getAllEmployee = async () =>{
       try{ 
         isLoading(true)
         //online api
-          const sendRequest = await fetch(basedUrl+"/course-table.php");
+          const sendRequest = await fetch(basedUrl+"/subject-table.php");
           const getResponse = await sendRequest.json();
           isLoading(false)
           if(getResponse.statusCode === 201){
@@ -100,8 +100,8 @@ const user = useSelector(state => JSON.parse(state.user.session));
         console.error(e)
       }
     }
-    getAllData();
-  }, [setRows,formOpenType]);
+    getAllEmployee();
+  }, [selectedSub,formOpenType]);
  
 
   
@@ -160,15 +160,29 @@ const renderEditStatus = (params) => {
  
   const columns = [
     {
-      field: 'course_name',
-      headerName: 'Course',
+      field: 'subject_code',
+      headerName: 'Subject code',
       width: 250,
      editable: false,
     },
     {
-        field: 'description',
-        headerName: 'Description',
+        field: 'subject_name',
+        headerName: 'Subject name',
         width: 250,
+        editable: true,
+      },
+      {
+        field: 'units',
+        headerName: 'Units',
+        width: 150,
+        type: 'number',
+        editable: true,
+      },
+      {
+        field: 'amount',
+        headerName: 'Amount',
+        width: 200,
+        type: 'number',
         editable: true,
       },
       {

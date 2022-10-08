@@ -1,10 +1,11 @@
+import React from 'react';
 import { LoginForm } from '../component/LoginForm';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { Skeleton } from '@mui/material';
+import {  Skeleton } from '@mui/material';
 import { useEffect } from 'react';
 import { PUT_USER, REMOVE_USER } from '../slice/UserSession/userSession';
-import { ParticlesBackground } from '../component/ParticlesBackground';
+
 export function SignIn() {
 
 //get user
@@ -34,9 +35,7 @@ useEffect(() =>{
   />
   ) :  (
     <>
-    
     <LoginForm />
-    
   </>
   )  }
     </>

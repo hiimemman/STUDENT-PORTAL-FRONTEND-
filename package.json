@@ -18,7 +18,9 @@
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.3.0",
     "@testing-library/user-event": "^13.5.0",
+    "@vitejs/plugin-react-refresh": "^1.3.6",
     "color": "^4.2.3",
+    "components": "^0.1.0",
     "generate-password": "^1.7.0",
     "javascript-time-ago": "^2.5.7",
     "particlesjs": "^2.2.3",
@@ -27,21 +29,21 @@
     "react-draggable": "^4.4.5",
     "react-redux": "^8.0.2",
     "react-router-dom": "^6.3.0",
-    "react-scripts": "5.0.1",
     "react-spring": "^9.5.5",
     "react-time-ago": "^7.2.1",
     "react-tsparticles": "^2.3.2",
     "redux": "^4.2.0",
     "styled-components": "^5.3.5",
     "tsparticles": "^2.3.2",
+    "utilities": "^1.0.6",
     "validator": "^13.7.0",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "vite",
+    "dev": "vite", 
+    "build": "vite build", 
+    "preview": "vite preview" 
   },
   "eslintConfig": {
     "extends": [
@@ -62,6 +64,12 @@
     ]
   },
   "devDependencies": {
-    "tailwindcss": "^3.1.4"
+    "@vitejs/plugin-react": "^2.1.0",
+    "autoprefixer": "^10.4.12",
+    "postcss": "^8.4.17",
+    "tailwindcss": "^3.1.8",
+    "vite": "^3.1.6",
+    "vite-plugin-svgr": "^2.2.1",
+    "vite-tsconfig-paths": "^3.5.1"
   }
 }

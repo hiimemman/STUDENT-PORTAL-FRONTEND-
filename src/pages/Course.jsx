@@ -14,10 +14,8 @@ import { useState, Suspense } from 'react';
 import Badge from '@mui/material/Badge';
 import MailIcon from '@mui/icons-material/Mail';
 import Avatar from "@mui/material/Avatar";
-import { EmployeeHistory } from '../viewhistory/EmployeeHistory';
-import { SubjectTable } from '../data-table/SubjectTable';
-import { SubjectHistory } from '../viewhistory/SubjectHistory';
 import { CourseTable } from '../data-table/CourseTable';
+import { CourseHistory } from '../viewhistory/CourseHistory';
 
 export  function Course() {
 //Selected Employee
@@ -88,7 +86,7 @@ const handleClose = (event, reason) => {
           <CourseTable />
           </TabPanel>
             <TabPanel value="2" sx ={{marginLeft:'-24px'}}>
-              <SubjectHistory />
+              <CourseHistory />
             </TabPanel>
           </TabContext>
        </div>

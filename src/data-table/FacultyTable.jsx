@@ -11,8 +11,8 @@ import Button from '@mui/material/Button';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { useSelector, useDispatch } from 'react-redux';
 import { basedUrl } from '../base-url/based-url'
-import { AddSubject } from '../forms/AddSubject';
-import { ADDSUBJECT } from '../slice/AddFormSlice/AddSubjectSlice/AddSubjectSlice';
+import { AddFaculty } from '../forms/AddFaculty';
+import { ADDFORMFACULTY } from '../slice/AddFormSlice/AddFacultySlice/AddFacultySlice';
 
 
 
@@ -34,26 +34,19 @@ const useFakeMutation = () => {
 };
 
 function computeMutation(newRow, oldRow) {
-  if (newRow.subject_name !== oldRow.subject_name) {
+  if (newRow.description !== oldRow.description) {
    
-    return `Subject name from '${oldRow.subject_name}' to '${newRow.subject_name}'`;
+    return `Description from '${oldRow.description}' to '${newRow.description}'`;
   }
   if (newRow.status !== oldRow.status) {
    
     return `Status from '${oldRow.status}' to '${newRow.status}'`;
   }
-  if (newRow.units !== oldRow.units) {
   
-    return `Units from '${oldRow.units || ''}' to '${newRow.units || ''}'`;
-  }
-  if (newRow.amount !== oldRow.amount) {
-  
-    return `Amount from '${oldRow.amount || ''}' to '${newRow.amount || ''}'`;
-  }
   return null;
 }
 
-export function SubjectTable() {  
+export function FacultyTable() {  
     //dispatch from redux
     const dispatch = useDispatch();
     const [rows, setRows] = useState([]);
@@ -68,12 +61,8 @@ export function SubjectTable() {
 
   const handleCloseSnackbar = () => setSnackbar(null);
 
-
-  //Selected sub
-  const [selectedSub, setSelectedSub] = useState(null);
-
     //Open add form
-const  formOpenType = useSelector(state => state.addForm.value);
+const  formOpenType = useSelector(state => state.addFormFaculty.value);
 
 //Current User Session
 const user = useSelector(state => JSON.parse(state.user.session));
@@ -82,11 +71,11 @@ const user = useSelector(state => JSON.parse(state.user.session));
   // Get all users api
   useEffect( () => {
     
-    const getAllEmployee = async () =>{
+    const getAllFaculty = async () =>{
       try{ 
         isLoading(true)
         //online api
-          const sendRequest = await fetch(basedUrl+"/subject-table.php");
+          const sendRequest = await fetch(basedUrl+"/faculty-table.php");
           const getResponse = await sendRequest.json();
           isLoading(false)
           if(getResponse.statusCode === 201){
@@ -100,7 +89,7 @@ const user = useSelector(state => JSON.parse(state.user.session));
         console.error(e)
       }
     }
-    getAllEmployee();
+    getAllFaculty();
   }, [setRows,formOpenType]);
  
 
@@ -160,36 +149,22 @@ const renderEditStatus = (params) => {
  
   const columns = [
     {
-      field: 'subject_code',
-      headerName: 'Subject code',
+      field: 'faculty_name',
+      headerName: 'Faculty',
       width: 250,
      editable: false,
     },
     {
-        field: 'subject_name',
-        headerName: 'Subject name',
-        width: 250,
-        editable: true,
-      },
-      {
-        field: 'units',
-        headerName: 'Units',
-        width: 150,
-        type: 'number',
-        editable: true,
-      },
-      {
-        field: 'amount',
-        headerName: 'Amount',
-        width: 200,
-        type: 'number',
+        field: 'description',
+        headerName: 'Description',
+        width: 440,
         editable: true,
       },
       {
         field: 'status',
         headerName: 'Status',
         renderEditCell: renderEditStatus,
-        width: 260,
+        width: 200,
         editable: true,
         renderCell: (cellValues) => {
           return(
@@ -200,6 +175,13 @@ const renderEditStatus = (params) => {
           );//end of return
         }
       },
+      {
+        field: 'added_at',
+        headerName: 'Date Created',
+        width: 200,
+        editable: false,
+        type: 'datetime'
+      }
   ];
 
   const processRowUpdate = useCallback(
@@ -226,22 +208,19 @@ const renderEditStatus = (params) => {
   const handleYes = async () => {
     const { newRow, oldRow, reject, resolve } = promiseArguments;
 
-
     try {
       // Make the HTTP request to save in the backend
       const dataUpdate = new FormData();
       dataUpdate.append('ID', newRow['id']);
-      dataUpdate.append('Subject_Code', newRow['subject_code']);
-      dataUpdate.append('Subject_Name', newRow['subject_name']);
-      dataUpdate.append('Units', newRow['units']);
-      dataUpdate.append('Amount', newRow['amount']);
+      dataUpdate.append('Faculty', newRow['faculty_name']);
+      dataUpdate.append('Description', newRow['description']);
       dataUpdate.append('Status', newRow['status']);
       dataUpdate.append('Action', 'Update');
       dataUpdate.append('EditorPosition', user.position);
       dataUpdate.append('EditorEmail', user.email);
-      dataUpdate.append('Category', 'Subject');
+      dataUpdate.append('Category', 'Faculty');
       const response = await mutateRow(newRow);
-      const sendRequest = await fetch(basedUrl+"/subject-update.php",{
+      const sendRequest = await fetch(basedUrl+"/faculty-update.php",{
         method: "POST",
         body: dataUpdate,
     });
@@ -322,11 +301,11 @@ function CustomToolbar() {
 const dispatch = useDispatch();
 
 //Open add form
-const  formOpenType = useSelector(state => state.addFormSub.value);
-
+const  formOpenType = useSelector(state => state.addFormFaculty.value);
+console.log("2"+formOpenType)
  //Open Add form
 const openPopper = () =>{
-  dispatch(ADDSUBJECT());
+  dispatch(ADDFORMFACULTY());
 } 
     return (<>
       <GridToolbarContainer>
@@ -336,7 +315,7 @@ const openPopper = () =>{
         <GridToolbarDensitySelector />
         <GridToolbarExport />
       </GridToolbarContainer>
-      <AddSubject open = {formOpenType === 'subject' } />
+      <AddFaculty open = {formOpenType === 'faculty' } />
     </>
     );
   }
