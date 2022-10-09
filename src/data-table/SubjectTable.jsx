@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import Avatar from "@mui/material/Avatar";
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
-import { Alert, Chip, Dialog, DialogActions, DialogContent, DialogTitle, Snackbar } from '@mui/material';
+import { Alert, Chip, Dialog, DialogActions, DialogContent, DialogTitle, InputLabel, MenuItem, OutlinedInput, Snackbar } from '@mui/material';
 import { useEffect, useState, useCallback, useRef } from 'react';
 import Button from '@mui/material/Button';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
@@ -13,6 +13,20 @@ import { useSelector, useDispatch } from 'react-redux';
 import { basedUrl } from '../base-url/based-url'
 import { AddSubject } from '../forms/AddSubject';
 import { ADDSUBJECT } from '../slice/AddFormSlice/AddSubjectSlice/AddSubjectSlice';
+import { useTheme } from '@mui/material/styles';
+import { Box } from '@mui/system';
+
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
 
 
 
@@ -66,6 +80,12 @@ export function SubjectTable() {
   const [promiseArguments, setPromiseArguments] = useState(null);
   const [snackbar, setSnackbar] = useState(null);
 
+
+  const theme = useTheme();
+  const [courses, setCourses] = useState('');
+
+  const [personName, setPersonName] = useState([]);
+
   const handleCloseSnackbar = () => setSnackbar(null);
 
 
@@ -82,9 +102,10 @@ const user = useSelector(state => JSON.parse(state.user.session));
   // Get all users api
   useEffect( () => {
     
-    const getAllEmployee = async () =>{
+    const getAllData = async () =>{
+      isLoading(true)
       try{ 
-        isLoading(true)
+      
         //online api
           const sendRequest = await fetch(basedUrl+"/subject-table.php");
           const getResponse = await sendRequest.json();
@@ -99,10 +120,103 @@ const user = useSelector(state => JSON.parse(state.user.session));
       }catch(e){
         console.error(e)
       }
+      try{ 
+        //online api
+          const sendRequest = await fetch(basedUrl+"/course-table.php");
+          const getResponse = await sendRequest.json();
+          isLoading(false)
+          if(getResponse.statusCode === 201){
+          
+          }else{
+            //if succesfully retrieve data
+            isLoading(false)
+            setCourses(getResponse);
+          }
+      }catch(e){
+        console.error(e)
+      }
     }
-    getAllEmployee();
-  }, [selectedSub,formOpenType]);
+    getAllData();
+
+  }, [selectedSub, formOpenType]);
  
+
+  function getStyles(name, personName, theme) {
+    return {
+      fontWeight:
+        personName.indexOf(name) === -1
+          ? theme.typography.fontWeightRegular
+          : theme.typography.fontWeightMedium,
+    };
+  }
+ 
+//Edit course availability via cell
+function EditCourses(props) {
+  const { id, value, field } = props;
+  const apiRef = useGridApiContext();
+  
+  const handleChange = async(event) =>{
+    
+    await apiRef.current.setEditCellValue({ id, field, value: event.target.value });
+      apiRef.current.stopCellEditMode({ id, field });
+  
+}
+
+  return (
+    <>
+        <Select
+          labelId="demo-multiple-chip-label"
+          id="demo-multiple-chip"
+          multiple
+          value={personName}
+          onChange={handleChange}
+          input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
+          renderValue={(selected) => (
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+              {selected.map((value) => (
+                <Chip key={value} label={value} />
+              ))}
+            </Box>
+          )}
+          MenuProps={MenuProps}
+        >
+          {console.log("Person Name: "+personName)}
+          {courses.map((name) => (
+            <MenuItem
+              key={name.id}
+              value={name.course_name}
+              style={getStyles(name.course_name, personName, theme)}
+            >
+              {name.course_name}
+            </MenuItem>
+          ))}
+        </Select>
+    </>
+  
+  );
+}
+
+EditCourses.propTypes = {
+  /**
+   * The column field of the cell that triggered the event.
+   */
+  field: PropTypes.string.isRequired,
+  /**
+   * The grid row id.
+   */
+  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  /**
+   * The cell value.
+   * If the column has `valueGetter`, use `params.row` to directly access the fields.
+   */
+  value: PropTypes.any,
+};
+
+const renderEditCourses = (params) => {
+  return <EditCourses {...params} />;
+};
+//End of edit course via cell
+
 
   
 //Edit status via cell
@@ -179,11 +293,11 @@ const renderEditStatus = (params) => {
         editable: true,
       },
       {
-        field: 'amount',
-        headerName: 'Amount',
-        width: 200,
-        type: 'number',
+        field: 'course_available',
+        headerName: 'Course(s)',
+        width: 150,
         editable: true,
+        renderEditCell: renderEditCourses,
       },
       {
         field: 'status',
@@ -234,7 +348,6 @@ const renderEditStatus = (params) => {
       dataUpdate.append('Subject_Code', newRow['subject_code']);
       dataUpdate.append('Subject_Name', newRow['subject_name']);
       dataUpdate.append('Units', newRow['units']);
-      dataUpdate.append('Amount', newRow['amount']);
       dataUpdate.append('Status', newRow['status']);
       dataUpdate.append('Action', 'Update');
       dataUpdate.append('EditorPosition', user.position);
