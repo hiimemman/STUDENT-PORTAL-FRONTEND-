@@ -10,8 +10,32 @@ import { Alert, Container, Divider, FormControl, FormControlLabel, FormHelperTex
 import { Box } from '@mui/system';
 import { CLOSESUBFORM } from '../slice/AddFormSlice/AddSubjectSlice/AddSubjectSlice';
 import { basedUrl } from '../base-url/based-url';
+import { useTheme } from '@mui/material/styles';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import Chip from '@mui/material/Chip';
 
-export function AddSubject(){
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
+
+function getStyles(name, personName, theme) {
+  return {
+    fontWeight:
+      personName.indexOf(name) === -1
+        ? theme.typography.fontWeightRegular
+        : theme.typography.fontWeightMedium,
+  };
+}
+
+
+export function AddSubject(props){
   const [scroll, setScroll] = useState('paper');
  //dispatch from redux
  const dispatch = useDispatch();
@@ -20,10 +44,11 @@ export function AddSubject(){
 const user = useSelector(state => JSON.parse(state.user.session));
 
 
+  const [courseName, setCourseName] = useState([]);
+
   const [errorSubjectCode, setErrorSubjectCode] = useState('');
   const [errorSubName, setErrorSubName] = useState('');
   const [errorUnits, setErrorUnits] = useState('');
-  const [errorAmount, setErrorAmount] = useState('');
 
   //Open add form
 const  formOpenType = useSelector(state => state.addFormSub.value);
@@ -32,7 +57,20 @@ const  formOpenType = useSelector(state => state.addFormSub.value);
   const [snackbar, setSnackbar] = useState(null);
 
   const handleCloseSnackbar = () => setSnackbar(null);
-  
+
+  const [courses, setCourses] = useState(props.courseAvailable);
+
+
+  useEffect(() => {
+    if (formOpenType === 'subject') {
+      const { current: descriptionElement } = descriptionElementRef;
+      if (descriptionElement !== null) {
+        descriptionElement.focus();
+      }
+    }
+   
+  }, [formOpenType]);
+
   const handleChangeSubCode = async (event) =>{
 
     try{
@@ -75,27 +113,26 @@ const  formOpenType = useSelector(state => state.addFormSub.value);
       setErrorUnits(true)
     }
   }
+  const theme = useTheme();
+  
 
-  const handleChangeAmount = (event) =>{
-    if(parseFloat(event.target.value) > 0){
-      setErrorAmount(false)
-    }else{
-      setErrorAmount(true)
-    }
-  }
+  const handleChangeCourse = (event) => {
+    const {
+      target: { value },
+    } = event;
+    setPersonName(
+      // On autofill we get a stringified value.
+      typeof value === 'string' ? value.split(',') : value,
+    );
+  };
+
   const handleClose = () => {
    dispatch(CLOSESUBFORM());
    };
  
    const descriptionElementRef = useRef(null);
-   useEffect(() => {
-    if (formOpenType === 'subject') {
-      const { current: descriptionElement } = descriptionElementRef;
-      if (descriptionElement !== null) {
-        descriptionElement.focus();
-      }
-    }
-  }, [formOpenType]);
+
+  
  
 const handleSubmitForm = async (event) =>{
  
@@ -170,11 +207,36 @@ const handleSubmitForm = async (event) =>{
                </FormControl>
              </Grid2>
              <Grid2 item xs={12}>
-              <FormControl fullWidth>
-               <TextField error = {errorAmount} type ="number" name ="Amount" fullWidth required label="Amount" variant="outlined" onKeyUp =  {handleChangeAmount} />
-        {errorAmount === true ? (<FormHelperText id="component-helper-text">Units name must not be empty
-        </FormHelperText>): (<></>)}
-               </FormControl>
+                  <FormControl>
+        <InputLabel id="demo-multiple-chip-label">Chip</InputLabel>
+        <Select
+          labelId="demo-multiple-chip-label"
+          id="demo-multiple-chip"
+          multiple
+          value={courses}
+          onChange={handleChangeCourse}
+          input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
+          renderValue={(selected) => (
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+              {selected.map((value) => (
+                <Chip key={value} label={value} />
+              ))}
+            </Box>
+          )}
+          MenuProps={MenuProps}
+        >
+          {console.log(courses)}
+          {courses.map((name) => (
+            <MenuItem
+              key={name.id}
+              value={name.subject_name}
+              style={getStyles(name.subject_name, courseName, theme)}
+            >
+              {name.subject_name}
+            </MenuItem>
+          ))}
+        </Select>
+                  </FormControl>
              </Grid2>
         </Grid2>
         </Box>

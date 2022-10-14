@@ -78,19 +78,10 @@ export function SubjectTable() {
   const noButtonRef = useRef(null);
 
   const [promiseArguments, setPromiseArguments] = useState(null);
+
   const [snackbar, setSnackbar] = useState(null);
 
-
-  const theme = useTheme();
-  const [courses, setCourses] = useState('');
-
-  const [personName, setPersonName] = useState([]);
-
   const handleCloseSnackbar = () => setSnackbar(null);
-
-
-  //Selected sub
-  const [selectedSub, setSelectedSub] = useState(null);
 
     //Open add form
 const  formOpenType = useSelector(state => state.addForm.value);
@@ -98,11 +89,11 @@ const  formOpenType = useSelector(state => state.addForm.value);
 //Current User Session
 const user = useSelector(state => JSON.parse(state.user.session));
 
-   
+const [courses, setCourses] = useState('');
+const [updatedCourse, setUpdateCourse] = useState(false);
   // Get all users api
   useEffect( () => {
-    
-    const getAllData = async () =>{
+   const getAllData = async () =>{
       isLoading(true)
       try{ 
       
@@ -124,100 +115,26 @@ const user = useSelector(state => JSON.parse(state.user.session));
         //online api
           const sendRequest = await fetch(basedUrl+"/course-table.php");
           const getResponse = await sendRequest.json();
-          isLoading(false)
+     
           if(getResponse.statusCode === 201){
           
           }else{
             //if succesfully retrieve data
-            isLoading(false)
             setCourses(getResponse);
+            setUpdateCourse(true)
           }
       }catch(e){
         console.error(e)
       }
     }
     getAllData();
-
-  }, [selectedSub, formOpenType]);
+  }, [formOpenType]);
  
-
-  function getStyles(name, personName, theme) {
-    return {
-      fontWeight:
-        personName.indexOf(name) === -1
-          ? theme.typography.fontWeightRegular
-          : theme.typography.fontWeightMedium,
-    };
-  }
- 
-//Edit course availability via cell
-function EditCourses(props) {
-  const { id, value, field } = props;
-  const apiRef = useGridApiContext();
+  useEffect(() => {
   
-  const handleChange = async(event) =>{
-    
-    await apiRef.current.setEditCellValue({ id, field, value: event.target.value });
-      apiRef.current.stopCellEditMode({ id, field });
+  }, [courses]);
+
   
-}
-
-  return (
-    <>
-        <Select
-          labelId="demo-multiple-chip-label"
-          id="demo-multiple-chip"
-          multiple
-          value={personName}
-          onChange={handleChange}
-          input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
-          renderValue={(selected) => (
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-              {selected.map((value) => (
-                <Chip key={value} label={value} />
-              ))}
-            </Box>
-          )}
-          MenuProps={MenuProps}
-        >
-          {console.log("Person Name: "+personName)}
-          {courses.map((name) => (
-            <MenuItem
-              key={name.id}
-              value={name.course_name}
-              style={getStyles(name.course_name, personName, theme)}
-            >
-              {name.course_name}
-            </MenuItem>
-          ))}
-        </Select>
-    </>
-  
-  );
-}
-
-EditCourses.propTypes = {
-  /**
-   * The column field of the cell that triggered the event.
-   */
-  field: PropTypes.string.isRequired,
-  /**
-   * The grid row id.
-   */
-  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-  /**
-   * The cell value.
-   * If the column has `valueGetter`, use `params.row` to directly access the fields.
-   */
-  value: PropTypes.any,
-};
-
-const renderEditCourses = (params) => {
-  return <EditCourses {...params} />;
-};
-//End of edit course via cell
-
-
   
 //Edit status via cell
 function EditStatus(props) {
@@ -296,8 +213,7 @@ const renderEditStatus = (params) => {
         field: 'course_available',
         headerName: 'Course(s)',
         width: 150,
-        editable: true,
-        renderEditCell: renderEditCourses,
+        editable: false,
       },
       {
         field: 'status',
@@ -360,7 +276,6 @@ const renderEditStatus = (params) => {
     });
     
     const getResponse = await sendRequest.json();
-    console.log(getResponse.statusCode);
     if(getResponse.statusCode !== 201){
       setSnackbar({ children: 'Update successfully', severity: 'success' });
       resolve(response);
@@ -386,7 +301,6 @@ const renderEditStatus = (params) => {
 
   const renderConfirmDialog = () => {
     if (!promiseArguments) {
-      console.log(!promiseArguments)
       return null;
     }
     const { newRow, oldRow } = promiseArguments;
@@ -412,8 +326,37 @@ const renderEditStatus = (params) => {
     );
   };
   
+
+  //Toolbar
+function CustomToolbar() {
+
+  //dispatch from redux
+const dispatch = useDispatch();
+
+//Open add form
+const  formOpenType = useSelector(state => state.addFormSub.value);
+
+//Open Add form
+const openPopper = () =>{
+dispatch(ADDSUBJECT());
+} 
+  return (<>
+    <GridToolbarContainer>
+      <Button variant="text" startIcon = {<PersonAddIcon />} onClick = {openPopper}> Add</Button>
+      <GridToolbarColumnsButton />
+      <GridToolbarFilterButton />
+      <GridToolbarDensitySelector />
+      <GridToolbarExport />
+    </GridToolbarContainer>
+    {console.log("courses"+courses)}
+    {updatedCourse  === true ? (<AddSubject open = {formOpenType === 'subject' }  courseAvailable = {Objec.values(courses)}/>) : (<></>)}
+  </>
+  );
+}
+
   return(
     <>
+    {console.log("COURSES:" + courses)}
      {renderConfirmDialog()}
     <DataGrid components={{ Toolbar: CustomToolbar, LoadingOverlay: LinearProgress, }} loading = {loading} rows = {rows} columns={columns}  experimentalFeatures={{ newEditingApi: true }} style ={{height:'500px'}}
      processRowUpdate={processRowUpdate}
@@ -428,28 +371,3 @@ const renderEditStatus = (params) => {
 
 }
 
-//Toolbar
-function CustomToolbar() {
-
-    //dispatch from redux
-const dispatch = useDispatch();
-
-//Open add form
-const  formOpenType = useSelector(state => state.addFormSub.value);
-
- //Open Add form
-const openPopper = () =>{
-  dispatch(ADDSUBJECT());
-} 
-    return (<>
-      <GridToolbarContainer>
-        <Button variant="text" startIcon = {<PersonAddIcon />} onClick = {openPopper}> Add</Button>
-        <GridToolbarColumnsButton />
-        <GridToolbarFilterButton />
-        <GridToolbarDensitySelector />
-        <GridToolbarExport />
-      </GridToolbarContainer>
-      <AddSubject open = {formOpenType === 'subject' } />
-    </>
-    );
-  }
