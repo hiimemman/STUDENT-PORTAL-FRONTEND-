@@ -159,7 +159,6 @@ const [actionFileSave, setActionFileSave] = useState('');
       isLoading(true)
         const sendRequest = await fetch(basedUrl+"/subject-history.php");
         const getResponse = await sendRequest.json();
-        console.log(getResponse)
         if(getResponse === 201){
           isLoading(false)
         }else{
@@ -183,7 +182,6 @@ const [actionFileSave, setActionFileSave] = useState('');
         dataRestore.append('Subject_Code', fileSave.subject_code);
         dataRestore.append('ID', fileSave.id);
         dataRestore.append('Subject_Name', fileSave.subject_name);
-        console.log(fileSave.subject_name)
         dataRestore.append('Units', fileSave.units);
         dataRestore.append('Amount', fileSave.amount);
         dataRestore.append('Status', fileSave.status);
@@ -197,7 +195,6 @@ const [actionFileSave, setActionFileSave] = useState('');
       });
       
       const getResponse = await sendRequest.json();
-      console.log(getResponse.statusCode)
       if(getResponse.statusCode !== 201){
         setOpenDragger(false)
         setOpenDialog(false);
@@ -211,7 +208,6 @@ const [actionFileSave, setActionFileSave] = useState('');
         setOpenDialog(false);
         setOpenSnackbar(true);
         setStatus("error");
-        console.log(getResponse.statusCode)
         setMessage('Error see console log for error');
         setisLoadingSubmit(false);
       }

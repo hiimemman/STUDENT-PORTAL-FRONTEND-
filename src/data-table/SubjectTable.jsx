@@ -89,7 +89,7 @@ const  formOpenType = useSelector(state => state.addForm.value);
 //Current User Session
 const user = useSelector(state => JSON.parse(state.user.session));
 
-const [courses, setCourses] = useState('');
+const [courses, setCourses] = useState({});
 const [updatedCourse, setUpdateCourse] = useState(false);
   // Get all users api
   useEffect( () => {
@@ -119,9 +119,10 @@ const [updatedCourse, setUpdateCourse] = useState(false);
           if(getResponse.statusCode === 201){
           
           }else{
-            //if succesfully retrieve data
-            setCourses(getResponse);
-            setUpdateCourse(true)
+            //if succesfully retrieve data'
+            console.log(getResponse)
+             setCourses(getResponse);
+             setUpdateCourse(true)
           }
       }catch(e){
         console.error(e)
@@ -348,15 +349,13 @@ dispatch(ADDSUBJECT());
       <GridToolbarDensitySelector />
       <GridToolbarExport />
     </GridToolbarContainer>
-    {console.log("courses"+courses)}
-    {updatedCourse  === true ? (<AddSubject open = {formOpenType === 'subject' }  courseAvailable = {Objec.values(courses)}/>) : (<></>)}
+    {updatedCourse  === true ? (<AddSubject open = {formOpenType === 'subject' }  courseAvailable = {courses}/>) : (<></>)}
   </>
   );
 }
 
   return(
     <>
-    {console.log("COURSES:" + courses)}
      {renderConfirmDialog()}
     <DataGrid components={{ Toolbar: CustomToolbar, LoadingOverlay: LinearProgress, }} loading = {loading} rows = {rows} columns={columns}  experimentalFeatures={{ newEditingApi: true }} style ={{height:'500px'}}
      processRowUpdate={processRowUpdate}

@@ -25,10 +25,10 @@ const MenuProps = {
   },
 };
 
-function getStyles(name, personName, theme) {
+function getStyles(name, courseName, theme) {
   return {
     fontWeight:
-      personName.indexOf(name) === -1
+      courseName.indexOf(name) === -1
         ? theme.typography.fontWeightRegular
         : theme.typography.fontWeightMedium,
   };
@@ -46,10 +46,12 @@ const user = useSelector(state => JSON.parse(state.user.session));
 
   const [courseName, setCourseName] = useState([]);
 
+
+
   const [errorSubjectCode, setErrorSubjectCode] = useState('');
   const [errorSubName, setErrorSubName] = useState('');
   const [errorUnits, setErrorUnits] = useState('');
-
+  const [errorCourse, setErrorCourse] = useState('');
   //Open add form
 const  formOpenType = useSelector(state => state.addFormSub.value);
 
@@ -120,10 +122,16 @@ const  formOpenType = useSelector(state => state.addFormSub.value);
     const {
       target: { value },
     } = event;
-    setPersonName(
+    setCourseName(
       // On autofill we get a stringified value.
       typeof value === 'string' ? value.split(',') : value,
     );
+    if(courseName.length <1){
+      setErrorCourse(true)
+    }else{
+      setErrorCourse(false)
+    }
+    console.log(courseName)
   };
 
   const handleClose = () => {
@@ -207,13 +215,13 @@ const handleSubmitForm = async (event) =>{
                </FormControl>
              </Grid2>
              <Grid2 item xs={12}>
-                  <FormControl>
+        <FormControl fullWidth error = {errorCourse}>
         <InputLabel id="demo-multiple-chip-label">Chip</InputLabel>
         <Select
           labelId="demo-multiple-chip-label"
           id="demo-multiple-chip"
           multiple
-          value={courses}
+          value={courseName}
           onChange={handleChangeCourse}
           input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
           renderValue={(selected) => (
@@ -225,17 +233,19 @@ const handleSubmitForm = async (event) =>{
           )}
           MenuProps={MenuProps}
         >
-          {console.log(courses)}
+          {console.log("COURSEs in add "+courses[1])}
           {courses.map((name) => (
             <MenuItem
               key={name.id}
-              value={name.subject_name}
-              style={getStyles(name.subject_name, courseName, theme)}
+              value={name.course_name}
+              style={getStyles(name.course_name, courseName, theme)}
             >
-              {name.subject_name}
+              {name.course_name}
             </MenuItem>
           ))}
         </Select>
+        {errorCourse=== true ? (<FormHelperText id="helper-text-course">Course available must not be empty
+        </FormHelperText>): (<></>)}
                   </FormControl>
              </Grid2>
         </Grid2>
