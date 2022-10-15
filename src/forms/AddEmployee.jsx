@@ -234,9 +234,6 @@ if(sexChanged === false){
         </FormControl>
           </Grid2>
         </Grid2>
-        {/* <Grid2 container spacing={3} sx ={{marginLeft:'-10px'}}>
-             
-        </Grid2> */}
         <Grid2 container spacing={3} sx ={{marginLeft:'-10px', marginTop: '10px'}}>
         <Grid2 item xs={6}>
         <LocalizationProvider dateAdapter={AdapterDayjs}>

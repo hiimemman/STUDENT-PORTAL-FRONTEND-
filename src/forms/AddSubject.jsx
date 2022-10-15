@@ -52,6 +52,10 @@ const user = useSelector(state => JSON.parse(state.user.session));
   const [errorSubName, setErrorSubName] = useState('');
   const [errorUnits, setErrorUnits] = useState('');
   const [errorCourse, setErrorCourse] = useState('');
+  const [errorYear, setErrorYear] =  useState('');
+  const [errorSemester, setErrorSemester] = useState('');
+
+
   //Open add form
 const  formOpenType = useSelector(state => state.addFormSub.value);
 
@@ -61,7 +65,6 @@ const  formOpenType = useSelector(state => state.addFormSub.value);
   const handleCloseSnackbar = () => setSnackbar(null);
 
   const [courses, setCourses] = useState(props.courseAvailable);
-
 
   useEffect(() => {
     if (formOpenType === 'subject') {
@@ -126,13 +129,33 @@ const  formOpenType = useSelector(state => state.addFormSub.value);
       // On autofill we get a stringified value.
       typeof value === 'string' ? value.split(',') : value,
     );
-    if(courseName.length <1){
+    setErrorCourse(false);
+  };
+
+  //Check if courseName is empty
+  useEffect(()=>{
+    if(courseName.length < 1 && errorCourse !== ''){
       setErrorCourse(true)
     }else{
       setErrorCourse(false)
     }
-    console.log(courseName)
-  };
+  },[courseName])
+
+  const handleChangeYear = (event) =>{
+    if((event.target.value).toString().length >0){
+      setErrorYear(false)
+    }else{
+      setErrorYear(true)
+    }
+  }
+
+  const handleChangeSemester = (event) =>{
+    if((event.target.value).toString().length >0){
+      setErrorSemester(false)
+    }else{
+      setErrorSemester(true)
+    }
+  }
 
   const handleClose = () => {
    dispatch(CLOSESUBFORM());
@@ -216,14 +239,15 @@ const handleSubmitForm = async (event) =>{
              </Grid2>
              <Grid2 item xs={12}>
         <FormControl fullWidth error = {errorCourse}>
-        <InputLabel id="demo-multiple-chip-label">Chip</InputLabel>
+        <InputLabel id="demo-multiple-chip-label">Course(s) Available</InputLabel>
         <Select
+        required
           labelId="demo-multiple-chip-label"
           id="demo-multiple-chip"
           multiple
           value={courseName}
           onChange={handleChangeCourse}
-          input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
+          input={<OutlinedInput id="select-multiple-chip" label="Course(s) Available" />}
           renderValue={(selected) => (
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
               {selected.map((value) => (
@@ -248,6 +272,44 @@ const handleSubmitForm = async (event) =>{
         </FormHelperText>): (<></>)}
                   </FormControl>
              </Grid2>
+
+             <Grid2 item xs={12}>
+             <FormControl fullWidth error = {errorYear} required>
+              <InputLabel id="demo-simple-select-label">Year Available</InputLabel>
+                <Select
+                required
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                name = "Year_Available"
+                label="Year Available"
+                onChange={handleChangeYear}
+                >
+                <MenuItem value={1}>1st year</MenuItem>
+                <MenuItem value={2}>2nd year</MenuItem>
+                <MenuItem value={3}>3rd year</MenuItem>
+                <MenuItem value={4}>4th year</MenuItem>
+                <MenuItem value={5}>5th year</MenuItem>
+                <MenuItem value={6}>6th year</MenuItem>
+              </Select>
+            </FormControl>
+            </Grid2>
+
+            <Grid2 item xs={12}>
+             <FormControl fullWidth error = {errorSemester} required>
+              <InputLabel id="demo-simple-select-label">Semester</InputLabel>
+                <Select
+                required
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                name = "Semester"
+                label="Semester"
+                onChange={handleChangeSemester}
+                >
+                <MenuItem value={1}>1st semester</MenuItem>
+                <MenuItem value={2}>2nd semester</MenuItem>
+              </Select>
+            </FormControl>
+            </Grid2>
         </Grid2>
         </Box>
         </DialogContent>
