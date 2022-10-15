@@ -15,6 +15,7 @@ import { AddSubject } from '../forms/AddSubject';
 import { ADDSUBJECT } from '../slice/AddFormSlice/AddSubjectSlice/AddSubjectSlice';
 import { useTheme } from '@mui/material/styles';
 import { Box } from '@mui/system';
+import { Suspense } from 'react';
 
 
 const ITEM_HEIGHT = 48;
@@ -64,6 +65,10 @@ function computeMutation(newRow, oldRow) {
   
     return `Amount from '${oldRow.amount || ''}' to '${newRow.amount || ''}'`;
   }
+  if (newRow.year_available !== oldRow.year_available) {
+   
+    return `Year from '${oldRow.year_available}' to '${newRow.year_available}'`;
+  }
   return null;
 }
 
@@ -84,13 +89,15 @@ export function SubjectTable() {
   const handleCloseSnackbar = () => setSnackbar(null);
 
     //Open add form
-const  formOpenType = useSelector(state => state.addForm.value);
+const  formOpenType = useSelector(state => state.addFormSub.value);
 
 //Current User Session
 const user = useSelector(state => JSON.parse(state.user.session));
 
-const [courses, setCourses] = useState({});
-const [updatedCourse, setUpdateCourse] = useState(false);
+const [courses, setCourses] = useState(null);
+
+const [updatedCourse, setUpdateCourse] = useState('');
+
   // Get all users api
   useEffect( () => {
    const getAllData = async () =>{
@@ -122,7 +129,7 @@ const [updatedCourse, setUpdateCourse] = useState(false);
             //if succesfully retrieve data'
             console.log(getResponse)
              setCourses(getResponse);
-             setUpdateCourse(true)
+             
           }
       }catch(e){
         console.error(e)
@@ -132,10 +139,70 @@ const [updatedCourse, setUpdateCourse] = useState(false);
   }, [formOpenType]);
  
   useEffect(() => {
-  
+    if(courses !== null){
+      setUpdateCourse(true)
+    }
   }, [courses]);
 
+ 
+ //Edit year via cell
+function EditYear(props) {
+  const { id, value, field } = props;
+  const apiRef = useGridApiContext();
   
+  const handleChange = async(event) =>{
+    
+    await apiRef.current.setEditCellValue({ id, field, value: event.target.value });
+      apiRef.current.stopCellEditMode({ id, field });
+  
+}
+
+  return (
+    <>
+      <Select
+      value={value}
+      onChange={handleChange}
+      size="small"
+      sx={{ height: 1 , width: 260}}
+      native
+      autoFocus
+    >
+      <option>1st year</option>
+      <option>2nd year</option>
+      <option>3rd year</option>
+      <option>4th year</option>
+      <option>5th year</option>
+      <option>6th year</option>
+
+    </Select>
+    </>
+  
+  );
+}
+
+EditYear.propTypes = {
+  /**
+   * The column field of the cell that triggered the event.
+   */
+  field: PropTypes.string.isRequired,
+  /**
+   * The grid row id.
+   */
+  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  /**
+   * The cell value.
+   * If the column has `valueGetter`, use `params.row` to directly access the fields.
+   */
+  value: PropTypes.any,
+};
+
+const renderEditYear = (params) => {
+  return <EditYear {...params} />;
+};
+//End of edit year via cell 
+
+
+
   
 //Edit status via cell
 function EditStatus(props) {
@@ -213,6 +280,19 @@ const renderEditStatus = (params) => {
       {
         field: 'course_available',
         headerName: 'Course(s)',
+        width: 150,
+        editable: false,
+      },
+      {
+        field: 'year_available',
+        headerName: 'Year',
+        renderEditCell: renderEditYear,
+        width: 150,
+        editable: true,
+      },
+      {
+        field: 'semester_available',
+        headerName: 'Semester',
         width: 150,
         editable: false,
       },
@@ -328,32 +408,6 @@ const renderEditStatus = (params) => {
   };
   
 
-  //Toolbar
-function CustomToolbar() {
-
-  //dispatch from redux
-const dispatch = useDispatch();
-
-//Open add form
-const  formOpenType = useSelector(state => state.addFormSub.value);
-
-//Open Add form
-const openPopper = () =>{
-dispatch(ADDSUBJECT());
-} 
-  return (<>
-    <GridToolbarContainer>
-      <Button variant="text" startIcon = {<PersonAddIcon />} onClick = {openPopper}> Add</Button>
-      <GridToolbarColumnsButton />
-      <GridToolbarFilterButton />
-      <GridToolbarDensitySelector />
-      <GridToolbarExport />
-    </GridToolbarContainer>
-    {updatedCourse  === true ? (<AddSubject open = {formOpenType === 'subject' }  courseAvailable = {courses}/>) : (<></>)}
-  </>
-  );
-}
-
   return(
     <>
      {renderConfirmDialog()}
@@ -370,3 +424,60 @@ dispatch(ADDSUBJECT());
 
 }
 
+ //Toolbar
+ function CustomToolbar() {
+  //Open add form
+  const  formOpenType = useSelector(state => state.addFormSub.value);
+  //dispatch from redux
+const dispatch = useDispatch();
+const [courses, setCourses] = useState({data: []});
+
+//  Get all users api
+ useEffect( () => {
+  console.log('UseEffect called')
+  const getAllData = async () =>{
+     try{ 
+       //online api
+         const sendRequest = await fetch(basedUrl+"/course-table.php");
+         const getResponse = await sendRequest.json();
+    
+         if(getResponse.statusCode === 201){
+         
+         }else{
+           //if succesfully retrieve data'
+          //  console.log(getResponse)
+           setCourses({data: getResponse});
+            
+         }
+     }catch(e){
+       console.error(e)
+     }
+   }
+   getAllData();
+ }, [formOpenType]);
+
+ useEffect(() => {
+   if(courses === null){
+     setUpdateCourse(true)
+   }
+ }, [courses]);
+
+
+
+//Open Add form
+const openPopper = () =>{
+    dispatch(ADDSUBJECT());
+} 
+  return (<>
+  {console.log("courses data"+courses.data)}
+    <GridToolbarContainer>
+      <Button variant="text" startIcon = {<PersonAddIcon />} onClick = {openPopper}> Add</Button>
+      <GridToolbarColumnsButton />
+      <GridToolbarFilterButton />
+      <GridToolbarDensitySelector />
+      <GridToolbarExport />
+    </GridToolbarContainer>
+    <AddSubject open = {formOpenType === 'subject'} course = {courses.data} />
+  </>
+  );
+}

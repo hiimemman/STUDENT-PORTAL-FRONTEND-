@@ -64,17 +64,9 @@ const  formOpenType = useSelector(state => state.addFormSub.value);
 
   const handleCloseSnackbar = () => setSnackbar(null);
 
-  const [courses, setCourses] = useState(props.courseAvailable);
+  const [courses, setCourses] = useState(props.course);
 
-  useEffect(() => {
-    if (formOpenType === 'subject') {
-      const { current: descriptionElement } = descriptionElementRef;
-      if (descriptionElement !== null) {
-        descriptionElement.focus();
-      }
-    }
-   
-  }, [formOpenType]);
+ console.log(courses)
 
   const handleChangeSubCode = async (event) =>{
 
@@ -158,24 +150,39 @@ const  formOpenType = useSelector(state => state.addFormSub.value);
   }
 
   const handleClose = () => {
+    setCourseName([]);
+    setErrorCourse('')
    dispatch(CLOSESUBFORM());
-   };
+  };
  
    const descriptionElementRef = useRef(null);
 
   
+useEffect(() => {
+  if (formOpenType === 'subject') {
+    const { current: descriptionElement } = descriptionElementRef;
+    if (descriptionElement !== null) {
+      descriptionElement.focus();
+    }
+  }
+ 
+}, [formOpenType]);
  
 const handleSubmitForm = async (event) =>{
  
 //`action`,`category`,`editor_position`,`editor_email`,`edited_email`
   event.preventDefault();
-  if(!errorSubjectCode && !errorSubName && !errorUnits && !errorAmount){
+  if(!errorSubjectCode && !errorSubName && !errorUnits){
   const data = new FormData(event.currentTarget);
   data.append('Action', 'Create');
   data.append('EditorPosition', user.position);
   data.append('EditorEmail', user.email);
   data.append('Category', 'Subject');
+  console.log("Formdata values:")
 
+  for (var pair of data.entries()) {
+    console.log(pair[0]+ ' - ' + pair[1]); 
+}
   try{
     const sendRequest = await fetch(basedUrl+"/subject-add.php",{
               method: "POST",
@@ -199,6 +206,8 @@ const handleSubmitForm = async (event) =>{
   }
 }
  
+
+
   return(
     <>
       <Dialog
@@ -243,7 +252,8 @@ const handleSubmitForm = async (event) =>{
         <Select
         required
           labelId="demo-multiple-chip-label"
-          id="demo-multiple-chip"
+          id="Courses"
+          name ="Courses"
           multiple
           value={courseName}
           onChange={handleChangeCourse}
@@ -257,7 +267,6 @@ const handleSubmitForm = async (event) =>{
           )}
           MenuProps={MenuProps}
         >
-          {console.log("COURSEs in add "+courses[1])}
           {courses.map((name) => (
             <MenuItem
               key={name.id}
@@ -282,14 +291,15 @@ const handleSubmitForm = async (event) =>{
                 id="demo-simple-select"
                 name = "Year_Available"
                 label="Year Available"
+                defaultValue ={''}
                 onChange={handleChangeYear}
                 >
-                <MenuItem value={1}>1st year</MenuItem>
-                <MenuItem value={2}>2nd year</MenuItem>
-                <MenuItem value={3}>3rd year</MenuItem>
-                <MenuItem value={4}>4th year</MenuItem>
-                <MenuItem value={5}>5th year</MenuItem>
-                <MenuItem value={6}>6th year</MenuItem>
+                <MenuItem value={'1st year'}>1st year</MenuItem>
+                <MenuItem value={'2nd year'}>2nd year</MenuItem>
+                <MenuItem value={'3rd year'}>3rd year</MenuItem>
+                <MenuItem value={'4th year'}>4th year</MenuItem>
+                <MenuItem value={'5th year'}>5th year</MenuItem>
+                <MenuItem value={'6th year'}>6th year</MenuItem>
               </Select>
             </FormControl>
             </Grid2>
@@ -303,10 +313,11 @@ const handleSubmitForm = async (event) =>{
                 id="demo-simple-select"
                 name = "Semester"
                 label="Semester"
+                defaultValue= {''}
                 onChange={handleChangeSemester}
                 >
-                <MenuItem value={1}>1st semester</MenuItem>
-                <MenuItem value={2}>2nd semester</MenuItem>
+                <MenuItem value={'1st semester'}>1st semester</MenuItem>
+                <MenuItem value={'2nd semester'}>2nd semester</MenuItem>
               </Select>
             </FormControl>
             </Grid2>
