@@ -16,6 +16,7 @@ import { ADDSUBJECT } from '../slice/AddFormSlice/AddSubjectSlice/AddSubjectSlic
 import { useTheme } from '@mui/material/styles';
 import { Box } from '@mui/system';
 import { Suspense } from 'react';
+import { PUT_SUBJECT } from '../slice/FormSelectedRow/SubjectSelected';
 
 
 const ITEM_HEIGHT = 48;
@@ -68,6 +69,10 @@ function computeMutation(newRow, oldRow) {
   if (newRow.year_available !== oldRow.year_available) {
    
     return `Year from '${oldRow.year_available}' to '${newRow.year_available}'`;
+  }
+  if (newRow.semester_available !== oldRow.semester_available) {
+   
+    return `Semester from '${oldRow.semester_available}' to '${newRow.semester_available}'`;
   }
   return null;
 }
@@ -138,11 +143,58 @@ const [updatedCourse, setUpdateCourse] = useState('');
     getAllData();
   }, [formOpenType]);
  
-  useEffect(() => {
-    if(courses !== null){
-      setUpdateCourse(true)
-    }
-  }, [courses]);
+
+
+   //Edit semester via cell
+function EditSemester(props) {
+  const { id, value, field } = props;
+  const apiRef = useGridApiContext();
+  
+  const handleChange = async(event) =>{
+    
+    await apiRef.current.setEditCellValue({ id, field, value: event.target.value });
+      apiRef.current.stopCellEditMode({ id, field });
+  
+}
+
+  return (
+    <>
+      <Select
+      value={value}
+      onChange={handleChange}
+      size="small"
+      sx={{ height: 1 , width: 260}}
+      native
+      autoFocus
+    >
+      <option>1st semester</option>
+      <option>2nd semester</option>
+      </Select>
+    </>
+  
+  );
+}
+
+EditSemester.propTypes = {
+  /**
+   * The column field of the cell that triggered the event.
+   */
+  field: PropTypes.string.isRequired,
+  /**
+   * The grid row id.
+   */
+  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  /**
+   * The cell value.
+   * If the column has `valueGetter`, use `params.row` to directly access the fields.
+   */
+  value: PropTypes.any,
+};
+
+const renderEditSemester = (params) => {
+  return <EditSemester {...params} />;
+};
+//End of edit semester via cell 
 
  
  //Edit year via cell
@@ -293,14 +345,15 @@ const renderEditStatus = (params) => {
       {
         field: 'semester_available',
         headerName: 'Semester',
+        renderEditCell: renderEditSemester,
         width: 150,
-        editable: false,
+        editable: true,
       },
       {
         field: 'status',
         headerName: 'Status',
         renderEditCell: renderEditStatus,
-        width: 260,
+        width: 100,
         editable: true,
         renderCell: (cellValues) => {
           return(
@@ -345,6 +398,9 @@ const renderEditStatus = (params) => {
       dataUpdate.append('Subject_Code', newRow['subject_code']);
       dataUpdate.append('Subject_Name', newRow['subject_name']);
       dataUpdate.append('Units', newRow['units']);
+      dataUpdate.append('Course', newRow['course_available']);
+      dataUpdate.append('Year', newRow['year_available']);
+      dataUpdate.append('Semester', newRow['semester_available'])
       dataUpdate.append('Status', newRow['status']);
       dataUpdate.append('Action', 'Update');
       dataUpdate.append('EditorPosition', user.position);
@@ -413,6 +469,13 @@ const renderEditStatus = (params) => {
      {renderConfirmDialog()}
     <DataGrid components={{ Toolbar: CustomToolbar, LoadingOverlay: LinearProgress, }} loading = {loading} rows = {rows} columns={columns}  experimentalFeatures={{ newEditingApi: true }} style ={{height:'500px'}}
      processRowUpdate={processRowUpdate}
+     onSelectionModelChange={(ids) => {
+      const selectedIDs = new Set(ids);
+      const selectedRowData = rows.filter((row) =>
+        selectedIDs.has(row.id.toString())
+      );
+      dispatch(PUT_SUBJECT(selectedRowData[0]))
+    }}
     /> 
  {!!snackbar && (
         <Snackbar open onClose={handleCloseSnackbar} autoHideDuration={6000}>
@@ -431,7 +494,7 @@ const renderEditStatus = (params) => {
   //dispatch from redux
 const dispatch = useDispatch();
 const [courses, setCourses] = useState({data: []});
-
+const [updatedCourse, setUpdatedCourse] = useState(false);
 //  Get all users api
  useEffect( () => {
   console.log('UseEffect called')
@@ -457,9 +520,9 @@ const [courses, setCourses] = useState({data: []});
  }, [formOpenType]);
 
  useEffect(() => {
-   if(courses === null){
-     setUpdateCourse(true)
-   }
+  if(courses.data === []){
+    setUpdateCourse(true)
+  }
  }, [courses]);
 
 
@@ -471,13 +534,14 @@ const openPopper = () =>{
   return (<>
   {console.log("courses data"+courses.data)}
     <GridToolbarContainer>
-      <Button variant="text" startIcon = {<PersonAddIcon />} onClick = {openPopper}> Add</Button>
+       <Button variant="text" startIcon = {<PersonAddIcon />} onClick = {openPopper}> Add</Button>
       <GridToolbarColumnsButton />
       <GridToolbarFilterButton />
       <GridToolbarDensitySelector />
       <GridToolbarExport />
     </GridToolbarContainer>
-    <AddSubject open = {formOpenType === 'subject'} course = {courses.data} />
+    {updatedCourse === true ? (<AddSubject open = {formOpenType === 'subject'} course = {courses.data} />) : (<></>)}
+    
   </>
   );
 }

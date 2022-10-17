@@ -2,7 +2,7 @@ import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import {  Alert, Skeleton, Snackbar } from '@mui/material';
+import {  Alert, Skeleton, Snackbar, Stack } from '@mui/material';
 import { DrawerAppBar } from '../component/DrawerAppBar';
 import { useEffect} from 'react';
 import { EmployeeTable } from '../data-table/EmployeeTable';
@@ -17,10 +17,11 @@ import Avatar from "@mui/material/Avatar";
 import { EmployeeHistory } from '../viewhistory/EmployeeHistory';
 import { SubjectTable } from '../data-table/SubjectTable';
 import { SubjectHistory } from '../viewhistory/SubjectHistory';
-
+import { Typography } from '@mui/material';
+import { SubjectView } from '../viewprofile/SubjectView';
 export  function Subject() {
-//Selected Employee
-const employee = useSelector(state => state.employeeSelected.value)
+//Selected Subject
+const subject = useSelector(state => state.subjectSelected.value)
 
 //get user
 const user = useSelector(state => JSON.parse(state.user.session))
@@ -81,6 +82,12 @@ const handleClose = (event, reason) => {
             <TabList onChange={handleChange} aria-label="lab API tabs example" >
                 <Tab label="DATA TABLE" value="1" />
                 <Tab label="HISTORY" value="2" />
+                {console.log("thisissub" + JSON.stringify(subject))}
+                {subject !== null ? (<Tab value="3" label={
+                <Stack direction="row" spacing={2}>
+                <Typography>{subject.subject_code}</Typography>
+                </Stack>
+                } />) : (<></>)}
              </TabList>
             </Box>
         <TabPanel value="1"  style={{height: 'auto'}} sx ={{marginLeft:'-24px'}}>
@@ -88,6 +95,9 @@ const handleClose = (event, reason) => {
           </TabPanel>
             <TabPanel value="2" sx ={{marginLeft:'-24px'}}>
               <SubjectHistory />
+            </TabPanel>
+            <TabPanel value="3" sx ={{marginLeft:'-24px'}}>
+              <SubjectView />
             </TabPanel>
           </TabContext>
        </div>

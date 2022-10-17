@@ -2,7 +2,7 @@ import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import {  Alert, Skeleton, Snackbar } from '@mui/material';
+import {  Alert, Skeleton, Snackbar, Typography } from '@mui/material';
 import { DrawerAppBar } from '../component/DrawerAppBar';
 import { useEffect} from 'react';
 import { EmployeeTable } from '../data-table/EmployeeTable';
@@ -17,6 +17,8 @@ import Avatar from "@mui/material/Avatar";
 import { EmployeeView } from '../viewprofile/EmployeeView';
 import { EmployeeHistory } from '../viewhistory/EmployeeHistory';
 import { ParticlesBackground } from '../component/ParticlesBackground';
+import { imageBaseUrl } from '../base-url/based-url';
+import { Stack } from '@mui/system';
 
 export  function Employees() {
 //Selected Employee
@@ -80,23 +82,24 @@ const handleClose = (event, reason) => {
         <Box sx={{ borderBottom: 1, borderColor: 'divider' } }>
             <TabList onChange={handleChange} aria-label="lab API tabs example" >
                 <Tab label="DATA TABLE" value="1" />
-                {employee !== null ? (<Tab value="2" label={<Badge badgeContent={
-                <Avatar src={employee.profile_url} sx={{ width: 30, height: 30  }}/> } >
-                  PROFILE
-                </Badge>} />) : (<Tab value="2" label ="PROFILE" disabled />)}
-                
-                <Tab label="HISTORY" value="3" />
+                <Tab label="HISTORY" value="2" />
+                {employee !== null ? (<Tab value="3" label={
+                <Stack direction="row" spacing={2}>
+                <Avatar src={imageBaseUrl+employee.profile_url} sx={{ width: 30, height: 30  }}/>
+                <Typography>{employee.firstname}</Typography>
+                </Stack>
+                } />) : (<></>)}
              </TabList>
             </Box>
         <TabPanel value="1"  style={{height: 'auto'}} sx ={{marginLeft:'-24px'}}>
           <EmployeeTable />
           </TabPanel>
             <TabPanel value="2" sx ={{marginLeft:'-24px'}}>
-          <EmployeeView /> 
-            </TabPanel>
-            <TabPanel value="3" sx ={{marginLeft:'-24px'}}>
               <EmployeeHistory />
-            </TabPanel>
+              </TabPanel>
+              <TabPanel value="3" sx ={{marginLeft:'-24px'}}>
+                <EmployeeView /> 
+              </TabPanel>
           </TabContext>
        </div>
        <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>

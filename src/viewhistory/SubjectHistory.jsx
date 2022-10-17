@@ -183,7 +183,9 @@ const [actionFileSave, setActionFileSave] = useState('');
         dataRestore.append('ID', fileSave.id);
         dataRestore.append('Subject_Name', fileSave.subject_name);
         dataRestore.append('Units', fileSave.units);
-        dataRestore.append('Amount', fileSave.amount);
+        dataRestore.append('Course', fileSave.course_available);
+        dataRestore.append('Year', fileSave.year_available);
+        dataRestore.append('Semester', fileSave.semester_available)
         dataRestore.append('Status', fileSave.status);
         dataRestore.append('Action', 'Restore');
         dataRestore.append('EditorPosition', user.position);
@@ -193,7 +195,7 @@ const [actionFileSave, setActionFileSave] = useState('');
           method: "POST",
           body: dataRestore,
       });
-      
+  
       const getResponse = await sendRequest.json();
       if(getResponse.statusCode !== 201){
         setOpenDragger(false)
@@ -264,8 +266,16 @@ const [actionFileSave, setActionFileSave] = useState('');
              <Grid2 item xs={4}><Typography variant='overline'>{fileSave.units}</Typography></Grid2>
             </Grid2>
             <Grid2 container spacing={2} sx ={{marginLeft:'0px'}}>
-             <Grid2 item xs={4}><Typography variant='overline'>AMOUNT:</Typography></Grid2>
-             <Grid2 item xs={4}><Typography variant='overline'>{fileSave.amount}</Typography></Grid2>
+             <Grid2 item xs={4}><Typography variant='overline'>COURSE(S):</Typography></Grid2>
+             <Grid2 item xs={4}><Typography variant='overline'>{fileSave.course_available}</Typography></Grid2>
+            </Grid2>
+            <Grid2 container spacing={2} sx ={{marginLeft:'0px'}}>
+             <Grid2 item xs={4}><Typography variant='overline'>YEAR:</Typography></Grid2>
+             <Grid2 item xs={4}><Typography variant='overline'>{fileSave.year_available}</Typography></Grid2>
+            </Grid2>
+            <Grid2 container spacing={2} sx ={{marginLeft:'0px'}}>
+             <Grid2 item xs={4}><Typography variant='overline'>SEMESTER:</Typography></Grid2>
+             <Grid2 item xs={4}><Typography variant='overline'>{fileSave.semester_available}</Typography></Grid2>
             </Grid2>
             <Grid2 container spacing={2} sx ={{marginLeft:'0px'}}>
              <Grid2 item xs={4}><Typography variant='overline'>STATUS:</Typography></Grid2>

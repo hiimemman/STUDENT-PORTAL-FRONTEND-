@@ -41,9 +41,9 @@
   },
   "scripts": {
     "start": "vite",
-    "dev": "vite", 
-    "build": "vite build", 
-    "preview": "vite preview" 
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "eslintConfig": {
     "extends": [
@@ -64,6 +64,7 @@
     ]
   },
   "devDependencies": {
+    "@tailwindcss/typography": "^0.5.7",
     "@vitejs/plugin-react": "^2.1.0",
     "autoprefixer": "^10.4.12",
     "postcss": "^8.4.17",

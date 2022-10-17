@@ -14,6 +14,7 @@ import { ADDEMPLOYEE } from '../slice/AddFormSlice/AddEmployeeSlice/AddEmployeeS
 import {PUT_EMPLOYEE} from '../slice/FormSelectedRow/EmployeeSelected'
 import { basedUrl } from '../base-url/based-url'
 import { useEffect, useState, useCallback, useRef } from 'react';
+import { imageBaseUrl } from '../base-url/based-url';
 //Toolbar
 function CustomToolbar() {
 
@@ -234,7 +235,7 @@ function EditPosition(props) {
       
         return (
           <>
-            <Avatar src={params.value} />
+            <Avatar src={imageBaseUrl+params.value} />
           </>
         );
       }

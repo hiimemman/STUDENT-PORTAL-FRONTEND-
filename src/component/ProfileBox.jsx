@@ -9,6 +9,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { REMOVE_USER } from '../slice/UserSession/userSession';
 import { useNavigate } from 'react-router-dom';
 import Skeleton from '@mui/material/Skeleton';
+import { imageBaseUrl } from '../base-url/based-url';
 
 export function ProfileBox(){
 //UseNavigate
@@ -52,7 +53,7 @@ const navigate = useNavigate();
       {user.firstname !== null ? (<Box sx={{ flexGrow: 0}} >
         <Tooltip title="Open settings">
           <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-            <Avatar alt={user.firstname} src= {user.profile_url} />
+            <Avatar alt={user.firstname} src= {imageBaseUrl+user.profile_url} />
           </IconButton>
         </Tooltip>
         <Menu

@@ -70,6 +70,7 @@ const dispatch = useDispatch();
       // });
           
           const getResponse = await sendRequest.json();
+          console.log(getResponse.statusCode)
           if(getResponse.statusCode === 201){
             setOpen(true);
             setStatus("error");
