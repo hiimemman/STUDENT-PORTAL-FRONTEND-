@@ -313,7 +313,7 @@ const renderEditStatus = (params) => {
     {
       field: 'subject_code',
       headerName: 'Subject code',
-      width: 250,
+      width: 200,
      editable: false,
     },
     {
@@ -325,14 +325,20 @@ const renderEditStatus = (params) => {
       {
         field: 'units',
         headerName: 'Units',
-        width: 150,
+        width: 50,
         type: 'number',
         editable: true,
       },
       {
+        field: 'type',
+        headerName: 'Subject Type',
+        width: 150,
+        editable: false,
+      },
+      {
         field: 'course_available',
         headerName: 'Course(s)',
-        width: 150,
+        width: 180,
         editable: false,
       },
       {
@@ -400,7 +406,8 @@ const renderEditStatus = (params) => {
       dataUpdate.append('Units', newRow['units']);
       dataUpdate.append('Course', newRow['course_available']);
       dataUpdate.append('Year', newRow['year_available']);
-      dataUpdate.append('Semester', newRow['semester_available'])
+      dataUpdate.append('Semester', newRow['semester_available']);
+      dataUpdate.append('Type', newRow['type']);
       dataUpdate.append('Status', newRow['status']);
       dataUpdate.append('Action', 'Update');
       dataUpdate.append('EditorPosition', user.position);
@@ -485,7 +492,7 @@ const renderEditStatus = (params) => {
     </>
   );
 }
-//d
+
  //Toolbar
  function CustomToolbarSubject() {
   //Open add form
@@ -500,7 +507,7 @@ const [updatedCourse, setUpdatedCourse] = useState(false);
   const getAllData = async () =>{
      try{ 
        //online api
-         const sendRequest = await fetch(basedUrl+"/course-table.php");
+         const sendRequest = await fetch(basedUrl+"/course-active.php");
          const getResponse = await sendRequest.json();
     
          if(getResponse.statusCode === 201){
@@ -519,8 +526,8 @@ const [updatedCourse, setUpdatedCourse] = useState(false);
  }, [formOpenType]);
 
  useEffect(() => {
-  if(courses.data !== []){
-    console.log("Courses data = "+JSON.stringify(courses.data));
+  if(courses.data.length > 0){
+    console.log("Courses data = "+JSON.stringify(courses));
     setUpdatedCourse(true)
   }
  }, [formOpenType, courses]);

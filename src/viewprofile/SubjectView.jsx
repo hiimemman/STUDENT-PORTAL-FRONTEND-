@@ -1,4 +1,4 @@
-import { Alert, Button, Chip, Divider, FormControl, FormHelperText, InputBase,  InputLabel,  MenuItem,  NativeSelect, OutlinedInput, Select, Snackbar, Stack, TextField, Typography } from '@mui/material';
+import { Alert, Button, Chip, Divider, FormControl, FormHelperText, InputBase,  InputLabel,  NativeSelect, OutlinedInput, Snackbar, Stack, TextField, Typography } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import Grid2 from '@mui/material/Unstable_Grid2'; // Grid2 version 2
 import { useEffect, useState } from 'react';
@@ -21,7 +21,8 @@ import { LoadingButton } from '@mui/lab';
 import { PUT_SUBJECT } from '../slice/FormSelectedRow/SubjectSelected';
 import { basedUrl } from '../base-url/based-url';
 import { useTheme } from '@mui/material/styles';
-
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
 //Course select required functions
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -77,8 +78,24 @@ const [loginStatus, setStatus] = useState("failed");// default is failed for log
 const [loginMessage, setMessage ] = useState("Try again");// Default message of alert
 
 
+//Field states
+
 //Get all active course
-const [courseName, setCourseName] = useState([]);
+console.log(subject.course_available)
+const courseInitialState = subject.course_available.split(",")
+const [courseName, setCourseName] = useState(
+  courseInitialState
+);
+
+const subjectTypeInitialState = subject.type
+const [subjectType, setSubjectType] = useState(
+subjectTypeInitialState
+)
+
+const [yearAvailable, setYearAvailable] = useState(subject.year_available);
+
+const [semesterAvailable, setSemesterAvailable] = useState(subject.semester_available);
+
 
 //Error handlers
 
@@ -145,17 +162,22 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
   //submit form
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if(validContact && validFname && validLname && validAddress){
+    console.log("Submited here")
       const data = new FormData(event.target);
+      data.append('ID', subject.id);
       data.append('Status', subject.status);
       data.append('Subject_Code', subject.subject_code);
+      data.append('Course', courseName);
+      if(subjectType === 'Minor'){
+        data.append('Course', 'General')
+      }
       data.append('Action', 'Update');
       data.append('EditorPosition', user.position);
       data.append('EditorEmail', user.email);
       data.append('Category', 'subject');
-    //   for (var pair of data.entries()) {
-    //     console.log(pair[0]+ ' - ' + pair[1]); 
-    // }
+      for (var pair of data.entries()) {
+        console.log(pair[0]+ ' - ' + pair[1]); 
+    }
       try{
         setisLoading(true);
         //online api
@@ -165,7 +187,7 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
           });
           
           const getResponse = await sendRequest.json();
-          console.log(getResponse.statusCode)
+          console.log("Reponse here: "+ JSON.stringify(getResponse.statusCode))
           if(getResponse.statusCode !== 201){
             dispatch(PUT_SUBJECT(getResponse.statusCode));
             setOpen(true);
@@ -184,13 +206,10 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
           
       }catch(e){
         setisLoading(false);
+        console.log(e)
         // setMessage(e);
       }
-    }else{
-      setOpen(true);
-      setStatus("warning");
-      setMessage("Please check your inputs and try again")
-    }
+    
   }
  
 
@@ -250,7 +269,7 @@ const [updatedCourse, setUpdatedCourse] = useState(false);
          <Stack direction="row" spacing={2} sx = {{width:'100%', marginBottom: '1.5rem'}}>
             <Typography variant ="overline" noWrap sx={{fontSize:'15px', width: '15rem'}}>Subject Name:  </Typography>
           <FormControl error ={errorSubjectName} >
-           <TextField error ={errorSubjectName} defaultValue = {subject.subject_name} name ="Subject_Name" id="Subject_Name" sx={{fontSize:'15px' , width: '50rem'}} onChange ={
+           <TextField required error ={errorSubjectName} defaultValue = {subject.subject_name} name ="Subject_Name" id="Subject_Name" sx={{fontSize:'15px' , width: '50rem'}} onChange ={
               (event) => {
               if((event.target.value).toString().length >0){
                setErrorSubjectName(false);
@@ -279,55 +298,130 @@ const [updatedCourse, setUpdatedCourse] = useState(false);
           </FormControl>
          </Stack>  
 
-        <Stack direction="row" spacing={2} sx = {{width:'100%', marginBottom: '1.5rem'}}>
-         <Typography variant ="overline" noWrap sx={{fontSize:'15px', width: '15rem'}}>Courses:  </Typography>
+      <Stack direction="row" spacing={2} sx = {{width:'100%', marginBottom: '1.5rem'}}>
+         <Typography variant ="overline" noWrap sx={{fontSize:'15px', width: '15rem'}}>Subject Type:  </Typography>
 
-         <FormControl fullWidth variant = "standard" error = {errorCourse}   sx={{fontSize:'15px' , width: '50rem'}}>
+         <FormControl fullWidth variant = "standard"    sx={{fontSize:'15px' , width: '50rem'}}>
         {/* <InputLabel id="demo-multiple-chip-label">Course(s) Available</InputLabel> */}
         <Select
          required
-          labelId="demo-multiple-chip-label"
-          id="Courses"
-          name ="Courses"
-          multiple
-          value={courseName}
-         
+          id="Type"
+          name ="Type"
+         value={subjectType}
           onChange={
-            (event) => {
-              const {
-                target: { value },
-              } = event;
-              setCourseName(
-                // On autofill we get a stringified value.
-                typeof value === 'string' ? value.split(',') : value,
-              );
-              setErrorCourse(false);
-            }
-          }
-          // input={<OutlinedInput id="select-multiple-chip" label="Course(s) Available" />}
-          renderValue={(selected) => (
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-              {selected.map((value) => (
-                <Chip key={value} label={value} />
-              ))}
-            </Box>
-          )}
-          MenuProps={MenuProps}
+    (event) => {setSubjectType(event.target.value)}
+    }     
         >
-          {courses.data.map((name) => (
-            <MenuItem
-              key={name.id}
-              value={name.course_name}
-              style={getStyles(name.course_name, courseName, theme)}
-            >
-              {name.course_name}
-            </MenuItem>
-          ))}
+          <MenuItem value = "Minor">
+              Minor
+          </MenuItem>
+          <MenuItem value = "Major">
+              Major
+          </MenuItem>
         </Select>
-        {errorCourse=== true ? (<FormHelperText id="helper-text-course">Course available must not be empty
-        </FormHelperText>): (<></>)}
       </FormControl>
-        </Stack>
+    </Stack> 
+    {subjectType === 'Major' ? (
+          <Stack direction="row" spacing={2} sx = {{width:'100%', marginBottom: '1.5rem'}}>
+          <Typography variant ="overline" noWrap sx={{fontSize:'15px', width: '15rem'}}>Courses:  </Typography>
+ 
+          <FormControl fullWidth variant = "standard" error = {errorCourse}   sx={{fontSize:'15px' , width: '50rem'}}>
+         {/* <InputLabel id="demo-multiple-chip-label">Course(s) Available</InputLabel> */}
+         <Select
+          required
+           labelId="demo-multiple-chip-label"
+           id="Courses"
+           name ="Courses"
+           multiple
+           value={courseName}
+           onChange={
+             (event) => {
+               const {
+                 target: { value },
+               } = event;
+               setCourseName(
+                 // On autofill we get a stringified value.
+                 typeof value === 'string' ? value.split(',') : value,
+               );
+               setErrorCourse(false);
+             }
+           }
+           // input={<OutlinedInput id="select-multiple-chip" label="Course(s) Available" />}
+           renderValue={(selected) => (
+             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+               {selected.map((value) => (
+                 <Chip key={value} label={value} />
+               ))}
+             </Box>
+           )}
+           MenuProps={MenuProps}
+         >
+           {courses.data.map((name) => (
+             <MenuItem
+               key={name.id}
+               value={name.course_name}
+               style={getStyles(name.course_name, courseName, theme)}
+             >
+               {name.course_name}
+             </MenuItem>
+           ))}
+         </Select>
+         {errorCourse=== true ? (<FormHelperText id="helper-text-course">Course available must not be empty
+         </FormHelperText>): (<></>)}
+       </FormControl>
+         </Stack>
+        ) : (<></>)}
+       
+
+       {/**
+        * 
+        * $Year = $_POST['Year'];
+$Semester = $_POST['Semester'];
+        */}
+ <Stack direction="row" spacing={2} sx = {{width:'100%', marginBottom: '1.5rem'}}>
+         <Typography variant ="overline" noWrap sx={{fontSize:'15px', width: '15rem'}}>Year Available:  </Typography>
+
+         <FormControl fullWidth variant = "standard"    sx={{fontSize:'15px' , width: '50rem'}}>
+        {/* <InputLabel id="demo-multiple-chip-label">Course(s) Available</InputLabel> */}
+        <Select
+         required
+          id="Year"
+          name ="Year"
+         value={yearAvailable}
+         onChange = {
+          (event) => setYearAvailable(event.target.value)
+         }
+        >
+           <MenuItem value= "1st year">1st year</MenuItem>
+           <MenuItem value= "2nd year">2nd year</MenuItem>
+           <MenuItem value= "3rd year">3rd year</MenuItem>
+           <MenuItem value= "4th year">4th year</MenuItem>
+           <MenuItem value= "5th year">5th year</MenuItem>
+           <MenuItem value= "6th year">6th year</MenuItem>
+        </Select>
+      </FormControl>
+ </Stack> 
+
+
+ <Stack direction="row" spacing={2} sx = {{width:'100%', marginBottom: '1.5rem'}}>
+         <Typography variant ="overline" noWrap sx={{fontSize:'15px', width: '15rem'}}>Semester Available:  </Typography>
+
+         <FormControl fullWidth variant = "standard"    sx={{fontSize:'15px' , width: '50rem'}}>
+        {/* <InputLabel id="demo-multiple-chip-label">Course(s) Available</InputLabel> */}
+        <Select
+         required
+          id="Semester"
+          name ="Semester"
+         value={semesterAvailable}
+         onChange = {
+          (event) => setSemesterAvailable(event.target.value)
+         }
+        >
+           <MenuItem value= "1st semester">1st semester</MenuItem>
+           <MenuItem value= "2nd semester">2nd semester</MenuItem>
+        </Select>
+      </FormControl>
+ </Stack> 
       </Grid2>
              
         <Divider sx={{marginTop: '1.5rem'}} />

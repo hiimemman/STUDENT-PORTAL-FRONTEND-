@@ -45,6 +45,8 @@ const user = useSelector(state => JSON.parse(state.user.session));
 
 
   const [courseName, setCourseName] = useState([]);
+  const [subjectType, setSubjectType] = useState('Minor');
+
 
 
 
@@ -54,7 +56,7 @@ const user = useSelector(state => JSON.parse(state.user.session));
   const [errorCourse, setErrorCourse] = useState('');
   const [errorYear, setErrorYear] =  useState('');
   const [errorSemester, setErrorSemester] = useState('');
-
+  const [errorType, setErrorType] = useState('');
 
   //Open add form
 const  formOpenType = useSelector(state => state.addFormSub.value);
@@ -174,6 +176,9 @@ const handleSubmitForm = async (event) =>{
   event.preventDefault();
   if(!errorSubjectCode && !errorSubName && !errorUnits){
   const data = new FormData(event.currentTarget);
+  if(subjectType === 'Minor'){
+    data.append('Courses', 'General');// If minor means avaialable to all
+  }
   data.append('Action', 'Create');
   data.append('EditorPosition', user.position);
   data.append('EditorEmail', user.email);
@@ -211,6 +216,7 @@ const handleSubmitForm = async (event) =>{
   return(
     <>
     {console.log("Add subject renderd")}
+    {console.log(courses)}
       <Dialog
         open={formOpenType === 'subject'}
         onClose={handleClose}
@@ -246,41 +252,6 @@ const handleSubmitForm = async (event) =>{
         {errorUnits === true ? (<FormHelperText id="component-helper-text">Units name must not be empty
         </FormHelperText>): (<></>)}
                </FormControl>
-             </Grid2>
-             <Grid2 item xs={12}>
-        <FormControl fullWidth error = {errorCourse}>
-        <InputLabel id="demo-multiple-chip-label">Course(s) Available</InputLabel>
-        <Select
-        required
-          labelId="demo-multiple-chip-label"
-          id="Courses"
-          name ="Courses"
-          multiple
-          value={courseName}
-          onChange={handleChangeCourse}
-          input={<OutlinedInput id="select-multiple-chip" label="Course(s) Available" />}
-          renderValue={(selected) => (
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-              {selected.map((value) => (
-                <Chip key={value} label={value} />
-              ))}
-            </Box>
-          )}
-          MenuProps={MenuProps}
-        >
-          {courses.map((name) => (
-            <MenuItem
-              key={name.id}
-              value={name.course_name}
-              style={getStyles(name.course_name, courseName, theme)}
-            >
-              {name.course_name}
-            </MenuItem>
-          ))}
-        </Select>
-        {errorCourse=== true ? (<FormHelperText id="helper-text-course">Course available must not be empty
-        </FormHelperText>): (<></>)}
-                  </FormControl>
              </Grid2>
 
              <Grid2 item xs={12}>
@@ -322,6 +293,70 @@ const handleSubmitForm = async (event) =>{
               </Select>
             </FormControl>
             </Grid2>
+
+            <Grid2 item xs={12}>
+             <FormControl fullWidth error = {errorType} required>
+              <InputLabel id="demo-simple-select-label">Type</InputLabel>
+                <Select
+                required
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                name = "Type"
+                label="Type"
+                defaultValue= {''}
+                onChange={(event) => {
+                  if((event.target.value).toString().length >0){
+                    setSubjectType(event.target.value)
+                    setErrorSemester(false)
+                  }else{
+                    setErrorSemester(true)
+                  }
+                }}
+                >
+                <MenuItem value={'Minor'}>Minor Subject</MenuItem>
+                <MenuItem value={'Major'}>Major Subject</MenuItem>
+              </Select>
+            </FormControl>
+            </Grid2>
+
+        {subjectType === 'Minor' ? (<></>) : (
+          <Grid2 item xs={12}>
+          <FormControl fullWidth error = {errorCourse}>
+          <InputLabel id="demo-multiple-chip-label">Course(s) Available</InputLabel>
+          <Select
+          required
+            labelId="demo-multiple-chip-label"
+            id="Courses"
+            name ="Courses"
+            multiple
+            value={courseName}
+            onChange={handleChangeCourse}
+            input={<OutlinedInput id="select-multiple-chip" label="Course(s) Available" />}
+            renderValue={(selected) => (
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                {selected.map((value) => (
+                  <Chip key={value} label={value} />
+                ))}
+              </Box>
+            )}
+            MenuProps={MenuProps}
+          >
+            {courses.map((name) => (
+              <MenuItem
+                key={name.id}
+                value={name.course_name}
+                style={getStyles(name.course_name, courseName, theme)}
+              >
+                {name.course_name}
+              </MenuItem>
+            ))}
+          </Select>
+          {errorCourse === true ? (<FormHelperText id="helper-text-course">Course available must not be empty
+          </FormHelperText>): (<></>)}
+                    </FormControl>
+          </Grid2>
+        )}
+        
         </Grid2>
         </Box>
         </DialogContent>
