@@ -467,7 +467,7 @@ const renderEditStatus = (params) => {
   return(
     <>
      {renderConfirmDialog()}
-    <DataGrid components={{ Toolbar: CustomToolbar, LoadingOverlay: LinearProgress, }} loading = {loading} rows = {rows} columns={columns}  experimentalFeatures={{ newEditingApi: true }} style ={{height:'500px'}}
+    <DataGrid components={{ Toolbar: CustomToolbarSubject, LoadingOverlay: LinearProgress, }} loading = {loading} rows = {rows} columns={columns}  experimentalFeatures={{ newEditingApi: true }} style ={{height:'500px'}}
      processRowUpdate={processRowUpdate}
      onSelectionModelChange={(ids) => {
       const selectedIDs = new Set(ids);
@@ -484,11 +484,10 @@ const renderEditStatus = (params) => {
       )}
     </>
   );
-
 }
 
  //Toolbar
- function CustomToolbar() {
+ function CustomToolbarSubject() {
   //Open add form
   const  formOpenType = useSelector(state => state.addFormSub.value);
   //dispatch from redux
@@ -520,28 +519,23 @@ const [updatedCourse, setUpdatedCourse] = useState(false);
  }, [formOpenType]);
 
  useEffect(() => {
-  if(courses.data === []){
-    setUpdateCourse(true)
+  if(courses.data !== []){
+    console.log("Courses data = "+JSON.stringify(courses.data));
+    setUpdatedCourse(true)
   }
- }, [courses]);
+ }, [formOpenType, courses]);
 
 
-
-//Open Add form
-const openPopper = () =>{
-    dispatch(ADDSUBJECT());
-} 
   return (<>
-  {console.log("courses data"+courses.data)}
+
     <GridToolbarContainer>
-       <Button variant="text" startIcon = {<PersonAddIcon />} onClick = {openPopper}> Add</Button>
+       <Button variant="text" startIcon = {<PersonAddIcon />} onClick = {() => dispatch(ADDSUBJECT())}> Add</Button>
       <GridToolbarColumnsButton />
       <GridToolbarFilterButton />
       <GridToolbarDensitySelector />
       <GridToolbarExport />
     </GridToolbarContainer>
     {updatedCourse === true ? (<AddSubject open = {formOpenType === 'subject'} course = {courses.data} />) : (<></>)}
-    
   </>
   );
 }

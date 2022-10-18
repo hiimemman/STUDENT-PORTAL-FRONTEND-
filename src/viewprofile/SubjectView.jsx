@@ -1,4 +1,4 @@
-import { Alert, Button, Divider, FormControl, FormHelperText, InputBase,  NativeSelect, Snackbar, Stack, TextField, Typography } from '@mui/material';
+import { Alert, Button, Chip, Divider, FormControl, FormHelperText, InputBase,  InputLabel,  MenuItem,  NativeSelect, OutlinedInput, Select, Snackbar, Stack, TextField, Typography } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import Grid2 from '@mui/material/Unstable_Grid2'; // Grid2 version 2
 import { useEffect, useState } from 'react';
@@ -20,8 +20,37 @@ import SaveIcon from '@mui/icons-material/Save';
 import { LoadingButton } from '@mui/lab';
 import { PUT_SUBJECT } from '../slice/FormSelectedRow/SubjectSelected';
 import { basedUrl } from '../base-url/based-url';
+import { useTheme } from '@mui/material/styles';
+
+//Course select required functions
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
+
+function getStyles(name, courseName, theme) {
+  return {
+    fontWeight:
+      courseName.indexOf(name) === -1
+        ? theme.typography.fontWeightRegular
+        : theme.typography.fontWeightMedium,
+  };
+}
+
+
+
 
 export function SubjectView(){
+
+  const theme = useTheme();
+  //dispatch from redux
+  const dispatch = useDispatch();
 
     //Selected Subject
 const subject = useSelector(state => state.subjectSelected.value);
@@ -29,8 +58,8 @@ const subject = useSelector(state => state.subjectSelected.value);
 //Current User Session
 const user = useSelector(state => JSON.parse(state.user.session));
 
-  //dispatch from redux
-  const dispatch = useDispatch();
+    //Open add form
+    const  formOpenType = useSelector(state => state.addFormSub.value);
 
 
 //Submit is Loading
@@ -48,11 +77,14 @@ const [loginStatus, setStatus] = useState("failed");// default is failed for log
 const [loginMessage, setMessage ] = useState("Try again");// Default message of alert
 
 
+//Get all active course
+const [courseName, setCourseName] = useState([]);
+
 //Error handlers
 
 const [errorSubjectName, setErrorSubjectName] = useState('');
 const [errorUnits, setErrorUnits] = useState('');
-
+const [errorCourse, setErrorCourse] = useState('');
 
 
 const handleClose = (event, reason) => {
@@ -162,6 +194,37 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
   }
  
 
+const [courses, setCourses] = useState({data: []});
+const [updatedCourse, setUpdatedCourse] = useState(false);
+//  Get all users api
+ useEffect( () => {
+  console.log('UseEffect called')
+  const getAllData = async () =>{
+     try{ 
+       //online api
+         const sendRequest = await fetch(basedUrl+"/course-table.php");
+         const getResponse = await sendRequest.json();
+    
+         if(getResponse.statusCode === 201){
+         
+         }else{
+           //if succesfully retrieve data'
+          //  console.log(getResponse)
+           setCourses({data: getResponse});
+            
+         }
+     }catch(e){
+       console.error(e)
+     }
+   }
+   getAllData();
+ }, [formOpenType]);
+
+ useEffect(() => {
+  if(courses.data === []){
+    setUpdateCourse(true)
+  }
+ }, [courses]);
   
     return(
         <>
@@ -199,10 +262,10 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
         </FormHelperText>): (<></>)}
           </FormControl>
          </Stack>  
-
+         
          <Stack direction="row" spacing={2} sx = {{width:'100%', marginBottom: '1.5rem'}}>
             <Typography variant ="overline" noWrap sx={{fontSize:'15px', width: '15rem'}}>Units:  </Typography>
-          <FormControl error ={errorUnits} >
+          <FormControl error ={errorUnits}  >
            <TextField error ={errorUnits} type ="number" defaultValue = {subject.units} name ="Units" id="Units" sx={{fontSize:'15px' , width: '50rem'}} onChange ={
               (event) => {
               if(parseFloat(event.target.value) > 0){
@@ -216,7 +279,56 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
           </FormControl>
          </Stack>  
 
-         </Grid2>
+        <Stack direction="row" spacing={2} sx = {{width:'100%', marginBottom: '1.5rem'}}>
+         <Typography variant ="overline" noWrap sx={{fontSize:'15px', width: '15rem'}}>Courses:  </Typography>
+
+         <FormControl fullWidth variant = "standard" error = {errorCourse}   sx={{fontSize:'15px' , width: '50rem'}}>
+        {/* <InputLabel id="demo-multiple-chip-label">Course(s) Available</InputLabel> */}
+        <Select
+         required
+          labelId="demo-multiple-chip-label"
+          id="Courses"
+          name ="Courses"
+          multiple
+          value={courseName}
+         
+          onChange={
+            (event) => {
+              const {
+                target: { value },
+              } = event;
+              setCourseName(
+                // On autofill we get a stringified value.
+                typeof value === 'string' ? value.split(',') : value,
+              );
+              setErrorCourse(false);
+            }
+          }
+          // input={<OutlinedInput id="select-multiple-chip" label="Course(s) Available" />}
+          renderValue={(selected) => (
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+              {selected.map((value) => (
+                <Chip key={value} label={value} />
+              ))}
+            </Box>
+          )}
+          MenuProps={MenuProps}
+        >
+          {courses.data.map((name) => (
+            <MenuItem
+              key={name.id}
+              value={name.course_name}
+              style={getStyles(name.course_name, courseName, theme)}
+            >
+              {name.course_name}
+            </MenuItem>
+          ))}
+        </Select>
+        {errorCourse=== true ? (<FormHelperText id="helper-text-course">Course available must not be empty
+        </FormHelperText>): (<></>)}
+      </FormControl>
+        </Stack>
+      </Grid2>
              
         <Divider sx={{marginTop: '1.5rem'}} />
         <Container sx ={{m:'1rem',display:'flex', justifyContent:'center'}}>

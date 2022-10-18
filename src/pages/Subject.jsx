@@ -58,12 +58,11 @@ const handleClose = (event, reason) => {
     } 
    },[user])
 
+
   
+
   return (
-    <>
-  
-    
-   
+    <>  
     {user !== null ?  (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />

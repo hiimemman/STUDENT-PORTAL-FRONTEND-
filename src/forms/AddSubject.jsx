@@ -210,6 +210,7 @@ const handleSubmitForm = async (event) =>{
 
   return(
     <>
+    {console.log("Add subject renderd")}
       <Dialog
         open={formOpenType === 'subject'}
         onClose={handleClose}
