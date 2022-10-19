@@ -15,6 +15,7 @@ import { ParticlesBackground } from './component/ParticlesBackground';
 import { Course } from './pages/Course';
 import { Faculty } from './pages/Faculty';
 import { Skeleton } from '@mui/material';
+import { Section } from './pages/Section';
 
 
 
@@ -48,7 +49,7 @@ const lightTheme = createTheme({
     fontFamily: [
       "Open Sans",
     ].join(",")
-  }
+  },
 })
  const darkTheme = createTheme(
  {
@@ -59,7 +60,7 @@ const lightTheme = createTheme({
     fontFamily: [
       "Open Sans",
     ].join(",")
-  }
+  },
 })
 
 
@@ -86,6 +87,7 @@ return (
         <Route path = "/employee/subject" element ={<><ParticlesBackground /><Subject/></>} /> 
         <Route path = "/employee/faculty" element ={<><ParticlesBackground /><Faculty/></>} />
         <Route path = "/employee/course" element ={<><ParticlesBackground /><Course/></>} />
+        <Route path = "/employee/section" element ={<><ParticlesBackground /><Section/></>} />
       </Routes>
     </Router>
   </ThemeProvider>

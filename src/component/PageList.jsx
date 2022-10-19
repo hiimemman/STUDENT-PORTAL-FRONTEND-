@@ -6,7 +6,7 @@ import List from '@mui/material/List';
 import { useSelector,useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import GridViewIcon from '@mui/icons-material/GridView';
-import { Tooltip, Typography } from '@mui/material';
+import { Stack, Tooltip, Typography } from '@mui/material';
 import {CLOSE, OPEN} from  '../slice/MenuSlice/MenuState'
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import Person3Icon from '@mui/icons-material/Person3';
@@ -15,11 +15,12 @@ import GroupsIcon from '@mui/icons-material/Groups';
 import AnnouncementIcon from '@mui/icons-material/Announcement';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import HandymanIcon from '@mui/icons-material/Handyman';
-import {DASHBOARD, EMPLOYEE,STUDENT, SUBJECT, COURSE, FACULTY} from '../slice/PageSlice/PageSlice';
+import {DASHBOARD, EMPLOYEE,STUDENT, SUBJECT, COURSE, FACULTY, SECTION} from '../slice/PageSlice/PageSlice';
 import SchoolIcon from '@mui/icons-material/School';
 import BiotechIcon from '@mui/icons-material/Biotech';
 import { useEffect } from 'react';
 import Diversity3Icon from '@mui/icons-material/Diversity3';
+import { SelectedLine } from './SelectedLine';
 
 export function PageList(){
 
@@ -66,6 +67,9 @@ if(currentPage === 'faculty'){
 if(currentPage === 'course'){
   navigate('/employee/course')
 }
+if(currentPage === 'section'){
+  navigate('/employee/section')
+}
 }, [currentPage]);
 
 return(
@@ -74,8 +78,9 @@ return(
        <Tooltip title="Dashboard" placement="right-start">
 
     <ListItem  disablePadding sx={{ display: 'block' }} className="transition ease-in-out delay-2 hover:bg-slate-300 duration-300">
-  
-      <ListItemButton onClick ={ ()=>dispatch(DASHBOARD()) } selected={currentPage === 'dashboard'}  onMouseEnter = {handleDrawerOpen} onMouseLeave ={handleDrawerClose}
+    <Stack direction="row" justifyContent="center" alignItems="center" spacing={0}>
+<SelectedLine selected ={currentPage === 'dashboard'}  />
+      <ListItemButton onClick ={ ()=>dispatch(DASHBOARD()) } onMouseEnter = {handleDrawerOpen} onMouseLeave ={handleDrawerClose}
         sx={{
           minHeight: 48,
           justifyContent: isOpen ? 'initial' : 'center',
@@ -83,52 +88,78 @@ return(
         }}
       >
         
-        <ListItemIcon
+        {currentPage === 'dashboard' ?  <ListItemIcon
           sx={{
             minWidth: 0,
             mr: isOpen ? 3 : 'auto',
             justifyContent: 'center',
+            
           }}
-        >
-        <GridViewIcon/>
-        </ListItemIcon>
+         style = {{color: '#14B8F9'}}
+        > <GridViewIcon/>
+        </ListItemIcon> :  
+      <ListItemIcon
+        sx={{
+          minWidth: 0,
+          mr: isOpen ? 3 : 'auto',
+          justifyContent: 'center',
+          
+        }}
+      ><GridViewIcon/>
+      </ListItemIcon>}
     
       { isOpen ?  <Typography className ='font-nunito text-lg' >Dashboard</Typography>: <p></p> }  
 
       </ListItemButton>
+      </Stack>
     </ListItem>
 </Tooltip>
 
     <Tooltip title="Employee(s)" placement="right-start">
     <ListItem  disablePadding sx={{ display: 'block'}} className="transition ease-in-out delay-2 hover:bg-slate-300  duration-300">
-  
-      <ListItemButton onClick ={ ()=>dispatch(EMPLOYEE())} selected={currentPage === 'employee'}   onMouseEnter = {handleDrawerOpen} onMouseLeave ={handleDrawerClose}
+    <Stack direction="row" justifyContent="center" alignItems="center" spacing={0}>
+<SelectedLine selected ={currentPage === 'employee'}  />
+      <ListItemButton onClick ={ ()=>dispatch(EMPLOYEE())}   onMouseEnter = {handleDrawerOpen} onMouseLeave ={handleDrawerClose}
         sx={{
           minHeight: 48,
           justifyContent: isOpen ? 'initial' : 'center',
           px: 2.5,
         }}
       >
-        
-        <ListItemIcon
+
+{currentPage === 'employee' ?  <ListItemIcon
           sx={{
             minWidth: 0,
             mr: isOpen ? 3 : 'auto',
             justifyContent: 'center',
+            
           }}
-        >
-        <PeopleAltIcon />
-        </ListItemIcon>
+         style = {{color: '#14B8F9'}}
+        >   <PeopleAltIcon />
+        </ListItemIcon> :  
+      <ListItemIcon
+        sx={{
+          minWidth: 0,
+          mr: isOpen ? 3 : 'auto',
+          justifyContent: 'center',
+          
+        }}
+      >  <PeopleAltIcon />
+      </ListItemIcon>}
+        
+    
         { isOpen ?  <Typography className ='font-nunito text-lg' >Employee(s)</Typography> : <p></p> }  
       </ListItemButton>
-    
+    </Stack>
     </ListItem>
   </Tooltip>
 
   <Tooltip title="Student(s)" placement="right-start">
     <ListItem  disablePadding sx={{ display: 'block'}} className="transition ease-in-out delay-2 hover:bg-slate-300  duration-300">
-  
-      <ListItemButton onClick ={ ()=>dispatch(STUDENT())} selected={currentPage === 'student'}   onMouseEnter = {handleDrawerOpen} onMouseLeave ={handleDrawerClose}
+    <Stack direction="row" justifyContent="center" alignItems="center" spacing={0}>
+<SelectedLine selected ={currentPage === 'student'}  />
+
+      <ListItemButton onClick ={ ()=>dispatch(STUDENT())}    onMouseEnter = {handleDrawerOpen} onMouseLeave ={handleDrawerClose}
         sx={{
           minHeight: 48,
           justifyContent: isOpen ? 'initial' : 'center',
@@ -147,39 +178,53 @@ return(
         </ListItemIcon>
         { isOpen ?  <Typography className ='font-nunito text-lg' >Student(s)</Typography> : <p></p> }  
       </ListItemButton>
-    
+      </Stack>
     </ListItem>
   </Tooltip>
 
   <Tooltip title="Subject(s)" placement="right-start">
     <ListItem  disablePadding sx={{ display: 'block'}} className="transition ease-in-out delay-2 hover:bg-slate-300  duration-300">
-  
-      <ListItemButton onClick ={ ()=>dispatch(SUBJECT())} selected={currentPage === 'subject'}   onMouseEnter = {handleDrawerOpen} onMouseLeave ={handleDrawerClose}
+    <Stack direction="row" justifyContent="center" alignItems="center" spacing={0}>
+<SelectedLine selected ={currentPage === 'subject'}  />
+      <ListItemButton onClick ={ ()=>dispatch(SUBJECT())}   onMouseEnter = {handleDrawerOpen} onMouseLeave ={handleDrawerClose}
         sx={{
           minHeight: 48,
           justifyContent: isOpen ? 'initial' : 'center',
           px: 2.5,
         }}
       >
-        
-        <ListItemIcon
+
+{currentPage === 'subject' ?  <ListItemIcon
           sx={{
             minWidth: 0,
             mr: isOpen ? 3 : 'auto',
             justifyContent: 'center',
+            
           }}
-        >
-        <BiotechIcon />
-        </ListItemIcon>
+         style = {{color: '#14B8F9'}}
+        >   <BiotechIcon />
+        </ListItemIcon> :  
+      <ListItemIcon
+        sx={{
+          minWidth: 0,
+          mr: isOpen ? 3 : 'auto',
+          justifyContent: 'center',
+          
+        }}
+      >  <BiotechIcon />
+      </ListItemIcon>}
+        
+        
         { isOpen ?  <Typography className ='font-nunito text-lg' >Subject</Typography> : <p></p> }  
       </ListItemButton>
-    
+    </Stack>
     </ListItem>
   </Tooltip>
   <Tooltip title="Faculty" placement="right-start">
     <ListItem  disablePadding sx={{ display: 'block'}} className="transition ease-in-out delay-2 hover:bg-slate-300  duration-300">
-  
-      <ListItemButton onClick ={() => dispatch(FACULTY())}  selected={currentPage === 'faculty'} onMouseEnter = {handleDrawerOpen} onMouseLeave ={handleDrawerClose}
+    <Stack direction="row" justifyContent="center" alignItems="center" spacing={0}>
+<SelectedLine selected ={currentPage === 'faculty'}  />
+      <ListItemButton onClick ={() => dispatch(FACULTY())}  onMouseEnter = {handleDrawerOpen} onMouseLeave ={handleDrawerClose}
         sx={{
           minHeight: 48,
           justifyContent: isOpen ? 'initial' : 'center',
@@ -187,68 +232,103 @@ return(
         }}
       >
         
-        <ListItemIcon
+        {currentPage === 'faculty' ?  <ListItemIcon
           sx={{
             minWidth: 0,
             mr: isOpen ? 3 : 'auto',
             justifyContent: 'center',
+            
           }}
-        >
-        <Diversity3Icon />
-        </ListItemIcon>
+         style = {{color: '#14B8F9'}}
+        >   <Diversity3Icon />
+        </ListItemIcon> :  
+      <ListItemIcon
+        sx={{
+          minWidth: 0,
+          mr: isOpen ? 3 : 'auto',
+          justifyContent: 'center',
+          
+        }}
+      >  <Diversity3Icon />
+      </ListItemIcon>}
+
+        
         { isOpen ?  <Typography className ='font-nunito text-lg' >Faculty</Typography> : <p></p> }  
       </ListItemButton>
-    
+    </Stack>
     </ListItem>
   </Tooltip>
   <Tooltip title="Course(s)" placement="right-start">
     <ListItem  disablePadding sx={{ display: 'block'}} className="transition ease-in-out delay-2 hover:bg-slate-300  duration-300">
-  
-      <ListItemButton onClick ={() => dispatch(COURSE())}  selected={currentPage === 'course'} onMouseEnter = {handleDrawerOpen} onMouseLeave ={handleDrawerClose}
-        sx={{
-          minHeight: 48,
-          justifyContent: isOpen ? 'initial' : 'center',
-          px: 2.5,
-        }}
+
+<Stack direction="row" justifyContent="center" alignItems="center" spacing={0}>
+<SelectedLine selected ={currentPage === 'course'}  />
+      <ListItemButton onClick ={() => dispatch(COURSE())}   onMouseEnter = {handleDrawerOpen} onMouseLeave ={handleDrawerClose}
       >
         
-        <ListItemIcon
+        {currentPage === 'course' ?  <ListItemIcon
           sx={{
             minWidth: 0,
             mr: isOpen ? 3 : 'auto',
             justifyContent: 'center',
+            
           }}
-        >
-        <LibraryBooksIcon />
-        </ListItemIcon>
+         style = {{color: '#14B8F9'}}
+        >   <LibraryBooksIcon />
+        </ListItemIcon> :  
+      <ListItemIcon
+        sx={{
+          minWidth: 0,
+          mr: isOpen ? 3 : 'auto',
+          justifyContent: 'center',
+          
+        }}
+      >  <LibraryBooksIcon />
+      </ListItemIcon>}
+
+       
         { isOpen ?  <Typography className ='font-nunito text-lg' >Course</Typography> : <p></p> }  
       </ListItemButton>
+</Stack>
+   
     
     </ListItem>
   </Tooltip>
   <Tooltip title="Section" placement="right-start">
     <ListItem  disablePadding sx={{ display: 'block'}} className="transition ease-in-out delay-2 hover:bg-slate-300  duration-300">
-  
-      <ListItemButton onClick ={()=>navigate('/employee/employees')}  onMouseEnter = {handleDrawerOpen} onMouseLeave ={handleDrawerClose}
+    <Stack direction="row" justifyContent="center" alignItems="center" spacing={0}>
+<SelectedLine selected ={currentPage === 'section'}  />
+      <ListItemButton onClick ={()=>dispatch(SECTION())} onMouseEnter = {handleDrawerOpen} onMouseLeave ={handleDrawerClose}
         sx={{
           minHeight: 48,
           justifyContent: isOpen ? 'initial' : 'center',
           px: 2.5,
         }}
       >
-        
-        <ListItemIcon
+        {currentPage === 'section' ?  <ListItemIcon
           sx={{
             minWidth: 0,
             mr: isOpen ? 3 : 'auto',
             justifyContent: 'center',
+            
           }}
-        >
-        <GroupsIcon />
-        </ListItemIcon>
+         style = {{color: '#14B8F9'}}
+        >   <GroupsIcon />
+        </ListItemIcon> :  
+      <ListItemIcon
+        sx={{
+          minWidth: 0,
+          mr: isOpen ? 3 : 'auto',
+          justifyContent: 'center',
+          
+        }}
+      >  <GroupsIcon />
+      </ListItemIcon>}
+        
+       
         { isOpen ?  <Typography className ='font-nunito text-lg' >Section</Typography> : <p></p> }  
       </ListItemButton>
-    
+    </Stack>
     </ListItem>
   </Tooltip>
   <Tooltip title="Student list" placement="right-start">
@@ -261,17 +341,29 @@ return(
           px: 2.5,
         }}
       >
-        
-        <ListItemIcon
+
+{currentPage === 'announcement' ?  <ListItemIcon
           sx={{
             minWidth: 0,
             mr: isOpen ? 3 : 'auto',
             justifyContent: 'center',
+            
           }}
-        >
-        <AnnouncementIcon />
-        </ListItemIcon>
-        { isOpen ?  <Typography className ='font-nunito text-lg' >Course</Typography> : <p></p> }  
+         style = {{color: '#14B8F9'}}
+        >   <AnnouncementIcon />
+        </ListItemIcon> :  
+      <ListItemIcon
+        sx={{
+          minWidth: 0,
+          mr: isOpen ? 3 : 'auto',
+          justifyContent: 'center',
+          
+        }}
+      >  <AnnouncementIcon />
+      </ListItemIcon>}
+        
+        
+        { isOpen ?  <Typography className ='font-nunito text-lg' >Announcement</Typography> : <p></p> }  
       </ListItemButton>
     
     </ListItem>
@@ -293,6 +385,7 @@ return(
             mr: isOpen ? 3 : 'auto',
             justifyContent: 'center',
           }}
+          
         >
         <AttachMoneyIcon />
         </ListItemIcon>
@@ -311,16 +404,25 @@ return(
           px: 2.5,
         }}
       >
-        
-        <ListItemIcon
+        {currentPage === 'notdefined' ?  <ListItemIcon
           sx={{
             minWidth: 0,
             mr: isOpen ? 3 : 'auto',
             justifyContent: 'center',
+            
           }}
-        >
-        <HandymanIcon />
-        </ListItemIcon>
+         style = {{color: '#14B8F9'}}
+        > <HandymanIcon />
+        </ListItemIcon>:  <ListItemIcon
+        sx={{
+          minWidth: 0,
+          mr: isOpen ? 3 : 'auto',
+          justifyContent: 'center',
+          
+        }}
+      ><HandymanIcon />
+      </ListItemIcon>}
+        
         { isOpen ?  <Typography className ='font-nunito text-lg' >Course</Typography> : <p></p> }  
       </ListItemButton>
     
