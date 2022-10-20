@@ -65,6 +65,7 @@ const user = useSelector(state => JSON.parse(state.user.session));
   const [startYear, setStartYear] = useState(null);
   const [endYear, setEndYear] = useState(null);
   const [academicYear, setAcademicYear] = useState(null);
+  
 
   //Open add form
 const  formOpenType = useSelector(state => state.addFormSection.value);
@@ -116,16 +117,7 @@ const  formOpenType = useSelector(state => state.addFormSection.value);
   }
   const theme = useTheme();
   
-  const handleChangeCourse = (event) => {
-    const {
-      target: { value },
-    } = event;
-    setCourseName(
-      // On autofill we get a stringified value.
-      typeof value === 'string' ? value.split(',') : value,
-    );
-    setErrorCourse(false);
-  };
+ 
 
   //Check if courseName is empty
   useEffect(()=>{
@@ -136,21 +128,7 @@ const  formOpenType = useSelector(state => state.addFormSection.value);
     }
   },[courseName])
 
-  const handleChangeYear = (event) =>{
-    if((event.target.value).toString().length >0){
-      setErrorYear(false)
-    }else{
-      setErrorYear(true)
-    }
-  }
-
-  const handleChangeSemester = (event) =>{
-    if((event.target.value).toString().length >0){
-      setErrorSemester(false)
-    }else{
-      setErrorSemester(true)
-    }
-  }
+  
 
   const handleClose = () => {
     // setCourseName([]);
@@ -177,46 +155,52 @@ useEffect(() => {
 
 useEffect(()=>{
   if(startYear !== null && endYear !== null){
-    console.log("School year = "+startYear.toString().substr(12, 4)+" - "+endYear.toString().substr(12, 4));
+    setAcademicYear(startYear.toString().substr(12, 4)+" - "+endYear.toString().substr(12, 4));
   }
 return () =>{
   //exit in memory
  }
 },[startYear, endYear])
+
  
 const handleSubmitForm = async (event) =>{
 //`action`,`category`,`editor_position`,`editor_email`,`edited_email`
   event.preventDefault();
   
   const data = new FormData(event.currentTarget);
- 
+
+  //specific
+  data.append('AcademicYear', academicYear);
+  data.append('StartYear', startYear.toString().substr(12, 4));
+  data.append('EndYear', endYear.toString().substr(12, 4));
+  //const
   data.append('Action', 'Create');
   data.append('EditorPosition', user.position);
   data.append('EditorEmail', user.email);
-  data.append('Category', 'Subject');
+  data.append('Category', 'Section');
   console.log("Formdata values:")
 
   for (var pair of data.entries()) {
     console.log(pair[0]+ ' - ' + pair[1]); 
 }
-  // try{
-  //   const sendRequest = await fetch(basedUrl+"/subject-add.php",{
-  //             method: "POST",
-  //             body: data,
-  //         });
+  try{
+    const sendRequest = await fetch(basedUrl+"/section-add.php",{
+              method: "POST",
+              body: data,
+          });
 
-  //         const getResponse = await sendRequest.json();
-  //        console.log(getResponse.statusCode)
-  //         if(getResponse.statusCode === 200){
-  //           setSnackbar({ children: 'Update successfully', severity: 'success' });
-  //           dispatch(CLOSESUBFORM())
-  //         }else{
-  //           setSnackbar({ children: "Field can't be empty", severity: 'error' });
-  //         }
-  // }catch(e){
+          const getResponse = await sendRequest.json();
+         console.log(getResponse.statusCode)
+          if(getResponse.statusCode === 200){
+            setSnackbar({ children: 'Update successfully', severity: 'success' });
+            dispatch(CLOSESUBFORM())
+          }else{
+            setSnackbar({ children: "Field can't be empty", severity: 'error' });
+          }
+  }catch(e){
     
-  //   setSnackbar({ children: "Field can't be empty", severity: 'error' });
-  // }
+    setSnackbar({ children: "Field can't be empty", severity: 'error' });
+  }
  
 }
  
