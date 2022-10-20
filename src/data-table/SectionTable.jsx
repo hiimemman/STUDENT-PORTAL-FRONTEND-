@@ -11,12 +11,13 @@ import Button from '@mui/material/Button';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { useSelector, useDispatch } from 'react-redux';
 import { basedUrl } from '../base-url/based-url'
-import { AddSubject } from '../forms/AddSubject';
-import { ADDSUBJECT } from '../slice/AddFormSlice/AddSubjectSlice/AddSubjectSlice';
+
+import {ADDSECTION} from '../slice/AddFormSlice/AddSectionSlice/AddSectionSlice'
 import { useTheme } from '@mui/material/styles';
 import { Box } from '@mui/system';
 import { Suspense } from 'react';
 import { PUT_SUBJECT } from '../slice/FormSelectedRow/SubjectSelected';
+import { AddSection } from '../forms/AddSection';
 
 
 const ITEM_HEIGHT = 48;
@@ -94,7 +95,7 @@ export function SectionTable() {
   const handleCloseSnackbar = () => setSnackbar(null);
 
     //Open add form
-const  formOpenType = useSelector(state => state.addFormSub.value);
+const  formOpenType = useSelector(state => state.addFormSection.value);
 
 //Current User Session
 const user = useSelector(state => JSON.parse(state.user.session));
@@ -439,7 +440,7 @@ const renderEditStatus = (params) => {
   return(
     <>
      {renderConfirmDialog()}
-    <DataGrid components={{ Toolbar: CustomToolbarSubject, LoadingOverlay: LinearProgress, }} loading = {loading} rows = {rows} columns={columns}  experimentalFeatures={{ newEditingApi: true }} style ={{height:'500px'}}
+    <DataGrid components={{ Toolbar: CustomToolbarSection, LoadingOverlay: LinearProgress, }} loading = {loading} rows = {rows} columns={columns}  experimentalFeatures={{ newEditingApi: true }} style ={{height:'500px'}}
      processRowUpdate={processRowUpdate}
      onSelectionModelChange={(ids) => {
       const selectedIDs = new Set(ids);
@@ -459,9 +460,9 @@ const renderEditStatus = (params) => {
 }
 
  //Toolbar
- function CustomToolbarSubject() {
+ function CustomToolbarSection() {
   //Open add form
-  const  formOpenType = useSelector(state => state.addFormSub.value);
+  const  formOpenType = useSelector(state => state.addFormSection.value);
   //dispatch from redux
 const dispatch = useDispatch();
 const [courses, setCourses] = useState({data: []});
@@ -501,13 +502,13 @@ const [updatedCourse, setUpdatedCourse] = useState(false);
   return (<>
 
     <GridToolbarContainer>
-       <Button variant="text" startIcon = {<PersonAddIcon />} onClick = {() => dispatch(ADDSUBJECT())}> Add</Button>
+       <Button variant="text" startIcon = {<PersonAddIcon />} onClick = {() => dispatch(ADDSECTION())}> Add</Button>
       <GridToolbarColumnsButton />
       <GridToolbarFilterButton />
       <GridToolbarDensitySelector />
       <GridToolbarExport />
     </GridToolbarContainer>
-    {updatedCourse === true ? (<AddSubject open = {formOpenType === 'subject'} course = {courses.data} />) : (<></>)}
+    {updatedCourse === true ? (<AddSection open = {formOpenType === 'section'}  courses ={courses}/>) : (<></>)}
   </>
   );
 }

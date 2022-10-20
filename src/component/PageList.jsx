@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useState } from 'react';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -24,8 +24,10 @@ import { SelectedLine } from './SelectedLine';
 
 export function PageList(){
 
-
-  
+ //check current theme
+ const selectedTheme = useSelector(state =>(state.selectedTheme.value));
+ 
+  const [selectTheme, setTheme] = useState('');
 
    //navigate
 const navigate = useNavigate();
@@ -70,7 +72,21 @@ if(currentPage === 'course'){
 if(currentPage === 'section'){
   navigate('/employee/section')
 }
+return ()=> {}
 }, [currentPage]);
+
+useEffect(()=>{
+  if(selectedTheme === 'lightTheme'){
+    setTheme('#01579b')
+   }else{
+  setTheme('#00b0ff')
+   } 
+  return () =>{
+     
+  }
+  },[selectedTheme])
+
+
 
 return(
   <>
@@ -95,7 +111,7 @@ return(
             justifyContent: 'center',
             
           }}
-         style = {{color: '#14B8F9'}}
+         style = {{color: selectTheme}}
         > <GridViewIcon/>
         </ListItemIcon> :  
       <ListItemIcon
@@ -134,7 +150,7 @@ return(
             justifyContent: 'center',
             
           }}
-         style = {{color: '#14B8F9'}}
+         style = {{color: selectTheme}}
         >   <PeopleAltIcon />
         </ListItemIcon> :  
       <ListItemIcon
@@ -201,7 +217,7 @@ return(
             justifyContent: 'center',
             
           }}
-         style = {{color: '#14B8F9'}}
+         style = {{color: selectTheme}}
         >   <BiotechIcon />
         </ListItemIcon> :  
       <ListItemIcon
@@ -239,7 +255,7 @@ return(
             justifyContent: 'center',
             
           }}
-         style = {{color: '#14B8F9'}}
+         style = {{color: selectTheme}}
         >   <Diversity3Icon />
         </ListItemIcon> :  
       <ListItemIcon
@@ -273,7 +289,7 @@ return(
             justifyContent: 'center',
             
           }}
-         style = {{color: '#14B8F9'}}
+         style = {{color: selectTheme}}
         >   <LibraryBooksIcon />
         </ListItemIcon> :  
       <ListItemIcon
@@ -312,7 +328,7 @@ return(
             justifyContent: 'center',
             
           }}
-         style = {{color: '#14B8F9'}}
+         style = {{color: selectTheme}}
         >   <GroupsIcon />
         </ListItemIcon> :  
       <ListItemIcon
@@ -349,7 +365,7 @@ return(
             justifyContent: 'center',
             
           }}
-         style = {{color: '#14B8F9'}}
+         style = {{color: selectTheme}}
         >   <AnnouncementIcon />
         </ListItemIcon> :  
       <ListItemIcon
@@ -411,7 +427,7 @@ return(
             justifyContent: 'center',
             
           }}
-         style = {{color: '#14B8F9'}}
+         style = {{color: selectTheme}}
         > <HandymanIcon />
         </ListItemIcon>:  <ListItemIcon
         sx={{

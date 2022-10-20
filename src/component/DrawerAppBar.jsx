@@ -18,6 +18,7 @@ import Brightness7Icon from '@mui/icons-material/Brightness7';
 import { useSelector, useDispatch } from 'react-redux';
 import { DARK, LIGHT } from '../slice/ThemeMode/ThemeMode';
 import Grid2 from '@mui/material/Unstable_Grid2/Grid2';
+import { Stack } from '@mui/material';
 
 
 const drawerWidth = 240;
@@ -120,7 +121,6 @@ const changeTheme = () =>{
   }
 }
 
-
   return (
     <>
  <AppBar position="fixed" open={isOpen}>   
@@ -140,21 +140,21 @@ const changeTheme = () =>{
         <Typography variant="h6"  className ='font-nunito'sx={{ flexGrow: 1 }}component="div">
           {/* LOGO HERE */}
         </Typography>
-          <Grid container justifyContent="flex-end" display ='flex'>
+          <Grid container justifyContent="center" display ='flex'>
           <Typography variant = "h5" className ='font-nunito'>
             {currentPage.charAt(0).toUpperCase() + currentPage.slice(1)}
           </Typography>
           </Grid>
 
         {/* profile */}
-        <Grid container justifyContent ="flex-end">
+        <Stack direction="row" spacing={1}>
           <div className='mx-6'> 
              <IconButton sx={{ ml: 1 }}  color="inherit" onClick={changeTheme}>
               {selectedTheme !== 'darkTheme' ? (<Brightness4Icon />) : (<Brightness7Icon />)}
              </IconButton>
           </div> 
        <ProfileBox  onMouseEnter={handleDrawerOpen}/>
-        </Grid>
+       </Stack>  
 
       </Toolbar>
     </AppBar>

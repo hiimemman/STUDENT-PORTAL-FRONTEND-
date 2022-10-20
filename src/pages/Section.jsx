@@ -83,7 +83,6 @@ const handleClose = (event, reason) => {
             <TabList onChange={handleChange} aria-label="lab API tabs example" >
                 <Tab label="DATA TABLE" value="1" />
                 <Tab label="HISTORY" value="2" />
-                {console.log("thisissub" + JSON.stringify(subject))}
                 {subject !== null ? (<Tab value="3" label={
                 <Stack direction="row" spacing={2}>
                 <Typography>{subject.subject_code}</Typography>
