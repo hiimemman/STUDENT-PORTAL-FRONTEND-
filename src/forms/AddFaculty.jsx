@@ -123,6 +123,7 @@ const handleSubmitForm = async (event) =>{
         scroll={scroll}
         aria-labelledby="scroll-dialog-title"
         aria-describedby="scroll-dialog-description"
+        fullWidth
       >
 
         <DialogTitle id="scroll-dialog-title">Add Faculty</DialogTitle>

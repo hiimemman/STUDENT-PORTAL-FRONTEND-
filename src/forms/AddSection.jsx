@@ -13,6 +13,10 @@ import { basedUrl } from '../base-url/based-url';
 import { useTheme } from '@mui/material/styles';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import Chip from '@mui/material/Chip';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from '@mui/x-date-pickers';
+
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -47,9 +51,7 @@ const user = useSelector(state => JSON.parse(state.user.session));
   const [courseName, setCourseName] = useState([]);
   const [subjectType, setSubjectType] = useState('Minor');
 
-  const [courses, setCourses] = useState(props.courses.data);
-
-
+ 
 
   const [errorSubjectCode, setErrorSubjectCode] = useState('');
   const [errorSubName, setErrorSubName] = useState('');
@@ -59,6 +61,11 @@ const user = useSelector(state => JSON.parse(state.user.session));
   const [errorSemester, setErrorSemester] = useState('');
   const [errorType, setErrorType] = useState('');
 
+  const [courses, setCourses] = useState(props.courses.data);
+  const [startYear, setStartYear] = useState(null);
+  const [endYear, setEndYear] = useState(null);
+  const [academicYear, setAcademicYear] = useState(null);
+
   //Open add form
 const  formOpenType = useSelector(state => state.addFormSection.value);
 
@@ -66,10 +73,6 @@ const  formOpenType = useSelector(state => state.addFormSection.value);
   const [snackbar, setSnackbar] = useState(null);
 
   const handleCloseSnackbar = () => setSnackbar(null);
-
-
-
-
 
   const handleChangeSubCode = async (event) =>{
 
@@ -94,9 +97,7 @@ const  formOpenType = useSelector(state => state.addFormSection.value);
       setErrorSubjectCode(true);
      
   }
-  
-   
-  }
+}
 
   const handleChangeSubName = (event) =>{
     if((event.target.value).toString().length >0){
@@ -115,7 +116,6 @@ const  formOpenType = useSelector(state => state.addFormSection.value);
   }
   const theme = useTheme();
   
-
   const handleChangeCourse = (event) => {
     const {
       target: { value },
@@ -168,18 +168,28 @@ useEffect(() => {
       descriptionElement.focus();
     }
   }
- 
+ return () =>{
+  //exit in memory
+ }
 }, [formOpenType]);
+
+//start and end year listener to produce a school year
+
+useEffect(()=>{
+  if(startYear !== null && endYear !== null){
+    console.log("School year = "+startYear.toString().substr(12, 4)+" - "+endYear.toString().substr(12, 4));
+  }
+return () =>{
+  //exit in memory
+ }
+},[startYear, endYear])
  
 const handleSubmitForm = async (event) =>{
- 
 //`action`,`category`,`editor_position`,`editor_email`,`edited_email`
   event.preventDefault();
-  if(!errorSubjectCode && !errorSubName && !errorUnits){
+  
   const data = new FormData(event.currentTarget);
-  if(subjectType === 'Minor'){
-    data.append('Courses', 'General');// If minor means avaialable to all
-  }
+ 
   data.append('Action', 'Create');
   data.append('EditorPosition', user.position);
   data.append('EditorEmail', user.email);
@@ -189,27 +199,25 @@ const handleSubmitForm = async (event) =>{
   for (var pair of data.entries()) {
     console.log(pair[0]+ ' - ' + pair[1]); 
 }
-  try{
-    const sendRequest = await fetch(basedUrl+"/subject-add.php",{
-              method: "POST",
-              body: data,
-          });
+  // try{
+  //   const sendRequest = await fetch(basedUrl+"/subject-add.php",{
+  //             method: "POST",
+  //             body: data,
+  //         });
 
-          const getResponse = await sendRequest.json();
-         console.log(getResponse.statusCode)
-          if(getResponse.statusCode === 200){
-            setSnackbar({ children: 'Update successfully', severity: 'success' });
-            dispatch(CLOSESUBFORM())
-          }else{
-            setSnackbar({ children: "Field can't be empty", severity: 'error' });
-          }
-  }catch(e){
+  //         const getResponse = await sendRequest.json();
+  //        console.log(getResponse.statusCode)
+  //         if(getResponse.statusCode === 200){
+  //           setSnackbar({ children: 'Update successfully', severity: 'success' });
+  //           dispatch(CLOSESUBFORM())
+  //         }else{
+  //           setSnackbar({ children: "Field can't be empty", severity: 'error' });
+  //         }
+  // }catch(e){
     
-    setSnackbar({ children: "Field can't be empty", severity: 'error' });
-  }
-  }else{
-    setSnackbar({ children: "Field can't be empty", severity: 'error' });
-  }
+  //   setSnackbar({ children: "Field can't be empty", severity: 'error' });
+  // }
+ 
 }
  
 
@@ -222,6 +230,7 @@ const handleSubmitForm = async (event) =>{
         scroll={scroll}
         aria-labelledby="scroll-dialog-title"
         aria-describedby="scroll-dialog-description"
+        fullWidth
       >
 
         <DialogTitle id="scroll-dialog-title">Add Section</DialogTitle>
@@ -231,14 +240,13 @@ const handleSubmitForm = async (event) =>{
       <Box component="form" id ="frmAddSubject"  onSubmit={handleSubmitForm} nowrap>
     
         <Grid2 container spacing={3} sx ={{marginLeft:'-10px'}}>
-             <Grid2 item xs={12}>
+             {/* <Grid2 item xs={12}>
               <FormControl fullWidth>
                <TextField error = {errorSubjectCode} name ="Subject_Code"  required label="Subject Code" variant="outlined" onKeyUp =  {handleChangeSubCode} />
         {errorSubjectCode === true ? (<FormHelperText id="component-helper-text">Subject code already exist
         </FormHelperText>): (<></>)}
                </FormControl>
-             </Grid2>
-
+             </Grid2> */}
 
              <Grid2 item xs={12}>
              <FormControl fullWidth error = {errorYear} required>
@@ -249,7 +257,6 @@ const handleSubmitForm = async (event) =>{
                 id="demo-simple-select"
                 name = "Course"
                 label="Course"
-                defaultValue ={''}
                 >
                     {console.log("COURSES IN SECTION:" + JSON.stringify(courses))}
               {courses.map((course) => (<MenuItem key = {course.id} value={course.course_name}>{course.course_name}</MenuItem>))}
@@ -257,6 +264,78 @@ const handleSubmitForm = async (event) =>{
             </FormControl>
             </Grid2>
 
+            <Grid2 item xs={12}>
+             <FormControl fullWidth error = {errorYear} required>
+              <InputLabel id="demo-simple-select-label">Year</InputLabel>
+                <Select
+                required
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                name = "Year"
+                label="Year"
+                >
+                <MenuItem value ={'1st year'}>1st year</MenuItem>
+                <MenuItem value ={'2nd year'}>2nd year</MenuItem>
+                <MenuItem value ={'3rd year'}>3rd year</MenuItem>
+                <MenuItem value ={'4th year'}>4th year</MenuItem>
+                <MenuItem value ={'5th year'}>5th year</MenuItem>
+                <MenuItem value ={'6th year'}>6th year</MenuItem>
+              </Select>
+            </FormControl>
+            </Grid2>
+
+            <Grid2 item xs={12}>
+             <FormControl fullWidth error = {errorYear} required>
+              <InputLabel id="demo-simple-select-label">Semester</InputLabel>
+                <Select
+                required
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                name = "Semester"
+                label="Semester"
+                >
+                <MenuItem value ={'1st semester'}>1st semester</MenuItem>
+                <MenuItem value ={'2nd semester'}>2nd semester</MenuItem>
+              </Select>
+            </FormControl>
+            </Grid2>
+
+      <Grid2 item xs={12}>
+        <FormControl fullWidth required>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+           <DatePicker
+            required
+            views={['year']}
+            label ="Start of school year"
+            id =  "StartYear"
+            name = "StartYear"
+            onChange = {(event) =>{setStartYear(event); return () =>{}} }
+            value={startYear}
+           // onChange={handleChangeYear}
+           renderInput={(params) => <TextField autoComplete='off' {...params} />}
+            />
+          </LocalizationProvider>
+          </FormControl>
+    </Grid2>
+
+
+    <Grid2 item xs={12}>
+        <FormControl fullWidth required>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+           <DatePicker
+            required
+            views={['year']}
+            label ="End of school year"
+            name = "EndYear"
+            id = "EndYear"
+            value={endYear}
+            onChange = {(event) =>{setEndYear(event)} }
+           // onChange={handleChangeYear}
+           renderInput={(params) => <TextField autoComplete='off' {...params} />}
+            />
+          </LocalizationProvider>
+        </FormControl>
+    </Grid2>   
 
         </Grid2>
         </Box>

@@ -4,6 +4,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useState, useEffect, useRef } from 'react';
+import validator from 'validator'
 import Button from '@mui/material/Button';
 import { useSelector, useDispatch } from 'react-redux';
 import { CLOSEFORM } from '../slice/AddFormSlice/AddEmployeeSlice/AddEmployeeSlice';
@@ -12,7 +13,6 @@ import { Container, Divider, FormControl, FormControlLabel, FormHelperText, Form
 import { Box } from '@mui/system';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import validator from 'validator'
 import { DatePicker } from '@mui/x-date-pickers';
 import {OPENSNACK, CLOSESNACK} from '../slice/Snackbars/EmployeeTableOpen/EmployeeTableOpen';
 import {SUCCESSSNACK, FAILEDSNACK} from '../slice/Snackbars/EmployeeTableStatus/EmployeeTableStatus'
@@ -194,6 +194,7 @@ if(sexChanged === false){
         scroll={scroll}
         aria-labelledby="scroll-dialog-title"
         aria-describedby="scroll-dialog-description"
+        fullWidth
       >
 
         <DialogTitle id="scroll-dialog-title">Add Employee</DialogTitle>
