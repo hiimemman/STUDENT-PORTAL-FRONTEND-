@@ -21,9 +21,10 @@ import { Typography } from '@mui/material';
 import { SubjectView } from '../viewprofile/SubjectView';
 import { SelectedLine } from '../component/SelectedLine';
 import { SectionTable } from '../data-table/SectionTable';
+import { SectionView } from '../viewprofile/SectionView';
 export  function Section() {
-//Selected Subject
-const subject = useSelector(state => state.subjectSelected.value)
+//Selected Section
+const section = useSelector(state => state.sectionSelected.value)
 
 //get user
 const user = useSelector(state => JSON.parse(state.user.session))
@@ -49,7 +50,7 @@ const handleClose = (event, reason) => {
 
 
 
-  const handleChange = (event, newValue) => {
+  const handleChange = (newValue) => {
     setValue(newValue);
   };
   //Navigate
@@ -60,7 +61,13 @@ const handleClose = (event, reason) => {
     } 
    },[user])
 
+useEffect(() =>{
 
+  return () =>{
+    //section listener
+  }
+
+},[section])
   
 
   return (
@@ -83,9 +90,10 @@ const handleClose = (event, reason) => {
             <TabList onChange={handleChange} aria-label="lab API tabs example" >
                 <Tab label="DATA TABLE" value="1" />
                 <Tab label="HISTORY" value="2" />
-                {subject !== null ? (<Tab value="3" label={
+                {console.log(section)}
+                {section !== null ? (<Tab value="3" label={
                 <Stack direction="row" spacing={2}>
-                <Typography>{subject.subject_code}</Typography>
+                <Typography>{section.section_name}</Typography>
                 </Stack>
                 } />) : (<></>)}
              </TabList>
@@ -94,10 +102,10 @@ const handleClose = (event, reason) => {
          <SectionTable />
           </TabPanel>
             <TabPanel value="2" sx ={{marginLeft:'-24px'}}>
-              <SubjectHistory />
+            
             </TabPanel>
             <TabPanel value="3" sx ={{marginLeft:'-24px'}}>
-              <SubjectView />
+              <SectionView/>
             </TabPanel>
           </TabContext>
        </div>

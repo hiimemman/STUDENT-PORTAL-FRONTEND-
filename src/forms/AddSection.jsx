@@ -48,24 +48,14 @@ export function AddSection(props){
 const user = useSelector(state => JSON.parse(state.user.session));
 
 
-  const [courseName, setCourseName] = useState([]);
-  const [subjectType, setSubjectType] = useState('Minor');
-
- 
-
-  const [errorSubjectCode, setErrorSubjectCode] = useState('');
-  const [errorSubName, setErrorSubName] = useState('');
-  const [errorUnits, setErrorUnits] = useState('');
-  const [errorCourse, setErrorCourse] = useState('');
-  const [errorYear, setErrorYear] =  useState('');
-  const [errorSemester, setErrorSemester] = useState('');
-  const [errorType, setErrorType] = useState('');
-
+  const [sectionName, setSectionName] = useState(null);
+  const [sectionUpdated, setSectionUpdated] = useState(false);
   const [courses, setCourses] = useState(props.courses.data);
   const [startYear, setStartYear] = useState(null);
   const [endYear, setEndYear] = useState(null);
   const [academicYear, setAcademicYear] = useState(null);
-  
+  const [selectedCourse, setSelectedCourse] = useState(null);
+  const [selectedYear, setSelectedYear] = useState(null);
 
   //Open add form
 const  formOpenType = useSelector(state => state.addFormSection.value);
@@ -75,69 +65,17 @@ const  formOpenType = useSelector(state => state.addFormSection.value);
 
   const handleCloseSnackbar = () => setSnackbar(null);
 
-  const handleChangeSubCode = async (event) =>{
-
-    try{
-      const data = new FormData();
-      data.append('Subject_Code', event.target.value);
-      const sendRequest = await fetch(basedUrl+"/exist-subject-code.php",{
-        method: "POST",
-        body: data,
-    });
-
-    const getResponse = await sendRequest.json();
-    console.log(getResponse.statusCode)
-    if(getResponse.statusCode === 200){
-      setErrorSubjectCode(false);
-     
-    }else{
-      setErrorSubjectCode(true);
-     
-    }
-    }catch(e){
-      setErrorSubjectCode(true);
-     
-  }
-}
-
-  const handleChangeSubName = (event) =>{
-    if((event.target.value).toString().length >0){
-      setErrorSubName(false)
-    }else{
-      setErrorSubName(true)
-    }
-  }
-
-  const handleChangeUnits = (event) =>{
-    if(parseFloat(event.target.value)  > 0){
-      setErrorUnits(false)
-    }else{
-      setErrorUnits(true)
-    }
-  }
-  const theme = useTheme();
-  
  
 
-  //Check if courseName is empty
-  useEffect(()=>{
-    if(courseName.length < 1 && errorCourse !== ''){
-      setErrorCourse(true)
-    }else{
-      setErrorCourse(false)
-    }
-  },[courseName])
-
-  
-
   const handleClose = () => {
-    // setCourseName([]);
-    // setErrorCourse('')
+    setSectionUpdated((prev) => prev = false);
+    setSectionName((prev) => prev = null);
+    setStartYear((prev) => prev = null);
+    setEndYear((prev) => prev = null);
    dispatch(CLOSESECTIONFORM());
   };
  
-   const descriptionElementRef = useRef(null);
-
+const descriptionElementRef = useRef(null);
   
 useEffect(() => {
   if (formOpenType === 'subject') {
@@ -151,56 +89,115 @@ useEffect(() => {
  }
 }, [formOpenType]);
 
+
+  
+
 //start and end year listener to produce a school year
 
-useEffect(()=>{
+useEffect(() => {
   if(startYear !== null && endYear !== null){
     setAcademicYear(startYear.toString().substr(12, 4)+" - "+endYear.toString().substr(12, 4));
   }
 return () =>{
   //exit in memory
  }
-},[startYear, endYear])
+},[startYear, endYear]);
 
- 
-const handleSubmitForm = async (event) =>{
-//`action`,`category`,`editor_position`,`editor_email`,`edited_email`
-  event.preventDefault();
-  
-  const data = new FormData(event.currentTarget);
+
+
+//Generate section name
+const getSectionName =  async () => {
+  console.log("Pumasok dito")
+  const data = new FormData();
 
   //specific
+  data.append('Course', selectedCourse);
   data.append('AcademicYear', academicYear);
-  data.append('StartYear', startYear.toString().substr(12, 4));
-  data.append('EndYear', endYear.toString().substr(12, 4));
+  data.append('Year', selectedYear);
   //const
-  data.append('Action', 'Create');
-  data.append('EditorPosition', user.position);
-  data.append('EditorEmail', user.email);
-  data.append('Category', 'Section');
-  console.log("Formdata values:")
 
   for (var pair of data.entries()) {
     console.log(pair[0]+ ' - ' + pair[1]); 
 }
   try{
-    const sendRequest = await fetch(basedUrl+"/section-add.php",{
+    const sendRequest = await fetch(basedUrl+"/section-name-generate.php",{
               method: "POST",
               body: data,
           });
-
-          const getResponse = await sendRequest.json();
-         console.log(getResponse.statusCode)
-          if(getResponse.statusCode === 200){
-            setSnackbar({ children: 'Update successfully', severity: 'success' });
-            dispatch(CLOSESUBFORM())
-          }else{
-            setSnackbar({ children: "Field can't be empty", severity: 'error' });
-          }
+    const getResponse = await sendRequest.json();
+    console.log("Response:")
+    console.log(getResponse.statusCode);
+    if(getResponse.statusCode !== 200){
+      setSectionName((prev) => prev = selectedCourse+" "+selectedYear.charAt(0)+"-"+getResponse.statusCode);
+    console.log("Natapos dito")
+    }
   }catch(e){
-    
-    setSnackbar({ children: "Field can't be empty", severity: 'error' });
+    console.log(e);
+  }      
+}
+
+useEffect(() => {
+  console.log(academicYear)
+  if(academicYear !== null){
+   getSectionName();
   }
+   return () =>{
+     //exit in memory
+   }
+ }, [academicYear])
+
+useEffect(() => {
+console.log(sectionName)
+  return () =>{
+    //exit memory
+  }
+},[sectionName])
+
+
+
+ 
+const handleSubmitForm = async (event) =>{
+//`action`,`category`,`editor_position`,`editor_email`,`edited_email`
+  event.preventDefault();
+  if(sectionName !== null){
+    const data = new FormData(event.currentTarget);
+
+    //specific
+    data.append('SectionName', sectionName);
+    data.append('AcademicYear', academicYear);
+    data.append('StartYear', startYear.toString().substr(12, 4));
+    data.append('EndYear', endYear.toString().substr(12, 4));
+    //const
+    data.append('Action', 'Create');
+    data.append('EditorPosition', user.position);
+    data.append('EditorEmail', user.email);
+    data.append('Category', 'Section');
+    console.log("Formdata values:")
+  
+    for (var pair of data.entries()) {
+      console.log(pair[0]+ ' - ' + pair[1]); 
+  }
+    try{
+      const sendRequest = await fetch(basedUrl+"/section-add.php",{
+                method: "POST",
+                body: data,
+            });
+  
+            const getResponse = await sendRequest.json();
+           console.log(getResponse.statusCode)
+            if(getResponse.statusCode == '200'){
+              setSnackbar({ children: 'Update successfully', severity: 'success' });
+              dispatch(CLOSESECTIONFORM())
+            }else{
+              setSnackbar({ children: "Field can't be empty", severity: 'error' });
+              dispatch(CLOSESECTIONFORM())
+            }
+    }catch(e){
+      setSnackbar({ children: "Field can't be empty", severity: 'error' });
+      dispatch(CLOSESECTIONFORM())
+    }
+  }
+  
  
 }
  
@@ -222,18 +219,15 @@ const handleSubmitForm = async (event) =>{
       
         <DialogContent dividers={scroll === 'paper'}>
       <Box component="form" id ="frmAddSubject"  onSubmit={handleSubmitForm} nowrap>
-    
-        <Grid2 container spacing={3} sx ={{marginLeft:'-10px'}}>
-             {/* <Grid2 item xs={12}>
+      <Grid2 container spacing={3} sx ={{marginLeft:'-10px'}}>
+    {sectionName !== null ? (<Grid2 item xs={12}>
               <FormControl fullWidth>
-               <TextField error = {errorSubjectCode} name ="Subject_Code"  required label="Subject Code" variant="outlined" onKeyUp =  {handleChangeSubCode} />
-        {errorSubjectCode === true ? (<FormHelperText id="component-helper-text">Subject code already exist
-        </FormHelperText>): (<></>)}
+               <TextField  name ="SubjectName"  label = {sectionName} variant="outlined" disabled />
                </FormControl>
-             </Grid2> */}
-
+    </Grid2>) : (<></>)}
+        
              <Grid2 item xs={12}>
-             <FormControl fullWidth error = {errorYear} required>
+             <FormControl fullWidth  required>
               <InputLabel id="demo-simple-select-label">Course</InputLabel>
                 <Select
                 required
@@ -241,15 +235,15 @@ const handleSubmitForm = async (event) =>{
                 id="demo-simple-select"
                 name = "Course"
                 label="Course"
+                onChange ={(event) => {setSelectedCourse(event.target.value); return () =>{}}}
                 >
-                    {console.log("COURSES IN SECTION:" + JSON.stringify(courses))}
-              {courses.map((course) => (<MenuItem key = {course.id} value={course.course_name}>{course.course_name}</MenuItem>))}
+              {courses.map((course) => (<MenuItem key = {course.id} value = {course.course_name}>{course.course_name}</MenuItem>))}
               </Select>
             </FormControl>
             </Grid2>
 
             <Grid2 item xs={12}>
-             <FormControl fullWidth error = {errorYear} required>
+             <FormControl fullWidth  required>
               <InputLabel id="demo-simple-select-label">Year</InputLabel>
                 <Select
                 required
@@ -257,6 +251,8 @@ const handleSubmitForm = async (event) =>{
                 id="demo-simple-select"
                 name = "Year"
                 label="Year"
+                onChange={(event) => {setSelectedYear(event.target.value); return () =>{}}}
+                
                 >
                 <MenuItem value ={'1st year'}>1st year</MenuItem>
                 <MenuItem value ={'2nd year'}>2nd year</MenuItem>
@@ -269,7 +265,7 @@ const handleSubmitForm = async (event) =>{
             </Grid2>
 
             <Grid2 item xs={12}>
-             <FormControl fullWidth error = {errorYear} required>
+             <FormControl fullWidth  required>
               <InputLabel id="demo-simple-select-label">Semester</InputLabel>
                 <Select
                 required
@@ -313,7 +309,7 @@ const handleSubmitForm = async (event) =>{
             name = "EndYear"
             id = "EndYear"
             value={endYear}
-            onChange = {(event) =>{setEndYear(event)} }
+            onChange = {(event) =>{setEndYear(event); return () => {}} }
            // onChange={handleChangeYear}
            renderInput={(params) => <TextField autoComplete='off' {...params} />}
             />

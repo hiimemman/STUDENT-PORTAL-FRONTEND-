@@ -16,7 +16,7 @@ import {ADDSECTION} from '../slice/AddFormSlice/AddSectionSlice/AddSectionSlice'
 import { useTheme } from '@mui/material/styles';
 import { Box } from '@mui/system';
 import { Suspense } from 'react';
-import { PUT_SUBJECT } from '../slice/FormSelectedRow/SubjectSelected';
+import { PUT_SECTION } from '../slice/FormSelectedRow/SectionSelected';
 import { AddSection } from '../forms/AddSection';
 
 
@@ -447,7 +447,7 @@ const renderEditStatus = (params) => {
       const selectedRowData = rows.filter((row) =>
         selectedIDs.has(row.id.toString())
       );
-      dispatch(PUT_SUBJECT(selectedRowData[0]))
+      dispatch(PUT_SECTION(selectedRowData[0]))
     }}
     /> 
  {!!snackbar && (
