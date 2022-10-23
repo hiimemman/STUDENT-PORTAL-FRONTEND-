@@ -244,38 +244,30 @@ const [actionFileSave, setActionFileSave] = useState('');
           <Paper elevation={5} sx={{  padding:'.5rem', width: 300,
           maxHeight: 450, overflow: 'auto'}} className ="rounded-xl">
            <Grid2 container  justifyContent="end">
-           {/* <Button variant="text" startIcon = {<RestoreIcon />} onClick = {restoreFile}> Restore</Button> */}
-           {actionFileSave !== 'Create' ? (<IconButton placeholder ={'Close'}aria-label="delete" size="small" onClick={handleOpenDialog}>
+            {/* removed because section only change status*/}
+           {/* {actionFileSave !== 'Create' ? (<IconButton placeholder ={'Close'}aria-label="delete" size="small" onClick={handleOpenDialog}>
             <RestoreIcon />
-            </IconButton>) : (<></>)}
+            </IconButton>) : (<></>)} */}
               <IconButton placeholder ={'Close'}aria-label="delete" size="small" onClick={() => setOpenDragger(false)}>
                <CloseIcon />
               </IconButton>
            </Grid2>
            <Divider />
             <Grid2 container spacing={2} sx ={{marginLeft:'0px'}}>
-             <Grid2 item xs={4}><Typography variant='overline'>CODE:</Typography></Grid2>
-             <Grid2 item xs={4}><Typography variant='overline'>{fileSave.subject_code}</Typography></Grid2>
+             <Grid2 item xs={4}><Typography variant='overline'>SECTION:</Typography></Grid2>
+             <Grid2 item xs={4}><Typography variant='overline'>{fileSave.section_name}</Typography></Grid2>
             </Grid2>
             <Grid2 container spacing={2} sx ={{marginLeft:'0px'}}>
-             <Grid2 item xs={4}><Typography variant='overline'>NAME:</Typography></Grid2>
-             <Grid2 item xs={4}><Typography variant='overline'>{fileSave.subject_name}</Typography></Grid2>
-            </Grid2>
-            <Grid2 container spacing={2} sx ={{marginLeft:'0px'}}>
-             <Grid2 item xs={4}><Typography variant='overline'>UNITS:</Typography></Grid2>
-             <Grid2 item xs={4}><Typography variant='overline'>{fileSave.units}</Typography></Grid2>
-            </Grid2>
-            <Grid2 container spacing={2} sx ={{marginLeft:'0px'}}>
-             <Grid2 item xs={4}><Typography variant='overline'>COURSE(S):</Typography></Grid2>
-             <Grid2 item xs={4}><Typography variant='overline'>{fileSave.course_available}</Typography></Grid2>
+             <Grid2 item xs={4}><Typography variant='overline'>COURSE:</Typography></Grid2>
+             <Grid2 item xs={4}><Typography variant='overline'>{fileSave.course}</Typography></Grid2>
             </Grid2>
             <Grid2 container spacing={2} sx ={{marginLeft:'0px'}}>
              <Grid2 item xs={4}><Typography variant='overline'>YEAR:</Typography></Grid2>
-             <Grid2 item xs={4}><Typography variant='overline'>{fileSave.year_available}</Typography></Grid2>
+             <Grid2 item xs={4}><Typography variant='overline'>{fileSave.section_year}</Typography></Grid2>
             </Grid2>
             <Grid2 container spacing={2} sx ={{marginLeft:'0px'}}>
-             <Grid2 item xs={4}><Typography variant='overline'>SEMESTER:</Typography></Grid2>
-             <Grid2 item xs={4}><Typography variant='overline'>{fileSave.semester_available}</Typography></Grid2>
+             <Grid2 item xs={4}><Typography variant='overline'>ACADEMIC YEAR:</Typography></Grid2>
+             <Grid2 item xs={4}><Typography variant='overline'>{fileSave.academic_year}</Typography></Grid2>
             </Grid2>
             <Grid2 container spacing={2} sx ={{marginLeft:'0px'}}>
              <Grid2 item xs={4}><Typography variant='overline'>STATUS:</Typography></Grid2>

@@ -290,6 +290,7 @@ const renderEditStatus = (params) => {
       const dataUpdate = new FormData();
       dataUpdate.append('ID', newRow['id']);
       dataUpdate.append('Semester', newRow['semester']);
+      dataUpdate.append('SectionName', newRow['section_name']);
       dataUpdate.append('Status', newRow['status']);
       dataUpdate.append('Action', 'Update');
       dataUpdate.append('EditorPosition', user.position);

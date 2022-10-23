@@ -128,7 +128,7 @@ const getSectionName =  async () => {
     console.log("Response:")
     console.log(getResponse.statusCode);
     if(getResponse.statusCode !== 200){
-      setSectionName((prev) => prev = selectedCourse+" "+selectedYear.charAt(0)+"-"+getResponse.statusCode);
+      setSectionName((prev) => prev = selectedCourse+" "+selectedYear.charAt(0)+"-"+(parseFloat(getResponse.statusCode)+1));
     console.log("Natapos dito")
     }
   }catch(e){

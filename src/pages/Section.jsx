@@ -5,23 +5,16 @@ import { useNavigate } from 'react-router-dom';
 import {  Alert, Skeleton, Snackbar, Stack } from '@mui/material';
 import { DrawerAppBar } from '../component/DrawerAppBar';
 import { useEffect} from 'react';
-import { EmployeeTable } from '../data-table/EmployeeTable';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import Tab from '@mui/material/Tab';
 import { useState, Suspense } from 'react';
-import Badge from '@mui/material/Badge';
-import MailIcon from '@mui/icons-material/Mail';
-import Avatar from "@mui/material/Avatar";
-import { EmployeeHistory } from '../viewhistory/EmployeeHistory';
-
-import { SubjectHistory } from '../viewhistory/SubjectHistory';
 import { Typography } from '@mui/material';
-import { SubjectView } from '../viewprofile/SubjectView';
 import { SelectedLine } from '../component/SelectedLine';
 import { SectionTable } from '../data-table/SectionTable';
 import { SectionView } from '../viewprofile/SectionView';
+import { SectionHistory } from '../viewhistory/SectionHistory';
 export  function Section() {
 //Selected Section
 const section = useSelector(state => state.sectionSelected.value)
@@ -109,7 +102,7 @@ console.log(value)
          <SectionTable />
           </TabPanel>
             <TabPanel value="2" sx ={{marginLeft:'-24px'}}>
-            
+            <SectionHistory />
             </TabPanel>
             <TabPanel value="3" sx ={{marginLeft:'-24px'}}>
               <SectionView/>
