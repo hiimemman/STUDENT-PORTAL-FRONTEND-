@@ -48,29 +48,10 @@ const useFakeMutation = () => {
 };
 
 function computeMutation(newRow, oldRow) {
-  if (newRow.subject_name !== oldRow.subject_name) {
-   
-    return `Subject name from '${oldRow.subject_name}' to '${newRow.subject_name}'`;
-  }
+  
   if (newRow.status !== oldRow.status) {
    
     return `Status from '${oldRow.status}' to '${newRow.status}'`;
-  }
-  if (newRow.units !== oldRow.units) {
-  
-    return `Units from '${oldRow.units || ''}' to '${newRow.units || ''}'`;
-  }
-  if (newRow.amount !== oldRow.amount) {
-  
-    return `Amount from '${oldRow.amount || ''}' to '${newRow.amount || ''}'`;
-  }
-  if (newRow.year_available !== oldRow.year_available) {
-   
-    return `Year from '${oldRow.year_available}' to '${newRow.year_available}'`;
-  }
-  if (newRow.semester_available !== oldRow.semester_available) {
-   
-    return `Semester from '${oldRow.semester_available}' to '${newRow.semester_available}'`;
   }
   return null;
 }
@@ -176,63 +157,6 @@ const renderEditSemester = (params) => {
 };
 //End of edit semester via cell 
 
- 
- //Edit year via cell
-function EditYear(props) {
-  const { id, value, field } = props;
-  const apiRef = useGridApiContext();
-  
-  const handleChange = async(event) =>{
-    
-    await apiRef.current.setEditCellValue({ id, field, value: event.target.value });
-      apiRef.current.stopCellEditMode({ id, field });
-  
-}
-
-  return (
-    <>
-      <Select
-      value={value}
-      onChange={handleChange}
-      size="small"
-      sx={{ height: 1 , width: 260}}
-      native
-      autoFocus
-    >
-      <option>1st year</option>
-      <option>2nd year</option>
-      <option>3rd year</option>
-      <option>4th year</option>
-      <option>5th year</option>
-      <option>6th year</option>
-
-    </Select>
-    </>
-  
-  );
-}
-
-EditYear.propTypes = {
-  /**
-   * The column field of the cell that triggered the event.
-   */
-  field: PropTypes.string.isRequired,
-  /**
-   * The grid row id.
-   */
-  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-  /**
-   * The cell value.
-   * If the column has `valueGetter`, use `params.row` to directly access the fields.
-   */
-  value: PropTypes.any,
-};
-
-const renderEditYear = (params) => {
-  return <EditYear {...params} />;
-};
-//End of edit year via cell 
-
 
 
   
@@ -293,38 +217,38 @@ const renderEditStatus = (params) => {
     {
       field: 'section_name',
       headerName: 'Section',
-      width: 200,
+      width: 250,
      editable: false,
     },
     {
         field: 'course',
         headerName: 'Course',
-        width: 200,
+        width: 250,
        editable: false,
     },
     {
         field: 'section_year',
         headerName: 'Year',
-        width: 200,
+        width: 250,
         editable: false,
       },
-      {
-        field: 'semester',
-        headerName: 'Semester',
-        width: 200,
-        editable: true,
-      },
+      // {
+      //   field: 'semester',
+      //   headerName: 'Semester',
+      //   width: 200,
+      //   editable: false,
+      // },
       {
         field: 'academic_year',
         headerName: 'Academic Year',
-        width: 250,
+        width: 300,
         editable: false,
       },
       {
         field: 'status',
         headerName: 'Status',
         renderEditCell: renderEditStatus,
-        width: 100,
+        width: 150,
         editable: true,
         renderCell: (cellValues) => {
           return(
@@ -365,20 +289,14 @@ const renderEditStatus = (params) => {
       // Make the HTTP request to save in the backend
       const dataUpdate = new FormData();
       dataUpdate.append('ID', newRow['id']);
-      dataUpdate.append('Subject_Code', newRow['subject_code']);
-      dataUpdate.append('Subject_Name', newRow['subject_name']);
-      dataUpdate.append('Units', newRow['units']);
-      dataUpdate.append('Course', newRow['course_available']);
-      dataUpdate.append('Year', newRow['year_available']);
-      dataUpdate.append('Semester', newRow['semester_available']);
-      dataUpdate.append('Type', newRow['type']);
+      dataUpdate.append('Semester', newRow['semester']);
       dataUpdate.append('Status', newRow['status']);
       dataUpdate.append('Action', 'Update');
       dataUpdate.append('EditorPosition', user.position);
       dataUpdate.append('EditorEmail', user.email);
-      dataUpdate.append('Category', 'Subject');
+      dataUpdate.append('Category', 'Section');
       const response = await mutateRow(newRow);
-      const sendRequest = await fetch(basedUrl+"/subject-update.php",{
+      const sendRequest = await fetch(basedUrl+"/section-update.php",{
         method: "POST",
         body: dataUpdate,
     });
