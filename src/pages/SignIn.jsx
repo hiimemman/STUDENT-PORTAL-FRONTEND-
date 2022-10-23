@@ -1,10 +1,12 @@
-import React from 'react';
+import { Suspense } from 'react';
 import { LoginForm } from '../component/LoginForm';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import {  Skeleton } from '@mui/material';
+import {  Box, Skeleton } from '@mui/material';
 import { useEffect } from 'react';
 import { PUT_USER, REMOVE_USER } from '../slice/UserSession/userSession';
+import { imageBaseUrl } from '../base-url/based-url';
+import { useState } from 'react';
 
 export function SignIn() {
 
@@ -15,6 +17,8 @@ const user = useSelector(state => (state.user.session))
 const navigate = useNavigate();
 //dispatch from redux
 const dispatch = useDispatch();
+
+const [backgroundImage, setBackgroundImage] = useState(imageBaseUrl+"school-sample-background.jpg")
 
 useEffect(() =>{
   if(sessionStorage.getItem('user') !== null && user === null){
@@ -35,7 +39,21 @@ useEffect(() =>{
   />
   ) :  (
     <>
+    <Suspense fallback = {
+      // <Skeleton variant="rectangular" width={210}
+      // height={118}></Skeleton>
+      <p> Loading</p>
+    }>
+      
+    <Box
+    sx={{
+      backgroundImage:`url("`+backgroundImage+`")`,  backgroundRepeat:'no-repeat', backgroundSize: 'cover',    
+    }}
+  >
     <LoginForm />
+  </Box>
+</Suspense> 
+    
   </>
   )  }
     </>

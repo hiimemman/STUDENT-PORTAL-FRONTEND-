@@ -13,6 +13,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import { basedUrl } from '../base-url/based-url'
 
 import {ADDSECTION} from '../slice/AddFormSlice/AddSectionSlice/AddSectionSlice'
+import { useTheme } from '@mui/material/styles';
+import { Box } from '@mui/system';
+import { Suspense } from 'react';
 import { PUT_SECTION } from '../slice/FormSelectedRow/SectionSelected';
 import { AddSection } from '../forms/AddSection';
 
@@ -75,10 +78,11 @@ function computeMutation(newRow, oldRow) {
   return null;
 }
 
-export function SectionTable() {  
+export function SectionScheduleTable() {  
     //dispatch from redux
     const dispatch = useDispatch();
-
+        //Selected Section
+const section = useSelector(state => state.sectionSelected.value);
     const [rows, setRows] = useState([]);
     const [loading, isLoading] = useState(false);
 
@@ -104,9 +108,15 @@ const user = useSelector(state => JSON.parse(state.user.session));
    const getAllData = async () =>{
       isLoading(true)
       try{ 
-      
+        const data = new FormData();
+        data.append('SectionName', section.section_name);
+        data.append('AcademicYear', section.academic_year);
+
         //online api
-          const sendRequest = await fetch(basedUrl+"/section-table.php");
+           const sendRequest = await fetch(basedUrl+"/section-schedule-table.php",{
+              method: "POST",
+              body: data,
+          });
           const getResponse = await sendRequest.json();
           isLoading(false)
           if(getResponse.statusCode === 201){
@@ -291,34 +301,52 @@ const renderEditStatus = (params) => {
  
   const columns = [
     {
-      field: 'section_name',
-      headerName: 'Section',
-      width: 200,
+      field: 'subject_name',
+      headerName: 'Subject',
+      width: 150,
      editable: false,
     },
     {
-        field: 'course',
-        headerName: 'Course',
+        field: 'description',
+        headerName: 'Description',
         width: 200,
        editable: false,
     },
     {
-        field: 'section_year',
-        headerName: 'Year',
-        width: 200,
+        field: 'units',
+        headerName: 'Units',
+        width: 50,
         editable: false,
       },
       {
         field: 'semester',
         headerName: 'Semester',
-        width: 200,
-        editable: true,
+        width: 150,
+        editable: false,
       },
       {
         field: 'academic_year',
         headerName: 'Academic Year',
-        width: 250,
+        width: 150,
         editable: false,
+      },
+      {
+        field: 'schedule_day',
+        headerName: 'Schedule Day',
+        width: 150,
+        editable: true,
+      },
+      {
+        field: 'schedule_time',
+        headerName: 'Time',
+        width: 100,
+        editable: true,
+      },
+      {
+        field: 'professional_initial',
+        headerName: 'Professor',
+        width: 190,
+        editable: true,
       },
       {
         field: 'status',
@@ -440,13 +468,13 @@ const renderEditStatus = (params) => {
      {renderConfirmDialog()}
     <DataGrid components={{ Toolbar: CustomToolbarSection, LoadingOverlay: LinearProgress, }} loading = {loading} rows = {rows} columns={columns}  experimentalFeatures={{ newEditingApi: true }} style ={{height:'500px'}}
      processRowUpdate={processRowUpdate}
-     onSelectionModelChange={(ids) => {
-      const selectedIDs = new Set(ids);
-      const selectedRowData = rows.filter((row) =>
-        selectedIDs.has(row.id.toString())
-      );
-      dispatch(PUT_SECTION(selectedRowData[0]))
-    }}
+    //  onSelectionModelChange={(ids) => {
+    //   const selectedIDs = new Set(ids);
+    //   const selectedRowData = rows.filter((row) =>
+    //     selectedIDs.has(row.id.toString())
+    //   );
+    //   dispatch(PUT_SECTION(selectedRowData[0]))
+    // }}
     /> 
  {!!snackbar && (
         <Snackbar open onClose={handleCloseSnackbar} autoHideDuration={6000}>
@@ -500,13 +528,11 @@ const [updatedCourse, setUpdatedCourse] = useState(false);
   return (<>
 
     <GridToolbarContainer>
-       <Button variant="text" startIcon = {<PersonAddIcon />} onClick = {() => dispatch(ADDSECTION())}> Add</Button>
-      <GridToolbarColumnsButton />
+       <GridToolbarColumnsButton />
       <GridToolbarFilterButton />
       <GridToolbarDensitySelector />
       <GridToolbarExport />
     </GridToolbarContainer>
-    {updatedCourse === true ? (<AddSection open = {formOpenType === 'section'}  courses ={courses}/>) : (<></>)}
-  </>
+    </>
   );
 }

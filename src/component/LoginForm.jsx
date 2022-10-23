@@ -13,7 +13,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useSelector, useDispatch } from 'react-redux';
 import { PUT_USER } from '../slice/UserSession/userSession';
 import { useNavigate } from 'react-router-dom';
-import {useState } from 'react';
+import {useState, useEffect } from 'react';
 import Snackbar from '@mui/material/Snackbar';
 import Paper from '@mui/material/Paper';
 import MuiAlert from '@mui/material/Alert';
@@ -22,13 +22,15 @@ import LinearProgress from '@mui/material/LinearProgress';
 import validator from 'validator'
 import { PaperLine } from './PaperLine';
 import { ParticlesBackground } from './ParticlesBackground';
-import { basedUrl } from '../base-url/based-url';
+import { basedUrl, imageBaseUrl } from '../base-url/based-url';
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 const theme = createTheme();
 export function LoginForm(){
+  //check current theme
+ const selectedTheme = useSelector(state =>(state.selectedTheme.value))
     
 //global store states from redux dev
 const isLogin = useSelector(state=>state.isAuth)
@@ -97,7 +99,12 @@ const dispatch = useDispatch();
   }
   //Snackbar
 
+  useEffect(() =>{
  
+     return () =>{
+   
+     }
+   },[selectedTheme])
 
 
   const handleClose = (event, reason) => {
@@ -120,19 +127,19 @@ const dispatch = useDispatch();
     return(
       <>
      
-        <ThemeProvider theme={theme}>
         <CssBaseline />
-        <Container component="main" maxWidth="xs">
+        <Container component="main" maxWidth="xs" sx ={{p:0}}>
         
          
           <div className='grid h-screen place-items-center'>
           
           <Paper 
   sx={{
-    borderRadius: 1,
+    borderRadius: 2,
   }}>        
   {/* <PaperLine/> */}
   {isLoading === true ? (<LinearProgress className ="rounded-t-xl p-1" />) : ("")}
+  
           <Box
             sx={{
               paddingTop:5,
@@ -144,12 +151,15 @@ const dispatch = useDispatch();
               alignItems: 'center',
             }}
           > 
-            <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+            {/* <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
               <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
               Sign in
-            </Typography>
+            </Typography> */}
+           {selectedTheme !== 'lightTheme' ? (<img  src= {imageBaseUrl+"Aisat-Mis-Dark.svg"} alt="SVG as an image" />) : 
+            (<img src= {imageBaseUrl+"Aisat-Mis-Light.svg"}  alt="SVG as an image" />)}
+           
             <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
             <Divider />
               {emailValid === false ? (<TextField
@@ -204,10 +214,10 @@ const dispatch = useDispatch();
              
               <Grid container>
                 <Grid item xs>
-                  {/* <Typography>{user.value.email}</Typography>  */}
-                  <Link href="#" variant="body2">
+
+                  {/* <Link href="#" variant="body2">
                     Forgot password?
-                  </Link>
+                  </Link> */}
                 </Grid>
                 {/* <Grid item>
                   <Link href="#" variant="body2">
@@ -226,7 +236,6 @@ const dispatch = useDispatch();
              </Alert>
             </Snackbar>
         </Container>
-      </ThemeProvider>  
     </>
     );
 }

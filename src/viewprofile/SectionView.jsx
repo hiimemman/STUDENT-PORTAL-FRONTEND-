@@ -7,7 +7,6 @@ import Avatar from '@mui/material/Avatar';
 import { styled } from '@mui/material/styles';
 import Badge from '@mui/material/Badge';
 import { Box, Container } from '@mui/system';
-import FormControlLabel from '@mui/material/FormControlLabel';
 import SaveIcon from '@mui/icons-material/Save';
 import { LoadingButton } from '@mui/lab';
 import { PUT_SUBJECT } from '../slice/FormSelectedRow/SubjectSelected';
@@ -21,6 +20,7 @@ import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import Tab from '@mui/material/Tab';
+import { SectionScheduleTable } from '../data-table/SectioScheduleTable';
 
 
 //Course select required functions
@@ -79,7 +79,7 @@ const [loginMessage, setMessage ] = useState("Try again");// Default message of 
 
 
 //Field states
-const [valueTab, setValueTab] = useState('2');//default tab
+const [valueTab, setValueTab] = useState(1);//default tab
 
 const [semester, setSemester] = useState(section.semester);
 
@@ -279,7 +279,7 @@ const OverviewPanel = () =>{
      <Typography variant ="overline" noWrap sx={{fontSize:'15px', width: '15rem'}}>Semester:  </Typography>
 
      <FormControl fullWidth variant = "standard"    sx={{fontSize:'15px' , width: '50rem'}}>
-    {/* <InputLabel id="demo-multiple-chip-label">Course(s) Available</InputLabel> */}
+
     <Select
      required
       id="Semester"
@@ -328,13 +328,19 @@ const OverviewPanel = () =>{
 const SchedulePanel = () =>{
   return (
     <>
-    <p> Tite</p>
+     
+     <SectionScheduleTable  />
+  
     </>
   )
 }
 
+const handleChangeTab = (event, newValue) =>{
+  setValueTab(newValue);
+} 
     return(
         <>
+        <TabContext value = {valueTab}>
         <Paper elevation={1}>
             <Box  style={{ backgroundImage:`url("https://gstatic.com/classroom/themes/img_read.jpg")`,  backgroundRepeat:'no-repeat', backgroundSize: 'cover', }} sx ={{width:'500', paddingTop:'1.5rem'}} className ="rounded-t-lg">
              <Box component="span" sx={{marginTop: '5.5rem', p: 3, display: 'flex' ,flexDirection:'column', alignItems: 'right'}}>
@@ -345,28 +351,27 @@ const SchedulePanel = () =>{
   </Box>
 </Box>
           <Box sx={{ borderBottom: 1, borderColor: 'divider' }} className ="rounded-b-lg"> 
-          {console.log(valueTab)}
-          <TabContext value={valueTab}>
-            <TabList onChange={(event) => setValueTab((prev) => prev = event.target.value) } aria-label="lab API tabs example" className='mt-2 ml-2'>
-              <Tab label="OVERVIEW" value="1" />
-                <Tab label="SCHEDULES" value="2" />
-                <Tab label="HISTORY" value="3" />
+          {console.log("Value tab"+valueTab)}
+          
+            <TabList onChange = {handleChangeTab} aria-label="lab API tabs example" className='mt-2 ml-2'>
+                <Tab label="OVERVIEW" value = {1} />
+                <Tab label="SCHEDULES" value= {2} />
+                <Tab label="HISTORY" value= {3} />
              </TabList>
-             <TabPanel value = "1">
+            
+         
+          </Box>
+             </Paper >
+  
+      
+             <TabPanel value = {1} sx ={{p:0}}>
                 <OverviewPanel />
              </TabPanel>
              
-             <TabPanel value  = "2">
+             <TabPanel value  = {2} sx ={{p:0, marginTop:'1.5rem'}}>
                <SchedulePanel />
              </TabPanel>
-          </TabContext>
-          </Box>
-             </Paper >
-             
-
-      
-           
-          
+      </TabContext>        
       <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
              <Alert onClose={handleClose} severity= {loginStatus} sx={{ width: '100%' }}>
                 {loginMessage}

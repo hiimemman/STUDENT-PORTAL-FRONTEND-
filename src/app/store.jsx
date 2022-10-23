@@ -17,6 +17,7 @@ import addCourse from '../slice/AddFormSlice/AddCourseSlice/AddCourseSlice'
 import addSection from '../slice/AddFormSlice/AddSectionSlice/AddSectionSlice'
 import sectionSelect from '../slice/FormSelectedRow/SectionSelected'
 
+
 export const store = configureStore({
   reducer: {
     user: userInfo,

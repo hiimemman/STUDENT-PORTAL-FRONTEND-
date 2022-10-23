@@ -112,13 +112,13 @@ return (
     <Router>
       <Routes>
         <Route path = "/loginemployee" element ={<><ParticlesBackground /><SignIn /></>} />
-        <Route path = "/employee/dashboard" element ={<><ParticlesBackground /><Dashboard /></>} />
-        <Route path = "/employee/employees" element ={<><ParticlesBackground /><Employees/></>} /> 
-        <Route path = "/employee/student" element ={<><ParticlesBackground /><Student/></>} />
-        <Route path = "/employee/subject" element ={<><ParticlesBackground /><Subject/></>} /> 
-        <Route path = "/employee/faculty" element ={<><ParticlesBackground /><Faculty/></>} />
-        <Route path = "/employee/course" element ={<><ParticlesBackground /><Course/></>} />
-        <Route path = "/employee/section" element ={<><ParticlesBackground /><Section/></>} />
+        <Route path = "/employee/dashboard" element ={<><Dashboard /></>} />
+        <Route path = "/employee/employees" element ={<><Employees/></>} /> 
+        <Route path = "/employee/student" element ={<><Student/></>} />
+        <Route path = "/employee/subject" element ={<><Subject/></>} /> 
+        <Route path = "/employee/faculty" element ={<><Faculty/></>} />
+        <Route path = "/employee/course" element ={<><Course/></>} />
+        <Route path = "/employee/section" element ={<><Section/></>} />
       </Routes>
     </Router>
   </ThemeProvider>

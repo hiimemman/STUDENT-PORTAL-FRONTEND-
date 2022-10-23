@@ -50,7 +50,7 @@ const handleClose = (event, reason) => {
 
 
 
-  const handleChange = (newValue) => {
+  const handleChange = (event, newValue) => {
     setValue(newValue);
   };
   //Navigate
@@ -68,6 +68,13 @@ useEffect(() =>{
   }
 
 },[section])
+
+useEffect(() =>{
+console.log(value)
+  return () =>{
+    //tab listener
+  }
+},[value])
   
 
   return (
