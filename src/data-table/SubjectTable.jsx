@@ -536,7 +536,7 @@ const [updatedCourse, setUpdatedCourse] = useState(false);
   return (<>
 
     <GridToolbarContainer>
-       <Button variant="text" startIcon = {<PersonAddIcon />} onClick = {() => dispatch(ADDSUBJECT())}> Add</Button>
+       <Button variant="text" color ="success" startIcon = {<PersonAddIcon />} onClick = {() => dispatch(ADDSUBJECT())}> Add</Button>
       <GridToolbarColumnsButton />
       <GridToolbarFilterButton />
       <GridToolbarDensitySelector />

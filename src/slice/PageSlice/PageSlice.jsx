@@ -14,6 +14,9 @@ export const pageState = createSlice({
         EMPLOYEE: (state) =>{
         state.value = 'employee'
         },
+        PROFESSOR: (state) =>{
+            state.value = 'professor'
+        },
         STUDENT: (state) =>{
             state.value = 'student'
         },
@@ -34,7 +37,7 @@ export const pageState = createSlice({
 
 
 // Action creators are generated for each case reducer function
-export const { DASHBOARD, EMPLOYEE, STUDENT, SUBJECT,FACULTY,COURSE, SECTION } = pageState.actions
+export const { DASHBOARD, EMPLOYEE, PROFESSOR, STUDENT, SUBJECT,FACULTY,COURSE, SECTION } = pageState.actions
 
 export default pageState.reducer
 

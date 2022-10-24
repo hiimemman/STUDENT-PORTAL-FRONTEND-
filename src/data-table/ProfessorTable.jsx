@@ -11,11 +11,10 @@ import Button from '@mui/material/Button';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { useSelector, useDispatch } from 'react-redux';
 import { basedUrl } from '../base-url/based-url'
-
-import {ADDSECTION} from '../slice/AddFormSlice/AddSectionSlice/AddSectionSlice'
-import { PUT_SECTION } from '../slice/FormSelectedRow/SectionSelected';
-import { AddSection } from '../forms/AddSection';
-
+import { AddSubject } from '../forms/AddSubject';
+import { ADDSUBJECT } from '../slice/AddFormSlice/AddSubjectSlice/AddSubjectSlice';
+import { PUT_SUBJECT } from '../slice/FormSelectedRow/SubjectSelected';
+import { imageBaseUrl } from '../base-url/based-url';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -48,18 +47,36 @@ const useFakeMutation = () => {
 };
 
 function computeMutation(newRow, oldRow) {
-  
+  if (newRow.subject_name !== oldRow.subject_name) {
+   
+    return `Subject name from '${oldRow.subject_name}' to '${newRow.subject_name}'`;
+  }
   if (newRow.status !== oldRow.status) {
    
     return `Status from '${oldRow.status}' to '${newRow.status}'`;
   }
+  if (newRow.units !== oldRow.units) {
+  
+    return `Units from '${oldRow.units || ''}' to '${newRow.units || ''}'`;
+  }
+  if (newRow.amount !== oldRow.amount) {
+  
+    return `Amount from '${oldRow.amount || ''}' to '${newRow.amount || ''}'`;
+  }
+  if (newRow.year_available !== oldRow.year_available) {
+   
+    return `Year from '${oldRow.year_available}' to '${newRow.year_available}'`;
+  }
+  if (newRow.semester_available !== oldRow.semester_available) {
+   
+    return `Semester from '${oldRow.semester_available}' to '${newRow.semester_available}'`;
+  }
   return null;
 }
 
-export function SectionTable() {  
+export function ProfessorTable() {  
     //dispatch from redux
     const dispatch = useDispatch();
-
     const [rows, setRows] = useState([]);
     const [loading, isLoading] = useState(false);
 
@@ -74,11 +91,14 @@ export function SectionTable() {
   const handleCloseSnackbar = () => setSnackbar(null);
 
     //Open add form
-const  formOpenType = useSelector(state => state.addFormSection.value);
+const  formOpenType = useSelector(state => state.addFormSub.value);
 
 //Current User Session
 const user = useSelector(state => JSON.parse(state.user.session));
 
+const [courses, setCourses] = useState(null);
+
+const [updatedCourse, setUpdateCourse] = useState('');
 
   // Get all users api
   useEffect( () => {
@@ -87,7 +107,7 @@ const user = useSelector(state => JSON.parse(state.user.session));
       try{ 
       
         //online api
-          const sendRequest = await fetch(basedUrl+"/section-table.php");
+          const sendRequest = await fetch(basedUrl+"/professor-table.php");
           const getResponse = await sendRequest.json();
           isLoading(false)
           if(getResponse.statusCode === 201){
@@ -96,6 +116,22 @@ const user = useSelector(state => JSON.parse(state.user.session));
             //if succesfully retrieve data
             isLoading(false)
             setRows(getResponse);
+          }
+      }catch(e){
+        console.error(e)
+      }
+      try{ 
+        //online api
+          const sendRequest = await fetch(basedUrl+"/course-table.php");
+          const getResponse = await sendRequest.json();
+     
+          if(getResponse.statusCode === 201){
+          
+          }else{
+            //if succesfully retrieve data'
+            console.log(getResponse)
+             setCourses(getResponse);
+             
           }
       }catch(e){
         console.error(e)
@@ -157,6 +193,63 @@ const renderEditSemester = (params) => {
 };
 //End of edit semester via cell 
 
+ 
+ //Edit year via cell
+function EditYear(props) {
+  const { id, value, field } = props;
+  const apiRef = useGridApiContext();
+  
+  const handleChange = async(event) =>{
+    
+    await apiRef.current.setEditCellValue({ id, field, value: event.target.value });
+      apiRef.current.stopCellEditMode({ id, field });
+  
+}
+
+  return (
+    <>
+      <Select
+      value={value}
+      onChange={handleChange}
+      size="small"
+      sx={{ height: 1 , width: 260}}
+      native
+      autoFocus
+    >
+      <option>1st year</option>
+      <option>2nd year</option>
+      <option>3rd year</option>
+      <option>4th year</option>
+      <option>5th year</option>
+      <option>6th year</option>
+
+    </Select>
+    </>
+  
+  );
+}
+
+EditYear.propTypes = {
+  /**
+   * The column field of the cell that triggered the event.
+   */
+  field: PropTypes.string.isRequired,
+  /**
+   * The grid row id.
+   */
+  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  /**
+   * The cell value.
+   * If the column has `valueGetter`, use `params.row` to directly access the fields.
+   */
+  value: PropTypes.any,
+};
+
+const renderEditYear = (params) => {
+  return <EditYear {...params} />;
+};
+//End of edit year via cell 
+
 
 
   
@@ -215,45 +308,56 @@ const renderEditStatus = (params) => {
  
   const columns = [
     {
-      field: 'section_name',
-      headerName: 'Section',
-      width: 250,
-     editable: false,
-    },
-    {
-        field: 'course',
-        headerName: 'Course',
-        width: 250,
-       editable: false,
-    },
-    {
-        field: 'section_year',
-        headerName: 'Year',
-        width: 250,
-        editable: false,
+        field: 'profile_url',
+        headerName: 'Avatar',
+        width: 100,
+        renderCell: (params) => {
+        
+          return (
+            <>
+              <Avatar src={imageBaseUrl+params.value} />
+            </>
+          );
+        }
       },
-      // {
-      //   field: 'semester',
-      //   headerName: 'Semester',
-      //   width: 200,
-      //   editable: false,
-      // },
       {
-        field: 'academic_year',
-        headerName: 'Academic Year',
-        width: 300,
-        editable: false,
+        field: 'fullName',
+        headerName: 'Full name',
+        description: 'This column has a value getter and is not sortable.',
+        sortable: true,
+        width: 240,
+        valueGetter: (params) =>
+          `${params.row.firstname || ''} ${params.row.middlename || ''} ${params.row.lastname || ''}`,
       },
+      {
+        field: 'email',
+        headerName: 'Email',
+        width: 259,
+        editable: false,
+     },
+     {
+        field: 'professor_username',
+        headerName: 'Username',
+        width: 259,
+        editable: false,
+     },
+    {
+            field: 'faculty',
+            headerName: 'Faculty',
+            width: 260,
+            editable: false,
+    },
       {
         field: 'status',
         headerName: 'Status',
         renderEditCell: renderEditStatus,
-        width: 150,
+        width: 121,
         editable: true,
         renderCell: (cellValues) => {
           return(
           <>
         {cellValues.value == "active" ? (<Chip icon={<CheckIcon/>} label="active  " color ="success" size = "small" variant = "outlined"/>) : (<Chip icon={<CloseIcon/>} label="inactive" color ="error" size = "small" variant = "outlined"/>)}
+
           </>
           );//end of return
         }
@@ -289,15 +393,20 @@ const renderEditStatus = (params) => {
       // Make the HTTP request to save in the backend
       const dataUpdate = new FormData();
       dataUpdate.append('ID', newRow['id']);
-      dataUpdate.append('Semester', newRow['semester']);
-      dataUpdate.append('SectionName', newRow['section_name']);
+      dataUpdate.append('Subject_Code', newRow['subject_code']);
+      dataUpdate.append('Subject_Name', newRow['subject_name']);
+      dataUpdate.append('Units', newRow['units']);
+      dataUpdate.append('Course', newRow['course_available']);
+      dataUpdate.append('Year', newRow['year_available']);
+      dataUpdate.append('Semester', newRow['semester_available']);
+      dataUpdate.append('Type', newRow['type']);
       dataUpdate.append('Status', newRow['status']);
       dataUpdate.append('Action', 'Update');
       dataUpdate.append('EditorPosition', user.position);
       dataUpdate.append('EditorEmail', user.email);
-      dataUpdate.append('Category', 'Section');
+      dataUpdate.append('Category', 'Subject');
       const response = await mutateRow(newRow);
-      const sendRequest = await fetch(basedUrl+"/section-update.php",{
+      const sendRequest = await fetch(basedUrl+"/subject-update.php",{
         method: "POST",
         body: dataUpdate,
     });
@@ -357,14 +466,14 @@ const renderEditStatus = (params) => {
   return(
     <>
      {renderConfirmDialog()}
-    <DataGrid components={{ Toolbar: CustomToolbarSection, LoadingOverlay: LinearProgress, }} loading = {loading} rows = {rows} columns={columns}  experimentalFeatures={{ newEditingApi: true }} style ={{height:'500px'}}
+    <DataGrid components={{ Toolbar: CustomToolbarSubject, LoadingOverlay: LinearProgress, }} loading = {loading} rows = {rows} columns={columns}  experimentalFeatures={{ newEditingApi: true }} style ={{height:'500px'}}
      processRowUpdate={processRowUpdate}
      onSelectionModelChange={(ids) => {
       const selectedIDs = new Set(ids);
       const selectedRowData = rows.filter((row) =>
         selectedIDs.has(row.id.toString())
       );
-      dispatch(PUT_SECTION(selectedRowData[0]))
+      dispatch(PUT_SUBJECT(selectedRowData[0]))
     }}
     /> 
  {!!snackbar && (
@@ -377,9 +486,9 @@ const renderEditStatus = (params) => {
 }
 
  //Toolbar
- function CustomToolbarSection() {
+ function CustomToolbarSubject() {
   //Open add form
-  const  formOpenType = useSelector(state => state.addFormSection.value);
+  const  formOpenType = useSelector(state => state.addFormSub.value);
   //dispatch from redux
 const dispatch = useDispatch();
 const [courses, setCourses] = useState({data: []});
@@ -419,13 +528,13 @@ const [updatedCourse, setUpdatedCourse] = useState(false);
   return (<>
 
     <GridToolbarContainer>
-       <Button variant="text" color ="success" startIcon = {<PersonAddIcon />} onClick = {() => dispatch(ADDSECTION())}> Add</Button>
+       <Button variant="text"  color ="success" startIcon = {<PersonAddIcon />} onClick = {() => dispatch(ADDSUBJECT())}> Add</Button>
       <GridToolbarColumnsButton />
       <GridToolbarFilterButton />
       <GridToolbarDensitySelector />
       <GridToolbarExport />
     </GridToolbarContainer>
-    {updatedCourse === true ? (<AddSection open = {formOpenType === 'section'}  courses ={courses}/>) : (<></>)}
+    {updatedCourse === true ? (<AddSubject open = {formOpenType === 'subject'} course = {courses.data} />) : (<></>)}
   </>
   );
 }

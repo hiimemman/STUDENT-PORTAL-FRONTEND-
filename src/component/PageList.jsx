@@ -15,12 +15,13 @@ import GroupsIcon from '@mui/icons-material/Groups';
 import AnnouncementIcon from '@mui/icons-material/Announcement';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import HandymanIcon from '@mui/icons-material/Handyman';
-import {DASHBOARD, EMPLOYEE,STUDENT, SUBJECT, COURSE, FACULTY, SECTION} from '../slice/PageSlice/PageSlice';
+import {DASHBOARD, EMPLOYEE,PROFESSOR, STUDENT, SUBJECT, COURSE, FACULTY, SECTION} from '../slice/PageSlice/PageSlice';
 import SchoolIcon from '@mui/icons-material/School';
 import BiotechIcon from '@mui/icons-material/Biotech';
 import { useEffect } from 'react';
 import Diversity3Icon from '@mui/icons-material/Diversity3';
 import { SelectedLine } from './SelectedLine';
+import HailIcon from '@mui/icons-material/Hail';
 
 export function PageList(){
 
@@ -56,6 +57,9 @@ if(currentPage === 'dashboard'){
 }
 if(currentPage === 'employee'){
   navigate('/employee/employees')
+}
+if(currentPage === 'professor'){
+  navigate('/employee/professor')
 }
 if(currentPage === 'student'){
   navigate('/employee/student')
@@ -169,6 +173,46 @@ return(
     </Stack>
     </ListItem>
   </Tooltip>
+
+  <Tooltip title="Professor" placement="right-start">
+
+    <ListItem  disablePadding sx={{ display: 'block' }} className="transition ease-in-out delay-2 hover:bg-slate-300 duration-300">
+    <Stack direction="row" justifyContent="center" alignItems="center" spacing={0}>
+<SelectedLine selected ={currentPage === 'professor'}  />
+      <ListItemButton onClick ={ ()=>dispatch(PROFESSOR()) } onMouseEnter = {handleDrawerOpen} onMouseLeave ={handleDrawerClose}
+        sx={{
+          minHeight: 48,
+          justifyContent: isOpen ? 'initial' : 'center',
+          px: 2.5,
+        }}
+      >
+        
+        {currentPage === 'professor' ?  <ListItemIcon
+          sx={{
+            minWidth: 0,
+            mr: isOpen ? 3 : 'auto',
+            justifyContent: 'center',
+            
+          }}
+         style = {{color: selectTheme}}
+        > <HailIcon/>
+        </ListItemIcon> :  
+      <ListItemIcon
+        sx={{
+          minWidth: 0,
+          mr: isOpen ? 3 : 'auto',
+          justifyContent: 'center',
+          
+        }}
+      ><HailIcon/>
+      </ListItemIcon>}
+    
+      { isOpen ?  <Typography className ='font-nunito text-lg' >Professor(s)</Typography>: <p></p> }  
+
+      </ListItemButton>
+      </Stack>
+    </ListItem>
+</Tooltip>
 
   <Tooltip title="Student(s)" placement="right-start">
     <ListItem  disablePadding sx={{ display: 'block'}} className="transition ease-in-out delay-2 hover:bg-slate-300  duration-300">

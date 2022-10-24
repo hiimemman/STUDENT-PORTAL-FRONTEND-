@@ -2,27 +2,23 @@ import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import {  Alert, Skeleton, Snackbar, Typography, Paper } from '@mui/material';
+import {  Alert, Skeleton, Snackbar, Stack, Paper } from '@mui/material';
 import { DrawerAppBar } from '../component/DrawerAppBar';
 import { useEffect} from 'react';
-import { EmployeeTable } from '../data-table/EmployeeTable';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import Tab from '@mui/material/Tab';
 import { useState, Suspense } from 'react';
-import Badge from '@mui/material/Badge';
-import MailIcon from '@mui/icons-material/Mail';
-import Avatar from "@mui/material/Avatar";
-import { EmployeeView } from '../viewprofile/EmployeeView';
-import { EmployeeHistory } from '../viewhistory/EmployeeHistory';
-import { ParticlesBackground } from '../component/ParticlesBackground';
-import { imageBaseUrl } from '../base-url/based-url';
-import { Stack } from '@mui/system';
 
-export  function Employees() {
-//Selected Employee
-const employee = useSelector(state => state.employeeSelected.value)
+import { SubjectHistory } from '../viewhistory/SubjectHistory';
+import { Typography } from '@mui/material';
+import { SubjectView } from '../viewprofile/SubjectView';
+import { ProfessorTable } from '../data-table/ProfessorTable';
+
+export  function Professor() {
+//Selected Subject
+const subject = useSelector(state => state.subjectSelected.value)
 
 //get user
 const user = useSelector(state => JSON.parse(state.user.session))
@@ -59,12 +55,11 @@ const handleClose = (event, reason) => {
     } 
    },[user])
 
+
   
+
   return (
-    <>
-  
-    
-   
+    <>  
     {user !== null ?  (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
@@ -76,34 +71,34 @@ const handleClose = (event, reason) => {
 } >
   
        <div className="flex flex-col justify-evenly" style={{width:'100%'}}>
-             <h2 className ='font-nunito font-bold'>Employees</h2>
+             <h2 className ='font-nunito font-bold'>Professor</h2>
           
              <TabContext value={value}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' } }>
             <TabList onChange={handleChange} aria-label="lab API tabs example" >
                 <Tab label="DATA TABLE" value="1" />
                 <Tab label="HISTORY" value="2" />
-                {employee !== null ? (<Tab value="3" label={
+                {console.log("thisissub" + JSON.stringify(subject))}
+                {subject !== null ? (<Tab value="3" label={
                 <Stack direction="row" spacing={2}>
-                <Avatar src={imageBaseUrl+employee.profile_url} sx={{ width: 30, height: 30  }}/>
-                <Typography>{employee.firstname}</Typography>
+                <Typography>{subject.subject_code}</Typography>
                 </Stack>
                 } />) : (<></>)}
              </TabList>
             </Box>
         <TabPanel value="1"  style={{height: 'auto'}} sx ={{marginLeft:'-24px'}}>
         <Paper elevation={1} sx ={{width:'500 '}} className ="rounded-xl">
-          <EmployeeTable />
+          <ProfessorTable />
           </Paper>
           </TabPanel>
             <TabPanel value="2" sx ={{marginLeft:'-24px'}}>
             <Paper elevation={1} sx ={{width:'500 '}} className ="rounded-xl">
-              <EmployeeHistory />
+              <SubjectHistory />
             </Paper>
-              </TabPanel>
-              <TabPanel value="3" sx ={{marginLeft:'-24px'}}>
-                <EmployeeView /> 
-              </TabPanel>
+            </TabPanel>
+            <TabPanel value="3" sx ={{marginLeft:'-24px'}}>
+              <SubjectView />
+            </TabPanel>
           </TabContext>
        </div>
        <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>

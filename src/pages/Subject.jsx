@@ -2,7 +2,7 @@ import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import {  Alert, Skeleton, Snackbar, Stack } from '@mui/material';
+import {  Alert, Skeleton, Snackbar, Stack, Paper } from '@mui/material';
 import { DrawerAppBar } from '../component/DrawerAppBar';
 import { useEffect} from 'react';
 import { EmployeeTable } from '../data-table/EmployeeTable';
@@ -90,10 +90,14 @@ const handleClose = (event, reason) => {
              </TabList>
             </Box>
         <TabPanel value="1"  style={{height: 'auto'}} sx ={{marginLeft:'-24px'}}>
+        <Paper elevation={1} sx ={{width:'500 '}} className ="rounded-xl">
           <SubjectTable />
+          </Paper>
           </TabPanel>
             <TabPanel value="2" sx ={{marginLeft:'-24px'}}>
+            <Paper elevation={1} sx ={{width:'500 '}} className ="rounded-xl">
               <SubjectHistory />
+            </Paper>
             </TabPanel>
             <TabPanel value="3" sx ={{marginLeft:'-24px'}}>
               <SubjectView />

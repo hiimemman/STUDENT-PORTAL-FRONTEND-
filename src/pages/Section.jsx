@@ -2,7 +2,7 @@ import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import {  Alert, Skeleton, Snackbar, Stack } from '@mui/material';
+import {  Alert, Paper, Skeleton, Snackbar, Stack } from '@mui/material';
 import { DrawerAppBar } from '../component/DrawerAppBar';
 import { useEffect} from 'react';
 import TabContext from '@mui/lab/TabContext';
@@ -49,9 +49,13 @@ const handleClose = (event, reason) => {
   //Navigate
   const navigate = useNavigate();
   useEffect(() =>{
+
     if(user === null){
      navigate('/LoginEmployee')
     } 
+    return () =>{
+      //exit memory
+    }
    },[user])
 
 useEffect(() =>{
@@ -64,6 +68,7 @@ useEffect(() =>{
 
 useEffect(() =>{
 console.log(value)
+
   return () =>{
     //tab listener
   }
@@ -99,10 +104,14 @@ console.log(value)
              </TabList>
             </Box>
         <TabPanel value="1"  style={{height: 'auto'}} sx ={{marginLeft:'-24px'}}>
+        <Paper elevation={1} sx ={{width:'500 '}} className ="rounded-xl">
          <SectionTable />
+         </Paper>
           </TabPanel>
             <TabPanel value="2" sx ={{marginLeft:'-24px'}}>
+            <Paper elevation={1} sx ={{width:'500 '}} className ="rounded-xl">
             <SectionHistory />
+            </Paper>
             </TabPanel>
             <TabPanel value="3" sx ={{marginLeft:'-24px'}}>
               <SectionView/>

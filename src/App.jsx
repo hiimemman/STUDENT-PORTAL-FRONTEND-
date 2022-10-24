@@ -16,6 +16,7 @@ import { Course } from './pages/Course';
 import { Faculty } from './pages/Faculty';
 import { Skeleton } from '@mui/material';
 import { Section } from './pages/Section';
+import { Professor } from './pages/Professor';
 
 
 
@@ -114,6 +115,7 @@ return (
         <Route path = "/loginemployee" element ={<><ParticlesBackground /><SignIn /></>} />
         <Route path = "/employee/dashboard" element ={<><Dashboard /></>} />
         <Route path = "/employee/employees" element ={<><Employees/></>} /> 
+        <Route path = "/employee/professor" element ={<><Professor /></>} />
         <Route path = "/employee/student" element ={<><Student/></>} />
         <Route path = "/employee/subject" element ={<><Subject/></>} /> 
         <Route path = "/employee/faculty" element ={<><Faculty/></>} />

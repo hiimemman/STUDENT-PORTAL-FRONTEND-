@@ -381,7 +381,7 @@ const openPopper = () =>{
 } 
     return (<>
       <GridToolbarContainer>
-        <Button variant="text" startIcon = {<PersonAddIcon />} onClick = {openPopper}> Add</Button>
+        <Button variant="text" color ="success" startIcon = {<PersonAddIcon />} onClick = {openPopper}> Add</Button>
         <GridToolbarColumnsButton />
         <GridToolbarFilterButton />
         <GridToolbarDensitySelector />

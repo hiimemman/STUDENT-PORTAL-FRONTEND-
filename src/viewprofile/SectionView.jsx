@@ -328,9 +328,9 @@ const OverviewPanel = () =>{
 const SchedulePanel = () =>{
   return (
     <>
-     
+     <Paper elevation={1} sx ={{width:'500 ',marginTop:'1.5rem'}} className ="rounded-xl">
      <SectionScheduleTable  />
-  
+      </Paper>
     </>
   )
 }
