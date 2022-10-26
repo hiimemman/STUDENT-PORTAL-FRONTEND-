@@ -151,11 +151,12 @@ const handleChangeEmail = async (event) =>{
 }
 
 const handleChangeProfessorUsername = async (event) =>{
-  console.log((event.target.value).toString().length)
+
   if((event.target.value).toString().length <= 0 ){
     console.log("pumasok dto")
     setErrorProfileUsername((prev) => prev = true);
     setUsernameHelpertext((prev) => prev = "Username must not be empty");
+    return;
   }else{
     try{
       const data = new FormData();
@@ -168,13 +169,16 @@ const handleChangeProfessorUsername = async (event) =>{
     const getResponse = await sendRequest.json();
     if(getResponse.statusCode === 200){
       setErrorProfileUsername((prev) => prev = false);
+      return;
     }else{
       setErrorProfileUsername((prev) => prev = true);
-      setUsernameHelpertext((prev) => prev = "Username already exist!")
+      setUsernameHelpertext((prev) => prev = "Username already exist!");
+      return;
     }
     }catch(e){
       setErrorProfileUsername((prev) => prev = true);
       setUsernameHelpertext((prev) => prev = "Server problem!");
+      return;
     }  
   }
 }
@@ -221,9 +225,9 @@ console.log(errorProfessorUsername)
         </Grid2>  
 
         <Grid2 item xs={12}>
-              <FormControl fullWidth required>
+              <FormControl fullWidth >
               <InputLabel htmlFor="Middlename">Middle name</InputLabel>
-               <OutlinedInput name ="Middlename" id ="Middlename" required label = "Middle name" />
+               <OutlinedInput name ="Middlename" id ="Middlename"  label = "Middle name" />
                </FormControl>
         </Grid2>
 
