@@ -30,6 +30,7 @@ const user = useSelector(state => JSON.parse(state.user.session));
 
   //error message
   const [emailHelpertext, setEmailHelperText] = useState('');
+  const [usernameHelpertext, setUsernameHelpertext] = useState('');
 
   //states
   const [activeFaculty, setActiveFaculty] = useState(props.faculty);
@@ -37,7 +38,7 @@ const user = useSelector(state => JSON.parse(state.user.session));
  
  //Open add form
 const  formOpenType = useSelector(state => state.addFormProfessor.value);
-console.log('course' + formOpenType)
+
 //Snackbar
   const [snackbar, setSnackbar] = useState(null);
 
@@ -122,24 +123,76 @@ const handleChangeLastName = (event) =>{
   } 
 }
 
-const handleChangeEmail = (event) =>{
-  if((event.target.value).toString().length > 0  || !validator.isEmail(event.target.value)){
-    setErrorEmail((prev) => prev = false);
+const handleChangeEmail = async (event) =>{
+  if(!validator.isEmail(event.target.value)){
+    setErrorEmail((prev) => prev = true);
     setEmailHelperText((prev) => prev = "Invalid Email address")
   }else{
-    setErrorEmail((prev) => prev = true);
-  } 
+    try{
+      const data = new FormData();
+      data.append('Email', event.target.value);
+      const sendRequest = await fetch(basedUrl+"/exist-professor-email.php",{
+        method: "POST",
+        body: data,
+    });
+
+    const getResponse = await sendRequest.json();
+    if(getResponse.statusCode === 200){
+      setErrorEmail((prev) => prev = false);
+    }else{
+      setErrorEmail((prev) => prev = true);
+      setEmailHelperText((prev) => prev = "Email already exist!")
+    }
+    }catch(e){
+      setErrorEmail((prev) => prev = true);
+      setEmailHelperText('Server problem!');
+    }  
+  }
 }
 
-useEffect( () =>{
+const handleChangeProfessorUsername = async (event) =>{
+  console.log((event.target.value).toString().length)
+  if((event.target.value).toString().length <= 0 ){
+    console.log("pumasok dto")
+    setErrorProfileUsername((prev) => prev = true);
+    setUsernameHelpertext((prev) => prev = "Username must not be empty");
+  }else{
+    try{
+      const data = new FormData();
+      data.append('ProfessorUsername', event.target.value);
+      const sendRequest = await fetch(basedUrl+"/exist-professor-username.php",{
+        method: "POST",
+        body: data,
+    });
 
+    const getResponse = await sendRequest.json();
+    if(getResponse.statusCode === 200){
+      setErrorProfileUsername((prev) => prev = false);
+    }else{
+      setErrorProfileUsername((prev) => prev = true);
+      setUsernameHelpertext((prev) => prev = "Username already exist!")
+    }
+    }catch(e){
+      setErrorProfileUsername((prev) => prev = true);
+      setUsernameHelpertext((prev) => prev = "Server problem!");
+    }  
+  }
+}
+
+useEffect( () => {
 //Input label listener
 
   return () =>{
     //exit in memory
   }
-},[errorFirstName, errorLastName])
+},[errorFirstName, errorLastName, errorEmail]);
  
+useEffect (() => {
+//helper text listener
+console.log(errorProfessorUsername) 
+  
+}, [emailHelpertext, usernameHelpertext, errorProfessorUsername ]);
+
   return(
     <>
       <Dialog
@@ -185,15 +238,16 @@ useEffect( () =>{
         <Grid2 item xs={12}>
               <FormControl fullWidth required error = {errorEmail}>
                   <InputLabel htmlFor="Email">Email</InputLabel>
-                  <OutlinedInput name ="Email" id ="Email" required label = "Email" />
-                  {errorEmail === true ? (<FormHelperText id="component-error-text" >Invalid Email address</FormHelperText>) : (<></>)}
+                  <OutlinedInput name ="Email" id ="Email" required label = "Email" onChange = {handleChangeEmail} />
+                  {errorEmail === true ? (<FormHelperText id="component-error-text" >{emailHelpertext}</FormHelperText>) : (<></>)}
                </FormControl>
         </Grid2>
 
         <Grid2 item xs={12}>
-              <FormControl fullWidth required>
+              <FormControl fullWidth required error = {errorProfessorUsername}>
                 <InputLabel htmlFor="ProfessorUsername">Username</InputLabel>
-                <OutlinedInput name ="ProfessorUsername" id ="ProfessorUsername" required label = "Username" />
+                <OutlinedInput name ="ProfessorUsername" id ="ProfessorUsername" required label = "Username" onChange ={handleChangeProfessorUsername} />
+                {errorProfessorUsername === true ? (<FormHelperText id="component-error-text" >{usernameHelpertext}</FormHelperText>) : (<></>)}
               </FormControl>
         </Grid2>
 
