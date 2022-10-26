@@ -203,13 +203,13 @@ if(sexChanged === false){
         <DialogContent dividers={scroll === 'paper'}>
       <Box component="form" id ="frmAddEmployee"  onSubmit={handleSubmitForm} noWrap>
         <Grid2 container spacing={3} sx ={{marginLeft:'-10px'}}>
-             <Grid2 item xs={4}>
-              {validFname !== false ? (<TextField autoComplete='off' name ="Fname"  required label="First name" variant="outlined" onKeyUp ={handleChangeFname} />) : (<TextField autoComplete='off' error  name ="Fname" required label="First name" variant="outlined" helperText ="Must not be empty"  onKeyUp ={handleChangeFname}/>)}
+             <Grid2 item xs={12}>
+              {validFname !== false ? (<TextField  fullWidth autoComplete='off' name ="Fname"  required label="First name" variant="outlined" onKeyUp ={handleChangeFname} />) : (<TextField autoComplete='off' error  name ="Fname" required label="First name" variant="outlined" helperText ="Must not be empty"  onKeyUp ={handleChangeFname}/>)}
                
              </Grid2>
-             <Grid2 item xs={4}><TextField autoComplete='off' name ="Mname" label="Middle name" variant="outlined" /></Grid2>
-             <Grid2 item xs={4}>
-             {validLname !== false ? (<TextField autoComplete='off' name ="Lname"  required label="Last name" variant="outlined" onKeyUp ={handleChangeLname} />) : (<TextField autoComplete='off' error  name ="Lsname" required label="Last name" variant="outlined" helperText ="Must not be empty"  onKeyUp ={handleChangeLname}/>)}
+             <Grid2 item xs={12}><TextField fullWidth autoComplete='off' name ="Mname" label="Middle name" variant="outlined" /></Grid2>
+             <Grid2 item xs={12}>
+             {validLname !== false ? (<TextField  fullWidth autoComplete='off' name ="Lname"  required label="Last name" variant="outlined" onKeyUp ={handleChangeLname} />) : (<TextField autoComplete='off' error  name ="Lsname" required label="Last name" variant="outlined" helperText ="Must not be empty"  onKeyUp ={handleChangeLname}/>)}
              </Grid2>
         </Grid2>
         <Grid2 container spacing={3} sx ={{marginLeft:'-10px'}}>

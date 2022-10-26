@@ -16,6 +16,7 @@ import addFaculty from '../slice/AddFormSlice/AddFacultySlice/AddFacultySlice'
 import addCourse from '../slice/AddFormSlice/AddCourseSlice/AddCourseSlice'
 import addSection from '../slice/AddFormSlice/AddSectionSlice/AddSectionSlice'
 import sectionSelect from '../slice/FormSelectedRow/SectionSelected'
+import addProfessor from '../slice/AddFormSlice/AddProfessorSlice/AddProfessorSlice'
 
 
 export const store = configureStore({
@@ -37,5 +38,6 @@ export const store = configureStore({
     addFormCourse: addCourse,
     addFormSection: addSection,
     sectionSelected: sectionSelect,
+    addFormProfessor: addProfessor,
   },
 })

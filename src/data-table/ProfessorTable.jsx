@@ -12,9 +12,10 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { useSelector, useDispatch } from 'react-redux';
 import { basedUrl } from '../base-url/based-url'
 import { AddSubject } from '../forms/AddSubject';
-import { ADDSUBJECT } from '../slice/AddFormSlice/AddSubjectSlice/AddSubjectSlice';
+import {ADDFORMPROFESSOR} from '../slice/AddFormSlice/AddProfessorSlice/AddProfessorSlice';
 import { PUT_SUBJECT } from '../slice/FormSelectedRow/SubjectSelected';
 import { imageBaseUrl } from '../base-url/based-url';
+import { AddProfessor } from '../forms/AddProfessor';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -91,12 +92,12 @@ export function ProfessorTable() {
   const handleCloseSnackbar = () => setSnackbar(null);
 
     //Open add form
-const  formOpenType = useSelector(state => state.addFormSub.value);
+const  formOpenType = useSelector(state => state.addFormProfessor.value);
 
 //Current User Session
 const user = useSelector(state => JSON.parse(state.user.session));
 
-const [courses, setCourses] = useState(null);
+const [faculty, setCourses] = useState(null);
 
 const [updatedCourse, setUpdateCourse] = useState('');
 
@@ -466,7 +467,7 @@ const renderEditStatus = (params) => {
   return(
     <>
      {renderConfirmDialog()}
-    <DataGrid components={{ Toolbar: CustomToolbarSubject, LoadingOverlay: LinearProgress, }} loading = {loading} rows = {rows} columns={columns}  experimentalFeatures={{ newEditingApi: true }} style ={{height:'500px'}}
+    <DataGrid components={{ Toolbar: CustomToolbarProfessor, LoadingOverlay: LinearProgress, }} loading = {loading} rows = {rows} columns={columns}  experimentalFeatures={{ newEditingApi: true }} style ={{height:'500px'}}
      processRowUpdate={processRowUpdate}
      onSelectionModelChange={(ids) => {
       const selectedIDs = new Set(ids);
@@ -486,20 +487,20 @@ const renderEditStatus = (params) => {
 }
 
  //Toolbar
- function CustomToolbarSubject() {
+ function CustomToolbarProfessor() {
   //Open add form
   const  formOpenType = useSelector(state => state.addFormSub.value);
   //dispatch from redux
 const dispatch = useDispatch();
-const [courses, setCourses] = useState({data: []});
-const [updatedCourse, setUpdatedCourse] = useState(false);
+const [faculty, setFaculty] = useState({data: []});
+const [updatedFaculty, setUpdatedFaculty] = useState(false);
 //  Get all users api
  useEffect( () => {
   console.log('UseEffect called')
   const getAllData = async () =>{
      try{ 
        //online api
-         const sendRequest = await fetch(basedUrl+"/course-active.php");
+         const sendRequest = await fetch(basedUrl+"/faculty-active.php");
          const getResponse = await sendRequest.json();
     
          if(getResponse.statusCode === 201){
@@ -507,7 +508,7 @@ const [updatedCourse, setUpdatedCourse] = useState(false);
          }else{
            //if succesfully retrieve data'
           //  console.log(getResponse)
-           setCourses({data: getResponse});
+           setFaculty({data: getResponse});
             
          }
      }catch(e){
@@ -518,23 +519,35 @@ const [updatedCourse, setUpdatedCourse] = useState(false);
  }, [formOpenType]);
 
  useEffect(() => {
-  if(courses.data.length > 0){
-    console.log("Courses data = "+JSON.stringify(courses));
-    setUpdatedCourse(true)
+  if(faculty.data.length > 0){
+    console.log("Faculty data = "+JSON.stringify(faculty));
+    setUpdatedFaculty(true)
   }
- }, [formOpenType, courses]);
 
+  return () =>{
+    //exit memory
+  }
+ }, [formOpenType, faculty]);
+
+
+ useEffect(() =>{
+
+
+  return () =>{
+    //exit in memory
+  }
+ },[updatedFaculty])
 
   return (<>
 
     <GridToolbarContainer>
-       <Button variant="text"  color ="success" startIcon = {<PersonAddIcon />} onClick = {() => dispatch(ADDSUBJECT())}> Add</Button>
+      <Button variant="text"  color ="success" startIcon = {<PersonAddIcon />} onClick = {() => dispatch(ADDFORMPROFESSOR())}> Add</Button>
       <GridToolbarColumnsButton />
       <GridToolbarFilterButton />
       <GridToolbarDensitySelector />
       <GridToolbarExport />
     </GridToolbarContainer>
-    {updatedCourse === true ? (<AddSubject open = {formOpenType === 'subject'} course = {courses.data} />) : (<></>)}
+    {updatedFaculty === true ? (<AddProfessor open = {formOpenType === 'professor'} faculty = {faculty.data} />) : (<></>)}
   </>
   );
 }
