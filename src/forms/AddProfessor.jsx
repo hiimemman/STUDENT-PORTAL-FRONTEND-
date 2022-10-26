@@ -68,39 +68,7 @@ const  formOpenType = useSelector(state => state.addFormProfessor.value);
     }
   }, [formOpenType]);
  
-const handleSubmitForm = async (event) =>{
- 
-//`action`,`category`,`editor_position`,`editor_email`,`edited_email`
-  event.preventDefault();
-  if(true){
-  const data = new FormData(event.currentTarget);
-  data.append('Action', 'Create');
-  data.append('EditorPosition', user.position);
-  data.append('EditorEmail', user.email);
-  data.append('Category', 'Course');
 
-  try{
-    const sendRequest = await fetch(basedUrl+"/course-add.php",{
-              method: "POST",
-              body: data,
-          });
-
-          const getResponse = await sendRequest.json();
-         console.log(getResponse.statusCode)
-          if(getResponse.statusCode === 200){
-            setSnackbar({ children: 'Update successfully', severity: 'success' });
-            dispatch(CLOSEFORM())
-          }else{
-            setSnackbar({ children: "Field can't be empty", severity: 'error' });
-          }
-  }catch(e){
-    
-    setSnackbar({ children: "Field can't be empty", severity: 'error' });
-  }
-  }else{
-    setSnackbar({ children: "Field can't be empty", severity: 'error' });
-  }
-}
 
 
 //event change handlers
@@ -197,6 +165,45 @@ console.log(errorProfessorUsername)
   
 }, [emailHelpertext, usernameHelpertext, errorProfessorUsername ]);
 
+
+
+const handleSubmitForm = async (event) =>{
+ 
+  //`action`,`category`,`editor_position`,`editor_email`,`edited_email`
+    event.preventDefault();
+    if(!errorFirstName && !errorLastName && !errorEmail && !errorProfessorUsername && !errorFaculty){
+    const data = new FormData(event.currentTarget);
+    data.append('Action', 'Create');
+    data.append('EditorPosition', user.position);
+    data.append('EditorEmail', user.email);
+    data.append('Category', 'Professor');
+
+    for (var pair of data.entries()) {
+      console.log(pair[0]+ ', ' + pair[1]); 
+  }
+  
+    try{
+      const sendRequest = await fetch(basedUrl+"/professor-add.php",{
+                method: "POST",
+                body: data,
+            });
+  
+            const getResponse = await sendRequest.json();
+           console.log(getResponse.statusCode)
+            if(getResponse.statusCode === 200){
+              setSnackbar({ children: 'Update successfully', severity: 'success' });
+              dispatch(CLOSEFORM())
+            }else{
+              setSnackbar({ children: "Field can't be empty", severity: 'error' });
+            }
+    }catch(e){
+      
+      setSnackbar({ children: "Field can't be empty", severity: 'error' });
+    }
+    }else{
+      setSnackbar({ children: "Field can't be empty", severity: 'error' });
+    }
+  }
   return(
     <>
       <Dialog
@@ -266,7 +273,6 @@ console.log(errorProfessorUsername)
      label="Faculty"
      onChange={handleChangeFaculty}
    >
-    {console.log(activeFaculty)}
     {activeFaculty.map((faculty) => <MenuItem key = {faculty} value ={faculty.faculty_name}>{faculty.faculty_name}</MenuItem>)}
    </Select>
    </FormControl>
