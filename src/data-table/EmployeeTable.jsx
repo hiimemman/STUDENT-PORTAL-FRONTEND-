@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import Avatar from "@mui/material/Avatar";
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
-import { Alert, Chip, Dialog, DialogActions, DialogContent, DialogTitle, Snackbar } from '@mui/material';
+import { Alert, Chip, Dialog, DialogActions, DialogContent, DialogTitle, Snackbar,MenuItem } from '@mui/material';
 import Button from '@mui/material/Button';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { AddEmployee } from '../forms/AddEmployee';
@@ -142,13 +142,11 @@ function EditPosition(props) {
       <Select
         value={value}
         onChange={handleChange}
-        size="small"
         sx={{ height: 1 , width: 150}}
-        native
         autoFocus
       >
-        <option>Admin</option>
-        <option>Registrar</option>
+        <MenuItem value ={'Admin'}>Admin</MenuItem>
+        <MenuItem value ={'Registrar'}>Registrar</MenuItem>
       </Select>
     );
   }
@@ -192,13 +190,13 @@ function EditPosition(props) {
         <Select
         value={value}
         onChange={handleChange}
-        size="small"
+
         sx={{ height: 1 , width: 170}}
-        native
+
         autoFocus
-      >
-        <option><CheckIcon/>active</option>
-        <option><CloseIcon />inactive</option>
+      > 
+      <MenuItem value ={'active'}><CheckIcon/>active</MenuItem>
+      <MenuItem value ={'inactive'}><CloseIcon/>inactive</MenuItem>
       </Select>
       </>
     

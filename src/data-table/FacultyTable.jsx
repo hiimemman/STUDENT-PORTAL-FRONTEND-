@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import Avatar from "@mui/material/Avatar";
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
-import { Alert, Chip, Dialog, DialogActions, DialogContent, DialogTitle, Snackbar } from '@mui/material';
+import { Alert, Chip, Dialog, DialogActions, DialogContent, DialogTitle, Snackbar, MenuItem } from '@mui/material';
 import { useEffect, useState, useCallback, useRef } from 'react';
 import Button from '@mui/material/Button';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
@@ -111,13 +111,14 @@ function EditStatus(props) {
       <Select
       value={value}
       onChange={handleChange}
-      size="small"
+
       sx={{ height: 1 , width: 260}}
-      native
+
       autoFocus
     >
-      <option><CheckIcon/>active</option>
-      <option><CloseIcon />inactive</option>
+      
+      <MenuItem value ={'active'}><CheckIcon/>active</MenuItem>
+      <MenuItem value = {'inactive'}><CloseIcon />inactive</MenuItem>
     </Select>
     </>
   

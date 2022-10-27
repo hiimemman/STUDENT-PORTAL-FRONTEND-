@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import Avatar from "@mui/material/Avatar";
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
-import { Alert, Chip, Dialog, DialogActions, DialogContent, DialogTitle, InputLabel, MenuItem, OutlinedInput, Snackbar, Stack } from '@mui/material';
+import { Alert, Chip, Dialog, DialogActions, DialogContent, DialogTitle, InputLabel, MenuItem, OutlinedInput, Snackbar, Stack, FormControl } from '@mui/material';
 import { useEffect, useState, useCallback, useRef } from 'react';
 import Button from '@mui/material/Button';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
@@ -31,7 +31,26 @@ const MenuProps = {
   },
 };
 
+const names = [
+  'Monday',
+  'Tuesday',
+  'Wednesday',
+  'Thursday',
+  'Friday',
+  'Saturday',
+  'Sunday',
+];
 
+
+
+function getStyles(name, personName, theme) {
+  return {
+    fontWeight:
+      personName.indexOf(name) === -1
+        ? theme.typography.fontWeightRegular
+        : theme.typography.fontWeightMedium,
+  };
+}
 
 
 const useFakeMutation = () => {
@@ -51,29 +70,18 @@ const useFakeMutation = () => {
 };
 
 function computeMutation(newRow, oldRow) {
-  if (newRow.subject_name !== oldRow.subject_name) {
-   
-    return `Subject name from '${oldRow.subject_name}' to '${newRow.subject_name}'`;
+  if (newRow.professor_initial !== oldRow.professor_initial) {
+    console.log("Pumasok dto")
+    return `Professor from '${oldRow.professor_initial}' to '${newRow.professor_initial}'`;
   }
   if (newRow.status !== oldRow.status) {
-   
     return `Status from '${oldRow.status}' to '${newRow.status}'`;
   }
-  if (newRow.units !== oldRow.units) {
-  
-    return `Units from '${oldRow.units || ''}' to '${newRow.units || ''}'`;
+  if (newRow.schedule_day !== oldRow.schedule_day) {
+    return `Schedule in day(s) from '${oldRow.schedule_day}' to '${newRow.schedule_day}'`;
   }
-  if (newRow.amount !== oldRow.amount) {
-  
-    return `Amount from '${oldRow.amount || ''}' to '${newRow.amount || ''}'`;
-  }
-  if (newRow.year_available !== oldRow.year_available) {
-   
-    return `Year from '${oldRow.year_available}' to '${newRow.year_available}'`;
-  }
-  if (newRow.semester_available !== oldRow.semester_available) {
-   
-    return `Semester from '${oldRow.semester_available}' to '${newRow.semester_available}'`;
+  if (newRow.schedule_time !== oldRow.schedule_time) {
+    return `Schedule in day(s) from '${oldRow.schedule_time}' to '${newRow.schedule_time}'`;
   }
   return null;
 }
@@ -82,8 +90,9 @@ export function SectionScheduleTable() {
     //dispatch from redux
     const dispatch = useDispatch();
         //Selected Section
-const section = useSelector(state => state.sectionSelected.value);
+    const section = useSelector(state => state.sectionSelected.value);
     const [rows, setRows] = useState([]);
+    const [professors, setProfessors] = useState([]);
     const [loading, isLoading] = useState(false);
 
     const mutateRow = useFakeMutation();
@@ -103,69 +112,127 @@ const  formOpenType = useSelector(state => state.addFormSection.value);
 const user = useSelector(state => JSON.parse(state.user.session));
 
 
+
+const getAllData = async () =>{
+  isLoading(true)
+  try{ 
+    const data = new FormData();
+    data.append('SectionName', section.section_name);
+    data.append('AcademicYear', section.academic_year);
+
+    //online api
+       const sendRequest = await fetch(basedUrl+"/section-schedule-table.php",{
+          method: "POST",
+          body: data,
+      });
+      const getResponse = await sendRequest.json();
+      isLoading(false)
+      if(getResponse.statusCode === 201){
+      
+      }else{
+        //if succesfully retrieve data
+        isLoading(false)
+        console.log(getResponse)
+        setRows(getResponse);
+      }
+  }catch(e){
+    console.error(e)
+  }
+}
+
+
+const getAllProfessors = async () =>{
+  isLoading(true)
+  try{ 
+  
+    //online api
+       const sendRequest = await fetch(basedUrl+"/professor-active.php");
+      const getResponse = await sendRequest.json();
+      isLoading(false)
+      if(getResponse.statusCode === 201){
+      
+      }else{
+        //if succesfully retrieve data
+        isLoading(false)
+        setProfessors(getResponse);
+      }
+  }catch(e){
+    console.error(e)
+  }
+}
+
   // Get all users api
   useEffect( () => {
-   const getAllData = async () =>{
-      isLoading(true)
-      try{ 
-        const data = new FormData();
-        data.append('SectionName', section.section_name);
-        data.append('AcademicYear', section.academic_year);
-
-        //online api
-           const sendRequest = await fetch(basedUrl+"/section-schedule-table.php",{
-              method: "POST",
-              body: data,
-          });
-          const getResponse = await sendRequest.json();
-          isLoading(false)
-          if(getResponse.statusCode === 201){
-          
-          }else{
-            //if succesfully retrieve data
-            isLoading(false)
-            setRows(getResponse);
-          }
-      }catch(e){
-        console.error(e)
-      }
-    }
     getAllData();
+    return () =>{
+      //exit in memory;
+    }
   }, [formOpenType]);
  
+  //Get all professors api
+
+  useEffect(() => {
+    getAllProfessors();
+
+    return () =>{
+      //exit in memory
+    }
+  },[formOpenType]);
 
 
-   //Edit semester via cell
-function EditSemester(props) {
+  //Edit day via cell
+function EditDay(props) {
+  const theme = useTheme();
+  const [personName, setPersonName] = useState([]);
+
   const { id, value, field } = props;
   const apiRef = useGridApiContext();
   
-  const handleChange = async(event) =>{
-    
-    await apiRef.current.setEditCellValue({ id, field, value: event.target.value });
+  const updateCellDay = async() =>{
+    await apiRef.current.setEditCellValue({ id, field, value: personName });
       apiRef.current.stopCellEditMode({ id, field });
-  
 }
+const handleChangeDay = (event) => {
+  const {
+    target: { value },
+  } = event;
+  setPersonName(
+    // On autofill we get a stringified value.
+    typeof value === 'string' ? value.split('/'): value,
+  );
+  
+};
+
+
 
   return (
     <>
-      <Select
-      value={value}
-      onChange={handleChange}
-      size="small"
-      sx={{ height: 1 , width: 260}}
-      native
-      autoFocus
-    >
-      <option>1st semester</option>
-      <option>2nd semester</option>
-      </Select>
+        <Select
+        fullWidth
+          labelId="demo-multiple-name-label"
+          id="demo-multiple-name"
+          multiple
+          value={personName}
+          onChange={handleChangeDay}
+          input={<OutlinedInput label="Name" />}
+          MenuProps={MenuProps}
+          onBlur = {updateCellDay}
+        >
+          {names.map((name) => (
+            <MenuItem
+              key={name}
+              value={name.substring(0,3)}
+              style={getStyles(name, personName, theme)}
+            >
+              {name.substring(0,3)}
+            </MenuItem>
+          ))}
+        </Select>
     </>
-  
   );
 }
 
-EditSemester.propTypes = {
+EditDay.propTypes = {
   /**
    * The column field of the cell that triggered the event.
    */
@@ -181,48 +248,41 @@ EditSemester.propTypes = {
   value: PropTypes.any,
 };
 
-const renderEditSemester = (params) => {
-  return <EditSemester {...params} />;
+const renderEditDay = (params) => {
+  return <EditDay {...params} />;
 };
-//End of edit semester via cell 
+//End of edit day via cell 
 
- 
+
  //Edit year via cell
-function EditYear(props) {
+function EditProfessor(props) {
+
   const { id, value, field } = props;
   const apiRef = useGridApiContext();
   
-  const handleChange = async(event) =>{
+  const handleChangeProfessor = async(event) =>{
     
     await apiRef.current.setEditCellValue({ id, field, value: event.target.value });
       apiRef.current.stopCellEditMode({ id, field });
-  
+    console.log(value)
 }
 
   return (
     <>
-      <Select
-      value={value}
-      onChange={handleChange}
-      size="small"
+    <Select
+     value={value}
       sx={{ height: 1 , width: 260}}
-      native
       autoFocus
+      onChange={handleChangeProfessor}
     >
-      <option>1st year</option>
-      <option>2nd year</option>
-      <option>3rd year</option>
-      <option>4th year</option>
-      <option>5th year</option>
-      <option>6th year</option>
-
+      {console.log(professors)}
+      {professors.map((activeProfessors) => (<MenuItem value = {activeProfessors.professor_username} >{activeProfessors.firstname+" "+activeProfessors.middlename+" "+activeProfessors.lastname}</MenuItem>))}
     </Select>
     </>
-  
   );
 }
 
-EditYear.propTypes = {
+EditProfessor.propTypes = {
   /**
    * The column field of the cell that triggered the event.
    */
@@ -238,10 +298,10 @@ EditYear.propTypes = {
   value: PropTypes.any,
 };
 
-const renderEditYear = (params) => {
-  return <EditYear {...params} />;
+const renderEditProfessor = (params) => {
+  return <EditProfessor {...params} />;
 };
-//End of edit year via cell 
+//End of edit professor via cell 
 
 
 
@@ -263,13 +323,12 @@ function EditStatus(props) {
       <Select
       value={value}
       onChange={handleChange}
-      size="small"
       sx={{ height: 1 , width: 260}}
-      native
       autoFocus
     >
-      <option><CheckIcon/>active</option>
-      <option><CloseIcon />inactive</option>
+    
+      <MenuItem value ={'active'}><CheckIcon/>active</MenuItem>
+      <MenuItem value = {'inactive'}><CloseIcon />inactive</MenuItem>
     </Select>
     </>
   
@@ -312,40 +371,24 @@ const renderEditStatus = (params) => {
         width: 200,
        editable: false,
     },
-    {
-        field: 'units',
-        headerName: 'Units',
-        width: 50,
-        editable: false,
-      },
-      {
-        field: 'semester',
-        headerName: 'Semester',
-        width: 150,
-        editable: false,
-      },
-      {
-        field: 'academic_year',
-        headerName: 'Academic Year',
-        width: 150,
-        editable: false,
-      },
       {
         field: 'schedule_day',
         headerName: 'Schedule Day',
-        width: 150,
+        renderEditCell: renderEditDay,
+        width: 200,
         editable: true,
       },
       {
         field: 'schedule_time',
         headerName: 'Time',
-        width: 100,
+        width: 430,
         editable: true,
       },
       {
-        field: 'professional_initial',
+        field: 'professor_initial',
         headerName: 'Professor',
-        width: 190,
+        renderEditCell: renderEditProfessor,
+        width: 150,
         editable: true,
       },
       {
@@ -357,7 +400,7 @@ const renderEditStatus = (params) => {
         renderCell: (cellValues) => {
           return(
           <>
-        {cellValues.value == "active" ? (<Chip icon={<CheckIcon/>} label="active  " color ="success" size = "small" variant = "outlined"/>) : (<Chip icon={<CloseIcon/>} label="inactive" color ="error" size = "small" variant = "outlined"/>)}
+        {cellValues.value == "active" ? (<Chip icon={<CheckIcon/>} label=" active  " color ="success" size = "small" variant = "outlined"/>) : (<Chip icon={<CloseIcon/>} label=" inactive" color ="error" size = "small" variant = "outlined"/>)}
           </>
           );//end of return
         }
@@ -388,30 +431,26 @@ const renderEditStatus = (params) => {
   const handleYes = async () => {
     const { newRow, oldRow, reject, resolve } = promiseArguments;
 
-
     try {
       // Make the HTTP request to save in the backend
       const dataUpdate = new FormData();
       dataUpdate.append('ID', newRow['id']);
-      dataUpdate.append('Subject_Code', newRow['subject_code']);
-      dataUpdate.append('Subject_Name', newRow['subject_name']);
-      dataUpdate.append('Units', newRow['units']);
-      dataUpdate.append('Course', newRow['course_available']);
-      dataUpdate.append('Year', newRow['year_available']);
-      dataUpdate.append('Semester', newRow['semester_available']);
-      dataUpdate.append('Type', newRow['type']);
+      dataUpdate.append('ProfessorUsername', newRow['professor_initial']);
+      dataUpdate.append('Time', newRow['schedule_time']);
+      dataUpdate.append('Day', newRow['schedule_day']);
       dataUpdate.append('Status', newRow['status']);
       dataUpdate.append('Action', 'Update');
       dataUpdate.append('EditorPosition', user.position);
       dataUpdate.append('EditorEmail', user.email);
-      dataUpdate.append('Category', 'Subject');
+      dataUpdate.append('Category', 'SectionSchedule');
       const response = await mutateRow(newRow);
-      const sendRequest = await fetch(basedUrl+"/subject-update.php",{
+      const sendRequest = await fetch(basedUrl+"/section-schedule-update.php",{
         method: "POST",
         body: dataUpdate,
     });
     
     const getResponse = await sendRequest.json();
+    console.log(getResponse)
     if(getResponse.statusCode !== 201){
       setSnackbar({ children: 'Update successfully', severity: 'success' });
       resolve(response);
@@ -422,6 +461,7 @@ const renderEditStatus = (params) => {
       setPromiseArguments(null);
     }
     } catch (error) {
+      console.log(error)
       setSnackbar({ children: "Field can't be empty", severity: 'error' });
       reject(oldRow);
       setPromiseArguments(null);
@@ -491,44 +531,6 @@ const renderEditStatus = (params) => {
 
  //Toolbar
  function CustomToolbarSection() {
-  //Open add form
-  const  formOpenType = useSelector(state => state.addFormSection.value);
-  //dispatch from redux
-const dispatch = useDispatch();
-const [courses, setCourses] = useState({data: []});
-const [updatedCourse, setUpdatedCourse] = useState(false);
-//  Get all users api
- useEffect( () => {
-  console.log('UseEffect called')
-  const getAllData = async () =>{
-     try{ 
-       //online api
-         const sendRequest = await fetch(basedUrl+"/course-active.php");
-         const getResponse = await sendRequest.json();
-    
-         if(getResponse.statusCode === 201){
-         
-         }else{
-           //if succesfully retrieve data'
-          //  console.log(getResponse)
-           setCourses({data: getResponse});
-            
-         }
-     }catch(e){
-       console.error(e)
-     }
-   }
-   getAllData();
- }, [formOpenType]);
-
- useEffect(() => {
-  if(courses.data.length > 0){
-    console.log("Courses data = "+JSON.stringify(courses));
-    setUpdatedCourse(true)
-  }
- }, [formOpenType, courses]);
-
-
   return (<>
 
     <GridToolbarContainer>

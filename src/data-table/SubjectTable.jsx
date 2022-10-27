@@ -162,13 +162,14 @@ function EditSemester(props) {
       <Select
       value={value}
       onChange={handleChange}
-      size="small"
+   
       sx={{ height: 1 , width: 260}}
-      native
+   
       autoFocus
     >
-      <option>1st semester</option>
-      <option>2nd semester</option>
+     
+      <MenuItem value ={'1st semester'}>1st semester</MenuItem>
+      <MenuItem value ={'2nd semester'}>2nd semester</MenuItem>
       </Select>
     </>
   
@@ -214,18 +215,15 @@ function EditYear(props) {
       <Select
       value={value}
       onChange={handleChange}
-      size="small"
       sx={{ height: 1 , width: 260}}
-      native
       autoFocus
     >
-      <option>1st year</option>
-      <option>2nd year</option>
-      <option>3rd year</option>
-      <option>4th year</option>
-      <option>5th year</option>
-      <option>6th year</option>
-
+    <MenuItem value ={'1st year'}>1st year</MenuItem>
+    <MenuItem value ={'2nd year'}>2nd year</MenuItem>
+    <MenuItem value ={'3rd year'}>3rd year</MenuItem>
+    <MenuItem value ={'4th year'}>4th year</MenuItem>
+    <MenuItem value ={'5th year'}>5th year</MenuItem>
+    <MenuItem value ={'6th year'}>6th year</MenuItem>
     </Select>
     </>
   
@@ -273,13 +271,11 @@ function EditStatus(props) {
       <Select
       value={value}
       onChange={handleChange}
-      size="small"
       sx={{ height: 1 , width: 260}}
-      native
       autoFocus
     >
-      <option><CheckIcon/>active</option>
-      <option><CloseIcon />inactive</option>
+      <MenuItem value ={'active'}><CheckIcon/>active</MenuItem>
+      <MenuItem value = {'inactive'}><CloseIcon />inactive</MenuItem>
     </Select>
     </>
   
