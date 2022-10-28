@@ -17,7 +17,7 @@ import addCourse from '../slice/AddFormSlice/AddCourseSlice/AddCourseSlice'
 import addSection from '../slice/AddFormSlice/AddSectionSlice/AddSectionSlice'
 import sectionSelect from '../slice/FormSelectedRow/SectionSelected'
 import addProfessor from '../slice/AddFormSlice/AddProfessorSlice/AddProfessorSlice'
-
+import professorSelect from '../slice/FormSelectedRow/ProfessorSelected'
 
 export const store = configureStore({
   reducer: {
@@ -39,5 +39,6 @@ export const store = configureStore({
     addFormSection: addSection,
     sectionSelected: sectionSelect,
     addFormProfessor: addProfessor,
+    professorSelected: professorSelect,
   },
 })

@@ -13,7 +13,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { basedUrl } from '../base-url/based-url'
 import { AddSubject } from '../forms/AddSubject';
 import {ADDFORMPROFESSOR} from '../slice/AddFormSlice/AddProfessorSlice/AddProfessorSlice';
-import { PUT_SUBJECT } from '../slice/FormSelectedRow/SubjectSelected';
+import { PUT_PROFESSOR } from '../slice/FormSelectedRow/ProfessorSelected';
 import { imageBaseUrl } from '../base-url/based-url';
 import { AddProfessor } from '../forms/AddProfessor';
 
@@ -474,7 +474,7 @@ const renderEditStatus = (params) => {
       const selectedRowData = rows.filter((row) =>
         selectedIDs.has(row.id.toString())
       );
-      dispatch(PUT_SUBJECT(selectedRowData[0]))
+      dispatch(PUT_PROFESSOR(selectedRowData[0]))
     }}
     /> 
  {!!snackbar && (

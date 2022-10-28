@@ -2,7 +2,7 @@ import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import {  Alert, Skeleton, Snackbar, Stack, Paper } from '@mui/material';
+import {  Alert, Skeleton, Snackbar, Stack, Paper, Avatar } from '@mui/material';
 import { DrawerAppBar } from '../component/DrawerAppBar';
 import { useEffect} from 'react';
 import TabContext from '@mui/lab/TabContext';
@@ -15,10 +15,11 @@ import { SubjectHistory } from '../viewhistory/SubjectHistory';
 import { Typography } from '@mui/material';
 import { SubjectView } from '../viewprofile/SubjectView';
 import { ProfessorTable } from '../data-table/ProfessorTable';
+import { imageBaseUrl } from '../base-url/based-url';
 
 export  function Professor() {
-//Selected Subject
-const subject = useSelector(state => state.subjectSelected.value)
+//Selected Professor
+const professor = useSelector(state => state.professorSelected.value)
 
 //get user
 const user = useSelector(state => JSON.parse(state.user.session))
@@ -78,10 +79,11 @@ const handleClose = (event, reason) => {
             <TabList onChange={handleChange} aria-label="lab API tabs example" >
                 <Tab label="DATA TABLE" value="1" />
                 <Tab label="HISTORY" value="2" />
-                {console.log("thisissub" + JSON.stringify(subject))}
-                {subject !== null ? (<Tab value="3" label={
+                {console.log("thisisprofessor" + JSON.stringify(professor))}
+                {professor !== null ? (<Tab value="3" label={
                 <Stack direction="row" spacing={2}>
-                <Typography>{subject.subject_code}</Typography>
+                 <Avatar src={imageBaseUrl+professor.profile_url} sx={{ width: 30, height: 30  }}/>
+                <Typography>{professor.firstname}</Typography>
                 </Stack>
                 } />) : (<></>)}
              </TabList>
@@ -97,7 +99,7 @@ const handleClose = (event, reason) => {
             </Paper>
             </TabPanel>
             <TabPanel value="3" sx ={{marginLeft:'-24px'}}>
-              <SubjectView />
+              
             </TabPanel>
           </TabContext>
        </div>

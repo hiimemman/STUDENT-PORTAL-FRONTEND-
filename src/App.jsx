@@ -4,7 +4,6 @@ import { StyledEngineProvider } from '@mui/styled-engine';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useSelector, useDispatch } from 'react-redux';
 import { useState, useEffect} from 'react';
-
 import { SignIn } from './pages/SignIn';
 import { Dashboard } from './pages/Dashboard';
 import { Employees } from './pages/Employees';
@@ -112,6 +111,7 @@ return (
   <ThemeProvider theme={currentTheme}> 
     <Router>
       <Routes>
+        <Route path = "/" element = {<Homepage />} />
         <Route path = "/loginemployee" element ={<><ParticlesBackground /><SignIn /></>} />
         <Route path = "/employee/dashboard" element ={<><Dashboard /></>} />
         <Route path = "/employee/employees" element ={<><Employees/></>} /> 

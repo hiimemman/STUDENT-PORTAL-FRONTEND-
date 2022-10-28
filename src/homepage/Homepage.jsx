@@ -1,15 +1,10 @@
-import React from 'react';
-import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router-dom';
-import { ParticlesBackground } from '../component/ParticlesBackground';
+import { HeaderAppBar } from './homepage-components/HeaderAppBar';
 
 export function  Homepage(){
-
-    //Navigation
-const navigate = useNavigate();
     return(
         <>
-        <Button variant="text" onClick ={() => navigate('/loginemployee')}>Text</Button>
+        <HeaderAppBar sx ={{m:0}} />
         </>
     )
 }
