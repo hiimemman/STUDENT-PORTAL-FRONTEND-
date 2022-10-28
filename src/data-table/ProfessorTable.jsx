@@ -268,16 +268,17 @@ function EditStatus(props) {
 
   return (
     <>
-      <Select
+     <Select
       value={value}
       onChange={handleChange}
-      size="small"
+
       sx={{ height: 1 , width: 260}}
-      native
+
       autoFocus
     >
-      <option><CheckIcon/>active</option>
-      <option><CloseIcon />inactive</option>
+      
+      <MenuItem value ={'active'}><CheckIcon/>active</MenuItem>
+      <MenuItem value = {'inactive'}><CloseIcon />inactive</MenuItem>
     </Select>
     </>
   
@@ -393,26 +394,25 @@ const renderEditStatus = (params) => {
     try {
       // Make the HTTP request to save in the backend
       const dataUpdate = new FormData();
-      dataUpdate.append('ID', newRow['id']);
-      dataUpdate.append('Subject_Code', newRow['subject_code']);
-      dataUpdate.append('Subject_Name', newRow['subject_name']);
-      dataUpdate.append('Units', newRow['units']);
-      dataUpdate.append('Course', newRow['course_available']);
-      dataUpdate.append('Year', newRow['year_available']);
-      dataUpdate.append('Semester', newRow['semester_available']);
-      dataUpdate.append('Type', newRow['type']);
+      dataUpdate.append('FirstnName', newRow['firstname']);
+      dataUpdate.append('MiddleName', newRow['middlename']);
+      dataUpdate.append('LastName', newRow['lastname']);
+      dataUpdate.append('Email', newRow['email']);
+      dataUpdate.append('Username', newRow['professor_username']);
+      dataUpdate.append('Faculty', newRow['faculty']);
       dataUpdate.append('Status', newRow['status']);
       dataUpdate.append('Action', 'Update');
       dataUpdate.append('EditorPosition', user.position);
       dataUpdate.append('EditorEmail', user.email);
       dataUpdate.append('Category', 'Subject');
       const response = await mutateRow(newRow);
-      const sendRequest = await fetch(basedUrl+"/subject-update.php",{
+      const sendRequest = await fetch(basedUrl+"/professor-update.php",{
         method: "POST",
         body: dataUpdate,
     });
     
     const getResponse = await sendRequest.json();
+    console.log(getResponse)
     if(getResponse.statusCode !== 201){
       setSnackbar({ children: 'Update successfully', severity: 'success' });
       resolve(response);
