@@ -16,6 +16,7 @@ import { Typography } from '@mui/material';
 import { SubjectView } from '../viewprofile/SubjectView';
 import { ProfessorTable } from '../data-table/ProfessorTable';
 import { imageBaseUrl } from '../base-url/based-url';
+import { ProfessorView } from '../viewprofile/ProfessorView';
 
 export  function Professor() {
 //Selected Professor
@@ -99,7 +100,7 @@ const handleClose = (event, reason) => {
             </Paper>
             </TabPanel>
             <TabPanel value="3" sx ={{marginLeft:'-24px'}}>
-              
+              <ProfessorView />
             </TabPanel>
           </TabContext>
        </div>

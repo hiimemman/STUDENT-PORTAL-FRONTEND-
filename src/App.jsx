@@ -16,6 +16,7 @@ import { Faculty } from './pages/Faculty';
 import { Skeleton } from '@mui/material';
 import { Section } from './pages/Section';
 import { Professor } from './pages/Professor';
+import { StudentSignIn } from './student-portal/StudentSignIn';
 
 
 
@@ -121,6 +122,7 @@ return (
         <Route path = "/employee/faculty" element ={<><Faculty/></>} />
         <Route path = "/employee/course" element ={<><Course/></>} />
         <Route path = "/employee/section" element ={<><Section/></>} />
+        <Route path = "/student-portal" element ={<><StudentSignIn /></>} />
       </Routes>
     </Router>
   </ThemeProvider>

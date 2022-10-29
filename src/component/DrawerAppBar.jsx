@@ -96,7 +96,7 @@ export function DrawerAppBar() {
  //dispatch from redux
  const dispatch = useDispatch();
     //check menu state
-    const isOpen = useSelector(state => (state.isOpen.value))
+    const isOpen = useSelector(state => (state.isOpen.value));
 
     //check current theme
     const selectedTheme = useSelector(state =>(state.selectedTheme.value))

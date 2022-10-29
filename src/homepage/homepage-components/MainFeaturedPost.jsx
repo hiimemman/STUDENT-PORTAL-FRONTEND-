@@ -6,9 +6,10 @@ import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
 import Box from '@mui/material/Box';
+import { Button } from '@mui/material';
 
-function MainFeaturedPost(props) {
-  const { post } = props;
+export function MainFeaturedPost(p) {
+
 
   return (
     <Paper
@@ -23,11 +24,15 @@ function MainFeaturedPost(props) {
         backgroundSize: 'cover',
         backgroundRepeat: 'no-repeat',
         backgroundPosition: 'center',
-        backgroundImage: `url(${post.image})`,
+        backgroundImage: `url(https://source.unsplash.com/random)`,
+        borderRadius: '0',
+        width:'100vw',
+        height:'100%',
       }}
+
     >
       {/* Increase the priority of the hero background image */}
-      {<img style={{ display: 'none' }} src={post.image} alt={post.imageText} />}
+      {<img style={{ display: 'none' }} src={'https://source.unsplash.com/random'} alt={'Image failed to load'} />}
       <Box
         sx={{
           position: 'absolute',
@@ -46,32 +51,32 @@ function MainFeaturedPost(props) {
               p: { xs: 3, md: 6 },
               pr: { md: 0 },
             }}
-            className = "mt-64"
+            className = "mt-40"
           >
             <Typography component="h1" variant="h3" color="inherit" gutterBottom>
-              {post.title}
+              Asian Institute of Science and Technology
             </Typography>
             <Typography variant="h5" color="inherit" paragraph>
-              {post.description}
+            Asian Institute of  Science and Technology first come to existence as the Asian Institute of Electronics (AIE)
             </Typography>
-            <Link variant="subtitle1" href="#">
-              {post.linkText}
-            </Link>
+            <Button size="medium" variant ="outlined">Learn More</Button>
           </Box>
+        </Grid>
+        <Grid item md ={6}>
+        <Box
+            sx={{
+              position: 'relative',
+              p: { xs: 3, md: 6 },
+              pr: { md: 0 },
+            }}
+            className = "mt-40"
+          >
+  <img style={{ display: 'none' }}  alt={'Image failed to load'} />
+        </Box>
         </Grid>
       </Grid>
     </Paper>
   );
 }
 
-MainFeaturedPost.propTypes = {
-  post: PropTypes.shape({
-    description: PropTypes.string.isRequired,
-    image: PropTypes.string.isRequired,
-    imageText: PropTypes.string.isRequired,
-    linkText: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired,
-  }).isRequired,
-};
 
-export default MainFeaturedPost;

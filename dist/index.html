@@ -9,7 +9,7 @@
       homescreen on Android. See https://developers.google.com/web/fundamentals/engage-and-retain/web-app-manifest/
     -->
     <link rel="manifest" href="/manifest.json">
-    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="shortcut icon" href="/assets/aisat-original-logo.75c8eb03.png">
     <!--
       Notice the use of  in the tags above.
       It will be replaced with the URL of the `public` folder during the build.
@@ -18,9 +18,15 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-    <title>Aisat Portal</title>
-    <script type="module" crossorigin src="/assets/index.3da0794d.js"></script>
-    <link rel="stylesheet" href="/assets/index.4d786bca.css">
+    <title>AISAT - Dasma Branch</title>
+    <!-- preload images-->
+    <link rel="preload" href="https://my-aisat-portal.herokuapp.com/uploads/homepage-logo.svg" as="image">
+    <link rel="preload" href="https://my-aisat-portal.herokuapp.com/uploads/Aisat-Mis-Light.svg" as="image">
+    <link rel="preload" href="https://my-aisat-portal.herokuapp.com/uploads/Aisat-Mis-Dark.svg" as="image">
+    <link rel="preload" href="https://my-aisat-portal.herokuapp.com/uploads/Aisat-Student-Light.svg" as="image">
+    <link rel="preload" href="https://my-aisat-portal.herokuapp.com/uploads/Aisat-Student-Dark.svg" as="image">
+    <script type="module" crossorigin src="/assets/index.f5e263c1.js"></script>
+    <link rel="stylesheet" href="/assets/index.f4b337be.css">
   </head>
   <body>
     <noscript>
