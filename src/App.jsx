@@ -122,7 +122,7 @@ return (
         <Route path = "/employee/faculty" element ={<><Faculty/></>} />
         <Route path = "/employee/course" element ={<><Course/></>} />
         <Route path = "/employee/section" element ={<><Section/></>} />
-        <Route path = "/student-portal" element ={<><StudentSignIn /></>} />
+        <Route path = "/student-portal" element ={<><ParticlesBackground /><StudentSignIn /></>} />
       </Routes>
     </Router>
   </ThemeProvider>
