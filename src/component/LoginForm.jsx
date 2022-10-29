@@ -23,6 +23,8 @@ import validator from 'validator'
 import { PaperLine } from './PaperLine';
 import { ParticlesBackground } from './ParticlesBackground';
 import { basedUrl, imageBaseUrl } from '../base-url/based-url';
+import HomeIcon from '@mui/icons-material/Home';
+import { IconButton } from '@mui/material';
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -126,7 +128,6 @@ const dispatch = useDispatch();
 
     return(
       <>
-     
         <CssBaseline />
         <Container component="main" maxWidth="xs" sx ={{p:0}}>
         
@@ -139,7 +140,8 @@ const dispatch = useDispatch();
   }}>        
   {/* <PaperLine/> */}
   {isLoading === true ? (<LinearProgress className ="rounded-t-xl p-1" />) : ("")}
-  
+  <IconButton color="secondary" style ={{position: 'absolute'}} onClick ={() => {navigate('/')}}><HomeIcon />
+  </IconButton>
           <Box
             sx={{
               paddingTop:5,
@@ -151,6 +153,7 @@ const dispatch = useDispatch();
               alignItems: 'center',
             }}
           > 
+        
             {/* <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
               <LockOutlinedIcon />
             </Avatar>

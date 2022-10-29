@@ -40,9 +40,8 @@ useEffect(() =>{
   ) :  (
     <>
     <Suspense fallback = {
-      // <Skeleton variant="rectangular" width={210}
-      // height={118}></Skeleton>
-      <p> Loading</p>
+      <Skeleton variant="rectangular" width={210}
+      height={118}></Skeleton>
     }>
       
     <Box
