@@ -211,16 +211,14 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
         <>
              <Paper elevation={1} sx ={{width:'500 ', paddingTop:'1.5rem'}} style={{ backgroundImage:`url("https://gstatic.com/classroom/themes/img_code.jpg")`,  backgroundRepeat:'no-repeat', backgroundSize: 'cover', }} className ="rounded-xl">
                    <Box component="span" sx={{ p: 3, display: 'flex' ,flexDirection:'column', alignItems: 'center'}}>
-                        <StyledBadge badgeContent={4} sx={{p:1}} color="secondary">
                             <Avatar alt="No Image" src={imageBaseUrl+employee.profile_url } sx={{ width: 100, height:    100 }} />  
-                        </StyledBadge>
-                        <Typography variant = "h5">{employee.firstname} {employee.middlename} {employee.lastname} - ({employee.position})</Typography>
-                        <Typography variant ="h7">{employee.email}</Typography>
+                        <Typography variant = "h5" color ="white">{employee.firstname} {employee.middlename} {employee.lastname} - ({employee.position})</Typography>
+                        <Typography variant ="h7" color ="white">{employee.email}</Typography>
                         <Container sx={{ p:1,display: 'flex', justifyContent: 'center'}}>
-                            <TwitterIcon></TwitterIcon>
-                            <FacebookIcon></FacebookIcon>
-                            <InstagramIcon></InstagramIcon>
-                            <LinkedInIcon></LinkedInIcon>
+                            <TwitterIcon color ="white"></TwitterIcon>
+                            <FacebookIcon color ="white"></FacebookIcon>
+                            <InstagramIcon color ="white"></InstagramIcon>
+                            <LinkedInIcon color ="white"></LinkedInIcon>
                         </Container>
                     </Box>       
              </Paper >

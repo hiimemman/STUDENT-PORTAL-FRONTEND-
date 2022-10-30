@@ -10,7 +10,7 @@ import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import Tab from '@mui/material/Tab';
 import { useState, Suspense } from 'react';
-
+import { basedUrl } from '../base-url/based-url';
 import { SubjectHistory } from '../viewhistory/SubjectHistory';
 import { Typography } from '@mui/material';
 import { SubjectView } from '../viewprofile/SubjectView';
@@ -23,7 +23,11 @@ export  function Professor() {
 const professor = useSelector(state => state.professorSelected.value)
 
 //get user
-const user = useSelector(state => JSON.parse(state.user.session))
+const user = useSelector(state => JSON.parse(state.user.session));
+
+//get active faculty
+
+const [faculty, setFaculty] = useState({});
 
 
 const [value, setValue] = useState('1');//default tab
@@ -57,9 +61,41 @@ const handleClose = (event, reason) => {
     } 
    },[user])
 
+   const getAllActiveFaculty = async () =>{
 
-  
+    try{ 
 
+      //online api
+        const sendRequest = await fetch(basedUrl+"/faculty-active.php");
+        const getResponse = await sendRequest.json();
+     
+        if(getResponse.statusCode === 201){
+        
+        }else{
+          //if succesfully retrieve data
+   
+          setFaculty(getResponse);
+        }
+    }catch(e){
+      console.error(e)
+    }
+  }
+
+
+   useEffect(() =>{
+    getAllActiveFaculty();
+    return () =>{
+      //exit in memory
+    }
+   },[value])
+
+   useEffect(() =>{
+
+
+    return () =>{
+      //exit in memory
+    }
+   },[faculty])
   return (
     <>  
     {user !== null ?  (
@@ -80,7 +116,6 @@ const handleClose = (event, reason) => {
             <TabList onChange={handleChange} aria-label="lab API tabs example" >
                 <Tab label="DATA TABLE" value="1" />
                 <Tab label="HISTORY" value="2" />
-                {console.log("thisisprofessor" + JSON.stringify(professor))}
                 {professor !== null ? (<Tab value="3" label={
                 <Stack direction="row" spacing={2}>
                  <Avatar src={imageBaseUrl+professor.profile_url} sx={{ width: 30, height: 30  }}/>
@@ -100,7 +135,8 @@ const handleClose = (event, reason) => {
             </Paper>
             </TabPanel>
             <TabPanel value="3" sx ={{marginLeft:'-24px'}}>
-              <ProfessorView />
+              {console.log(faculty)}
+              <ProfessorView faculty ={faculty}/>
             </TabPanel>
           </TabContext>
        </div>

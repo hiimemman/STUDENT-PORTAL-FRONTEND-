@@ -9,18 +9,18 @@ import Badge from '@mui/material/Badge';
 import { Box, Container } from '@mui/system';
 import SaveIcon from '@mui/icons-material/Save';
 import { LoadingButton } from '@mui/lab';
-import { PUT_SUBJECT } from '../slice/FormSelectedRow/SubjectSelected';
+
+import { PUT_PROFESSOR } from '../slice/FormSelectedRow/ProfessorSelected';
 import { basedUrl } from '../base-url/based-url';
 import { useTheme } from '@mui/material/styles';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
-
-
+import { imageBaseUrl } from '../base-url/based-url';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import Tab from '@mui/material/Tab';
-import { SectionScheduleTable } from '../data-table/SectionScheduleTable';
+import { ProfessorScheduleTable } from '../data-table/ProfessorScheduleTable';
 
 
 //Course select required functions
@@ -47,7 +47,7 @@ function getStyles(name, courseName, theme) {
 
 
 
-export function ProfessorView(){
+export function ProfessorView(props){
 
   const theme = useTheme();
   //dispatch from redux
@@ -81,7 +81,7 @@ const [loginMessage, setMessage ] = useState("Try again");// Default message of 
 //Field states
 const [valueTab, setValueTab] = useState(1);//default tab
 
-const [semester, setSemester] = useState(professor.semester);
+const [faculty, setFaculty] = useState(professor.faculty);
 
 const [yearAvailable, setYearAvailable] = useState(professor.year_available);
 
@@ -150,18 +150,15 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
     },
   }));
 
+
   //submit form
   const handleSubmit = async (event) => {
     event.preventDefault();
     console.log("Submited here")
       const data = new FormData(event.target);
+      data.append('Username', professor.professor_username);
       data.append('ID', professor.id);
       data.append('Status', professor.status);
-      data.append('Subject_Code', professor.subject_code);
-      data.append('Course', courseName);
-      if(subjectType === 'Minor'){
-        data.append('Course', 'General')
-      }
       data.append('Action', 'Update');
       data.append('EditorPosition', user.position);
       data.append('EditorEmail', user.email);
@@ -180,7 +177,7 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
           const getResponse = await sendRequest.json();
           console.log("Reponse here: "+ JSON.stringify(getResponse.statusCode))
           if(getResponse.statusCode !== 201){
-            dispatch(PUT_SUBJECT(getResponse.statusCode));
+            dispatch(PUT_PROFESSOR(getResponse.statusCode));
             setOpen(true);
             setStatus("success");
             setMessage("Updated Successfully")
@@ -255,56 +252,61 @@ const OverviewPanel = () =>{
     <Box component="form" onSubmit={handleSubmit}  sx={{ mt: 1 }}>
     <Grid2 container sx ={{paddingRight: 10,}} >
       <Stack direction="row" spacing={2} sx = {{width:'100%', marginBottom: '1.5rem'}}>
-        <Typography variant ="overline" noWrap sx={{fontSize:'15px', width: '15rem'}}>Section:  </Typography>
+        <Typography variant ="overline" noWrap sx={{fontSize:'15px', width: '15rem'}}>Firstname:  </Typography>
       <FormControl >
-         <TextField disabled defaultValue = {professor.professor_name} name ="Section_Name" id="Subject_Name" sx={{fontSize:'15px' , width: '50rem'}} variant="standard" inputProps={{ 'aria-label': 'description' }} />
+         <TextField defaultValue = {professor.firstname} name ="FirstName" id="FirstName" sx={{fontSize:'15px' , width: '50rem'}} variant="standard" inputProps={{ 'aria-label': 'description' }} />
+      </FormControl>
+      
+     </Stack>   
+
+     <Stack direction="row" spacing={2} sx = {{width:'100%', marginBottom: '1.5rem'}}>
+        <Typography variant ="overline" noWrap sx={{fontSize:'15px', width: '15rem'}}>Middlename:  </Typography>
+      <FormControl >
+         <TextField defaultValue = {professor.middlename} name ="MiddleName" id="MiddleName" sx={{fontSize:'15px' , width: '50rem'}} variant="standard" inputProps={{ 'aria-label': 'description' }} />
+      </FormControl>
+     </Stack>    
+
+     <Stack direction="row" spacing={2} sx = {{width:'100%', marginBottom: '1.5rem'}}>
+        <Typography variant ="overline" noWrap sx={{fontSize:'15px', width: '15rem'}}>Lastname:  </Typography>
+      <FormControl >
+         <TextField defaultValue = {professor.lastname} name ="LastName" id="LastName" sx={{fontSize:'15px' , width: '50rem'}} variant="standard" inputProps={{ 'aria-label': 'description' }} />
       </FormControl>
      </Stack>   
 
      <Stack direction="row" spacing={2} sx = {{width:'100%', marginBottom: '1.5rem'}}>
-        <Typography variant ="overline" noWrap sx={{fontSize:'15px', width: '15rem'}}>Course:  </Typography>
+        <Typography variant ="overline" noWrap sx={{fontSize:'15px', width: '15rem'}}>Email:  </Typography>
       <FormControl >
-         <TextField disabled defaultValue = {professor.course} name ="Course" id="Course" sx={{fontSize:'15px' , width: '50rem'}} variant="standard" inputProps={{ 'aria-label': 'description' }} />
+         <TextField disabled defaultValue = {professor.email} name ="Email" id="Email" sx={{fontSize:'15px' , width: '50rem'}} variant="standard" inputProps={{ 'aria-label': 'description' }} />
       </FormControl>
-     </Stack>
+     </Stack>  
 
      <Stack direction="row" spacing={2} sx = {{width:'100%', marginBottom: '1.5rem'}}>
-        <Typography variant ="overline" noWrap sx={{fontSize:'15px', width: '15rem'}}>Year:  </Typography>
+        <Typography variant ="overline" noWrap sx={{fontSize:'15px', width: '15rem'}}>Username:  </Typography>
       <FormControl >
-         <TextField disabled defaultValue = {professor.professor_year} name ="Year" id="Year" sx={{fontSize:'15px' , width: '50rem'}} variant="standard" inputProps={{ 'aria-label': 'description' }} />
+         <TextField disabled defaultValue = {professor.professor_username} name ="Username" id="Username" sx={{fontSize:'15px' , width: '50rem'}} variant="standard" inputProps={{ 'aria-label': 'description' }} />
       </FormControl>
-     </Stack>
+     </Stack>  
 
  <Stack direction="row" spacing={2} sx = {{width:'100%', marginBottom: '1.5rem'}}>
-     <Typography variant ="overline" noWrap sx={{fontSize:'15px', width: '15rem'}}>Semester:  </Typography>
+     <Typography variant ="overline" noWrap sx={{fontSize:'15px', width: '15rem'}}>Faculty:  </Typography>
 
      <FormControl fullWidth variant = "standard"    sx={{fontSize:'15px' , width: '50rem'}}>
 
     <Select
      required
-      id="Semester"
-      name ="Semester"
-     value={semester}
+      id="Faculty"
+      name ="Faculty"
+     value={faculty}
       onChange={
-(event) => {setSemester((prev) => prev = event.target.value)}
+(event) => {setFaculty((prev) => prev = event.target.value)}
 }     
     >
-      <MenuItem value = "1st semester">
-          1st semester
-      </MenuItem>
-      <MenuItem value = "2nd semester">
-          2nd semester
-      </MenuItem>
+      
+      {props.faculty.map((faculties) => (<MenuItem value ={faculties.faculty_name}>{faculties.faculty_name}</MenuItem>))}
+      
     </Select>
   </FormControl>
 </Stack> 
-
-<Stack direction="row" spacing={2} sx = {{width:'100%', marginBottom: '1.5rem'}}>
-        <Typography variant ="overline" noWrap sx={{fontSize:'15px', width: '15rem'}}>Academic Year:  </Typography>
-      <FormControl >
-         <TextField disabled defaultValue = {professor.academic_year} name ="AcademicYear" id="AcademicYear" sx={{fontSize:'15px' , width: '50rem'}} variant="standard" inputProps={{ 'aria-label': 'description' }} />
-      </FormControl>
-     </Stack>
     
   </Grid2>
          
@@ -329,7 +331,7 @@ const SchedulePanel = () =>{
   return (
     <>
      <Paper elevation={1} sx ={{width:'500 ',marginTop:'1.5rem'}} className ="rounded-xl">
-     <SectionScheduleTable  />
+     <ProfessorScheduleTable />
       </Paper>
     </>
   )
@@ -342,13 +344,13 @@ const handleChangeTab = (event, newValue) =>{
         <>
         <TabContext value = {valueTab}>
         <Paper elevation={1}>
-            <Box  style={{ backgroundImage:`url("https://gstatic.com/classroom/themes/img_read.jpg")`,  backgroundRepeat:'no-repeat', backgroundSize: 'cover', }} sx ={{width:'500', paddingTop:'1.5rem'}} className ="rounded-t-lg">
-             <Box component="span" sx={{marginTop: '5.5rem', p: 3, display: 'flex' ,flexDirection:'column', alignItems: 'right'}}>
-             <article className="prose lg:prose-xl">
-  <h2 className=' text-slate-100' >{professor.professor_name}</h2>
-  <p className=' text-slate-100'>A.Y {professor.academic_year}</p>
-</article>
-  </Box>
+            <Box  style={{ backgroundImage:`url("https://gstatic.com/classroom/themes/img_code.jpg")`,  backgroundRepeat:'no-repeat', backgroundSize: 'cover', }} sx ={{width:'500', paddingTop:'1.5rem'}} className ="rounded-t-lg">
+            <Box component="span" sx={{ p: 3, display: 'flex' ,flexDirection:'column', alignItems: 'center'}}>
+                            <Avatar alt="No Image" src={imageBaseUrl+professor.profile_url } sx={{ width: 100, height:    100 }} />  
+                        <Typography variant = "h5" color ="white">{professor.firstname} {professor.middlename} {professor.lastname} - ({professor.professor_username})</Typography>
+                        <Typography variant ="h7" color ="white">{professor.email}</Typography>
+                        <Typography variant ="h8" color ="white">Professor</Typography>
+                    </Box>       
 </Box>
           <Box sx={{ borderBottom: 1, borderColor: 'divider' }} className ="rounded-b-lg"> 
           {console.log("Value tab"+valueTab)}
