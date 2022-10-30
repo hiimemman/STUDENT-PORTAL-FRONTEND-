@@ -351,20 +351,18 @@ const renderEditStatus = (params) => {
 };
 //End of edit status via cell
 
-  
- 
   const columns = [
+    {
+      field: 'section_name',
+      headerName: 'Section',
+      width: 150,
+     editable: false,
+  },
     {
       field: 'subject_name',
       headerName: 'Subject',
       width: 150,
      editable: false,
-    },
-    {
-        field: 'description',
-        headerName: 'Description',
-        width: 200,
-       editable: false,
     },
       {
         field: 'schedule_day',

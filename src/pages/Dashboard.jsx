@@ -5,7 +5,7 @@ import Skeleton from '@mui/material/Skeleton';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { DrawerAppBar } from '../component/DrawerAppBar';
-import { CssBaseline } from '@mui/material';
+import { CssBaseline, Stack } from '@mui/material';
 import { DashboardCard } from '../component/DashboardCard/DashboardCard';
 import { Suspense } from 'react';
 import Grid2 from '@mui/material/Unstable_Grid2/Grid2';
@@ -37,15 +37,23 @@ useEffect(() =>{
 
 <div className="flex flex-col justify-evenly" style={{width:'100%'}}>
              <h2 className ='font-nunito font-bold'>Dashboard</h2>
-             <Grid2 container spacing={2}>
-                <Grid2 xs={3}>
-                  <DashboardCard image ={"https://uploads.codesandbox.io/uploads/user/b3e56831-8b98-4fee-b941-0e27f39883ab/9qWx-1.png"} title ={'EMPLOYEE ACCOUNT(S)'} content ={'5'} />
-                </Grid2>
-                <Grid2 xs={3}>
-                  <DashboardCard image ={"https://uploads.codesandbox.io/uploads/user/b3e56831-8b98-4fee-b941-0e27f39883ab/9qWx-1.png"} title ={'STUDENT ACCOUNT(S)'} content ={'5'} />
-                </Grid2>
-             </Grid2>
+               <Stack direction={{ xs: 'column', sm: 'row' }}
+  spacing={{ xs: 1, sm: 2, md: 4 }}>
+  
+                  <DashboardCard  title ={'EMPLOYEE'} content ={'5'} />
+
+                  <DashboardCard  title ={'PROFESSOR'} content ={'5'} />
              
+                  <DashboardCard  title ={'STUDENT'} content ={'5'} />
+
+                  <DashboardCard  title ={'FACULTY'} content ={'5'} />
+
+                  <DashboardCard  title ={'COURSE'} content ={'5'} />
+
+                  <DashboardCard  title ={'SUBJECT'} content ={'5'} />
+
+                  <DashboardCard  title ={'SECTION'} content ={'5'} />
+              </Stack>
 </div> 
       </Box>) :  (<Skeleton
         sx={{ bgcolor: 'grey.900' }}

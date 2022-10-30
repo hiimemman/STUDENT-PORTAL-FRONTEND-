@@ -1,53 +1,33 @@
-import React, { useState } from 'react'
-import ReactDOM from 'react-dom'
-import { useSpring, useSprings, animated, interpolate } from 'react-spring'
+import * as React from 'react';
 import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
+import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import { CardActionArea } from '@mui/material';
-import './DashboardCard.css'
+import { Stack, Box, CardActionArea } from '@mui/material';
 
-function Stack({ image, background, open,title }) {
-    
-    const { f, r } = useSpring({ f: open ? 0 : 1, r: open ? -3 : 3 })
-    const cards = useSprings(5, [0, 1, 2, 3, 4].map(i => ({ opacity: 0.2 + i / 5, z: open ? (i / 5) * 80 : 0 })))
-    return (
-      <div class="container" >
-         <p style ={{zIndex:1,}}className= "font-bold text- text-slate-100  hover:text-sky-400 absolute top-0 left-2" >
-          {title}
-        </p>
-        {cards.map(({ z, opacity }, index) => (
-          <animated.div
-            style={{
-              zIndex:0,
-              opacity,
-              background,
-              transform: interpolate(
-                [z, f.interpolate([0, 0.2, 0.6, 1], [0, index, index, 0]), r],
-                (z, f, r) => `translate3d(0,0,${z}px) rotateX(${f * r}deg)`
-              )
-            }}>
-            {index === 4 && <animated.img style={{ transform: f.interpolate([0, 1], ['scale(0.7)', 'scale(1)']) }} src={image} />}
-          </animated.div>
-        ))}
-      </div>
-    )
-  }
 export function DashboardCard(props){
-  const [open, setOpen] = useState(false)
     return(
         <>
-    <Card sx={{ maxWidth: 345, width: 270 }} onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)}>
+    <Card sx={{ maxWidth: 345 }}>
       <CardActionArea>
-      <Stack image= {props.image} background="#52649e" open ={open} title ={props.title} />
-      <CardContent style ={{height:'70px', marginTop: '-30px'}} >
-          
-          <Typography variant="body2" color="text.secondary">
-           {props.content}
-          </Typography>
-        </CardContent>
-      </CardActionArea>
+    <Stack direction={{ xs: 'column', sm: 'row' }}
+  spacing={{ xs: 1, sm: 2, md: 4 }}>
+    <div className ='h-full w-1.5  bg-cyan-800  absolute  left-0' ></div>
+    <Box>
+      <CardContent >
+        <Typography gutterBottom variant="h5" component="div">
+          {props.title}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          Lizards are a widespread group of squamate reptiles, with over 6,000
+          species, ranging across all continents except Antarctica
+        </Typography>
+      </CardContent>
+   </Box>
+    </Stack>
+    </CardActionArea>
     </Card>
         </>
     )

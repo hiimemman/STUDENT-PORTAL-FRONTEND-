@@ -358,7 +358,7 @@ const handleChangeTab = (event, newValue) =>{
             <TabList onChange = {handleChangeTab} aria-label="lab API tabs example" className='mt-2 ml-2'>
                 <Tab label="OVERVIEW" value = {1} />
                 <Tab label="SCHEDULES" value= {2} />
-                <Tab label="HISTORY" value= {3} />
+                
              </TabList>
             
          
