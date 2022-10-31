@@ -1,4 +1,3 @@
-import * as React from 'react';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
@@ -10,20 +9,22 @@ import { Stack, Box, CardActionArea } from '@mui/material';
 export function DashboardCard(props){
     return(
         <>
-    <Card sx={{ maxWidth: 345 }}>
+    <Card sx={{ width: 230,maxWidth: 290 }}>
       <CardActionArea>
     <Stack direction={{ xs: 'column', sm: 'row' }}
   spacing={{ xs: 1, sm: 2, md: 4 }}>
     <div className ='h-full w-1.5  bg-cyan-800  absolute  left-0' ></div>
     <Box>
       <CardContent >
-        <Typography gutterBottom variant="h5" component="div">
+        <Typography gutterBottom variant="h6" component="div" color ="text.secondary">
           {props.title}
         </Typography>
-        <Typography variant="body2" color="text.secondary">
-          Lizards are a widespread group of squamate reptiles, with over 6,000
-          species, ranging across all continents except Antarctica
+        <Stack direction = "row" spacing ={2} style = {{paddingTop: '.5rem'}} >
+          {props.icon}
+        <Typography variant="h4" color="text.primary">
+         {props.content}
         </Typography>
+        </Stack>
       </CardContent>
    </Box>
     </Stack>

@@ -17,6 +17,7 @@ import { SubjectView } from '../viewprofile/SubjectView';
 import { ProfessorTable } from '../data-table/ProfessorTable';
 import { imageBaseUrl } from '../base-url/based-url';
 import { ProfessorView } from '../viewprofile/ProfessorView';
+import { ProfessorHistory } from '../viewhistory/ProfessorHistory';
 
 export  function Professor() {
 //Selected Professor
@@ -131,7 +132,7 @@ const handleClose = (event, reason) => {
           </TabPanel>
             <TabPanel value="2" sx ={{marginLeft:'-24px'}}>
             <Paper elevation={1} sx ={{width:'500 '}} className ="rounded-xl">
-              <SubjectHistory />
+              <ProfessorHistory />
             </Paper>
             </TabPanel>
             <TabPanel value="3" sx ={{marginLeft:'-24px'}}>
