@@ -98,7 +98,7 @@ console.log(value)
                 {console.log(section)}
                 {section !== null ? (<Tab value="3" label={
                 <Stack direction="row" spacing={2}>
-                <Typography>{section.section_name}</Typography>
+                <Typography>{section.section_name+" - A.Y ("+section.year_start+"-"+section.year_end+")"}</Typography>
                 </Stack>
                 } />) : (<></>)}
              </TabList>

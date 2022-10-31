@@ -77,13 +77,15 @@ function CustomToolbar() {
   
  
 
-export function ProfessorHistory(){
+export function SectionScheduleHistory(){
   //Current User Session
 const user = useSelector(state => JSON.parse(state.user.session));
     const [rows, setRow] = useState({});
     const [loading, isLoading] = useState(false);
     const [anchorEl, setAnchorEl] = useState(null);
 
+        //Selected Section
+const section = useSelector(state => state.sectionSelected.value);
 
     const [openDragger, setOpenDragger] = useState(false);
 
@@ -146,21 +148,32 @@ const [actionFileSave, setActionFileSave] = useState('');
     setOpenDialog(false);
   };
 
-    useEffect(() =>{
-    const getData = async () =>{
-      isLoading(true)
-        const sendRequest = await fetch(basedUrl+"/professor-history.php");
-        const getResponse = await sendRequest.json();
-        if(getResponse === 201){
-          isLoading(false)
-        }else{
-          isLoading(false)
-           setRow(getResponse);
-        }
-    }
-    getData();
-    }, [setRow,submitRestore]);
+  const getData = async () =>{
+    isLoading(true)
+    const data = new FormData();
+    data.append('CurrentID', section.id);
+  
+    //online api
+       const sendRequest = await fetch(basedUrl+"/section-schedule-history.php",{
+          method: "POST",
+          body: data,
+      });
+      const getResponse = await sendRequest.json();
+      console.log(getResponse)
+      if(getResponse === 201){
+        isLoading(false)
+      }else{
+        isLoading(false)
+         setRow(getResponse);
+      }
+  }
 
+    useEffect(() =>{
+      getData();
+      return () =>{
+        //exit memory
+      }
+    }, [submitRestore])
  
     useEffect(() =>{
 

@@ -21,6 +21,7 @@ import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import Tab from '@mui/material/Tab';
 import { SectionScheduleTable } from '../data-table/SectionScheduleTable';
+import { SectionScheduleHistory } from '../viewhistory/SectionScheduleHistory';
 
 
 //Course select required functions
@@ -370,6 +371,9 @@ const handleChangeTab = (event, newValue) =>{
              
              <TabPanel value  = {2} sx ={{p:0, marginTop:'1.5rem'}}>
                <SchedulePanel />
+             </TabPanel>
+             <TabPanel value  = {3} sx ={{p:0, marginTop:'1.5rem'}}>
+               <SectionScheduleHistory />
              </TabPanel>
       </TabContext>        
       <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>

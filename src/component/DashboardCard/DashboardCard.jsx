@@ -5,20 +5,23 @@ import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { Stack, Box, CardActionArea } from '@mui/material';
-
+import Divider from '@mui/material/Divider';
 export function DashboardCard(props){
     return(
         <>
-    <Card sx={{ width: 230,maxWidth: 290 }}>
+    <Card sx={{ width: 225,maxWidth: 290 }}>
       <CardActionArea>
     <Stack direction={{ xs: 'column', sm: 'row' }}
-  spacing={{ xs: 1, sm: 2, md: 4 }}>
+  spacing={{ xs: 1, sm: 2, md: 1 }}>
     <div className ='h-full w-1.5  bg-cyan-800  absolute  left-0' ></div>
     <Box>
       <CardContent >
+        <Stack direction ="row" spacing = {1} divider={<Divider orientation="vertical" flexItem />}>
         <Typography gutterBottom variant="h6" component="div" color ="text.secondary">
           {props.title}
         </Typography>
+        <Typography variant ="h6" className='text-slate-400'>Active</Typography>
+        </Stack>
         <Stack direction = "row" spacing ={2} style = {{paddingTop: '.5rem'}} >
           {props.icon}
         <Typography variant="h4" color="text.primary">

@@ -129,7 +129,7 @@ const getSectionName =  async () => {
     console.log(getResponse.statusCode);
     if(getResponse.statusCode !== 200){
       setSectionName((prev) => prev = selectedCourse+" "+selectedYear.charAt(0)+"-"+(parseFloat(getResponse.statusCode)+1));
-    console.log("Natapos dito")
+ 
     }
   }catch(e){
     console.log(e);
@@ -185,7 +185,7 @@ const handleSubmitForm = async (event) =>{
   
             const getResponse = await sendRequest.json();
            console.log(getResponse.statusCode)
-            if(getResponse.statusCode == '200'){
+            if(getResponse.statusCode !== '200'){
               setSnackbar({ children: 'Update successfully', severity: 'success' });
               dispatch(CLOSESECTIONFORM())
             }else{
@@ -193,6 +193,7 @@ const handleSubmitForm = async (event) =>{
               dispatch(CLOSESECTIONFORM())
             }
     }catch(e){
+      console.log(e)
       setSnackbar({ children: "Field can't be empty", severity: 'error' });
       dispatch(CLOSESECTIONFORM())
     }
