@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import Avatar from "@mui/material/Avatar";
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
-import { Alert, Chip, Dialog, DialogActions, DialogContent, DialogTitle, Snackbar, MenuItem } from '@mui/material';
+import { Alert, Chip, Dialog, DialogActions, DialogContent, DialogTitle, Snackbar, MenuItem, Stack } from '@mui/material';
 import { useEffect, useState, useCallback, useRef } from 'react';
 import Button from '@mui/material/Button';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
@@ -13,6 +13,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { basedUrl } from '../base-url/based-url'
 import { ADDFORMCOURSE } from '../slice/AddFormSlice/AddCourseSlice/AddCourseSlice';
 import { AddCourse } from '../forms/AddCourse';
+import { NoRowBackground } from '../component/NoRowBackground';
 
 
 
@@ -353,7 +354,12 @@ const renderEditStatus = (params) => {
     {console.log('Here'+ activeFaculty)}
     {activeFaculty !== null ? (<AddCourse open = {formOpenType === 'course' } faculties ={activeFaculty} />) : (<></>)}
      {renderConfirmDialog()}
-    <DataGrid components={{ Toolbar: CustomToolbar, LoadingOverlay: LinearProgress, }} loading = {loading} rows = {rows} columns={columns}  experimentalFeatures={{ newEditingApi: true }} style ={{height:'500px'}}
+    <DataGrid components={{ Toolbar: CustomToolbar, LoadingOverlay: LinearProgress,NoRowsOverlay: () => (
+      <Stack height="100%" alignItems="center" justifyContent="center">
+        <NoRowBackground  />
+      
+      </Stack>
+    ), }} loading = {loading} rows = {rows} columns={columns}  experimentalFeatures={{ newEditingApi: true }} style ={{height:'500px'}}
      processRowUpdate={processRowUpdate}
     /> 
  {!!snackbar && (

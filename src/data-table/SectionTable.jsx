@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import Avatar from "@mui/material/Avatar";
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
-import { Alert, Chip, Dialog, DialogActions, DialogContent, DialogTitle, InputLabel, MenuItem, OutlinedInput, Snackbar } from '@mui/material';
+import { Alert, Chip, Dialog, DialogActions, DialogContent, DialogTitle, InputLabel, MenuItem, OutlinedInput, Snackbar, Stack } from '@mui/material';
 import { useEffect, useState, useCallback, useRef } from 'react';
 import Button from '@mui/material/Button';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
@@ -15,6 +15,7 @@ import { basedUrl } from '../base-url/based-url'
 import {ADDSECTION} from '../slice/AddFormSlice/AddSectionSlice/AddSectionSlice'
 import { PUT_SECTION } from '../slice/FormSelectedRow/SectionSelected';
 import { AddSection } from '../forms/AddSection';
+import { NoRowBackground } from '../component/NoRowBackground';
 
 
 const ITEM_HEIGHT = 48;
@@ -362,7 +363,11 @@ const renderEditStatus = (params) => {
   return(
     <>
      {renderConfirmDialog()}
-    <DataGrid components={{ Toolbar: CustomToolbarSection, LoadingOverlay: LinearProgress, }} loading = {loading} rows = {rows} columns={columns}  experimentalFeatures={{ newEditingApi: true }} style ={{height:'500px'}}
+    <DataGrid components={{ Toolbar: CustomToolbarSection, LoadingOverlay: LinearProgress,NoRowsOverlay: () => (
+      <Stack height="100%" alignItems="center" justifyContent="center">
+        <NoRowBackground  />
+      </Stack>
+    ), }} loading = {loading} rows = {rows} columns={columns}  experimentalFeatures={{ newEditingApi: true }} style ={{height:'500px'}}
      processRowUpdate={processRowUpdate}
      onSelectionModelChange={(ids) => {
       const selectedIDs = new Set(ids);

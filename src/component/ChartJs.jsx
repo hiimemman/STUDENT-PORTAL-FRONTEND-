@@ -41,7 +41,7 @@ export function ChartJs(props){
         labels: ['Employee', 'Professor', 'Student', 'Faculty', 'Course', 'Subject', 'Section'],
         datasets:[
             {
-                label: 'Population',
+                label: 'Active',
                 data: props.data,
                 backgroundColor:[
                     'rgba(255, 99, 132, 0.5)',

@@ -282,7 +282,11 @@ const renderEditStatus = (params) => {
   return(
     <>
      {renderConfirmDialog()}
-    <DataGrid components={{ Toolbar: CustomToolbar, LoadingOverlay: LinearProgress, }} loading = {loading} rows = {rows} columns={columns}  experimentalFeatures={{ newEditingApi: true }} style ={{height:'500px'}}
+    <DataGrid components={{ Toolbar: CustomToolbar, LoadingOverlay: LinearProgress,NoRowsOverlay: () => (
+      <Stack height="100%" alignItems="center" justifyContent="center">
+        <NoRowBackground  />
+      </Stack>
+    ), }} loading = {loading} rows = {rows} columns={columns}  experimentalFeatures={{ newEditingApi: true }} style ={{height:'500px'}}
      processRowUpdate={processRowUpdate}
     /> 
  {!!snackbar && (

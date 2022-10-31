@@ -18,6 +18,7 @@ import { Box } from '@mui/system';
 import { Suspense } from 'react';
 import { PUT_SECTION } from '../slice/FormSelectedRow/SectionSelected';
 import { AddSection } from '../forms/AddSection';
+import { NoRowBackground } from '../component/NoRowBackground';
 
 
 const ITEM_HEIGHT = 48;
@@ -508,7 +509,7 @@ const renderEditStatus = (params) => {
      {renderConfirmDialog()}
     <DataGrid components={{ Toolbar: CustomToolbarSection, LoadingOverlay: LinearProgress,NoRowsOverlay: () => (
       <Stack height="100%" alignItems="center" justifyContent="center">
-        No rows in DataGrid
+        <NoRowBackground  />
       </Stack>
     ), }} loading = {loading} rows = {rows} columns={columns}  experimentalFeatures={{ newEditingApi: true }} style ={{height:'500px'}}
      processRowUpdate={processRowUpdate}
