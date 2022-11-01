@@ -14,10 +14,10 @@ import { basedUrl } from '../base-url/based-url'
 import { AddSubject } from '../forms/AddSubject';
 import { ADDSUBJECT } from '../slice/AddFormSlice/AddSubjectSlice/AddSubjectSlice';
 import { useTheme } from '@mui/material/styles';
-import { Box } from '@mui/system';
+import { Stack } from '@mui/material';
 import { Suspense } from 'react';
 import { PUT_SUBJECT } from '../slice/FormSelectedRow/SubjectSelected';
-
+import { NoRowBackground } from '../component/NoRowBackground';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -470,7 +470,7 @@ const renderEditStatus = (params) => {
   return(
     <>
      {renderConfirmDialog()}
-    <DataGrid components={{ Toolbar: CustomToolbarSubject, LoadingOverlay: LinearProgress,NoRowsOverlay: () => (
+    <DataGrid components={{ Toolbar: CustomToolbarSubject, LoadingOverlay: LinearProgress,NoResultsOverlay: () => (
       <Stack height="100%" alignItems="center" justifyContent="center">
         <NoRowBackground  />
       </Stack>

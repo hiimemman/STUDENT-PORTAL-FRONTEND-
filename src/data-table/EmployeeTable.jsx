@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import Avatar from "@mui/material/Avatar";
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
-import { Alert, Chip, Dialog, DialogActions, DialogContent, DialogTitle, Snackbar,MenuItem } from '@mui/material';
+import { Alert, Chip, Dialog, DialogActions, DialogContent, DialogTitle, Snackbar,MenuItem, Stack } from '@mui/material';
 import Button from '@mui/material/Button';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { AddEmployee } from '../forms/AddEmployee';
@@ -15,6 +15,7 @@ import {PUT_EMPLOYEE} from '../slice/FormSelectedRow/EmployeeSelected'
 import { basedUrl } from '../base-url/based-url'
 import { useEffect, useState, useCallback, useRef } from 'react';
 import { imageBaseUrl } from '../base-url/based-url';
+import { NoRowBackground } from '../component/NoRowBackground';
 //Toolbar
 function CustomToolbar() {
 
@@ -393,7 +394,7 @@ function EditPosition(props) {
   return(
     <>
     {renderConfirmDialog()}
-    <DataGrid components={{ Toolbar: CustomToolbar, LoadingOverlay: LinearProgress,NoRowsOverlay: () => (
+    <DataGrid components={{ Toolbar: CustomToolbar, LoadingOverlay: LinearProgress, NoResultsOverlay: () => (
       <Stack height="100%" alignItems="center" justifyContent="center">
         <NoRowBackground  />
       </Stack>

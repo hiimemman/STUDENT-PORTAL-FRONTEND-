@@ -226,16 +226,26 @@ return(
           px: 2.5,
         }}
       >
-        
-        <ListItemIcon
+
+        {currentPage === 'student' ?  <ListItemIcon
           sx={{
             minWidth: 0,
             mr: isOpen ? 3 : 'auto',
             justifyContent: 'center',
+            
           }}
-        >
-        <SchoolIcon />
-        </ListItemIcon>
+         style = {{color: selectTheme}}
+        > <SchoolIcon />
+        </ListItemIcon> :  
+      <ListItemIcon
+        sx={{
+          minWidth: 0,
+          mr: isOpen ? 3 : 'auto',
+          justifyContent: 'center',
+          
+        }}
+      ><SchoolIcon />
+      </ListItemIcon>}
         { isOpen ?  <Typography className ='font-nunito text-lg' >Student(s)</Typography> : <p></p> }  
       </ListItemButton>
       </Stack>

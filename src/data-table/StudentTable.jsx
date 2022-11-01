@@ -5,21 +5,17 @@ import PropTypes from 'prop-types';
 import Avatar from "@mui/material/Avatar";
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
-import { Alert, Chip, Dialog, DialogActions, DialogContent, DialogTitle, InputLabel, MenuItem, OutlinedInput, Snackbar, Stack, FormControl } from '@mui/material';
+import { Alert, Chip, Dialog, DialogActions, DialogContent, DialogTitle, InputLabel, MenuItem, OutlinedInput, Snackbar } from '@mui/material';
 import { useEffect, useState, useCallback, useRef } from 'react';
 import Button from '@mui/material/Button';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { useSelector, useDispatch } from 'react-redux';
 import { basedUrl } from '../base-url/based-url'
-
-import {ADDSECTION} from '../slice/AddFormSlice/AddSectionSlice/AddSectionSlice'
-import { useTheme } from '@mui/material/styles';
-import { Box } from '@mui/system';
-import { Suspense } from 'react';
-import { PUT_SECTION } from '../slice/FormSelectedRow/SectionSelected';
-import { AddSection } from '../forms/AddSection';
-import { NoRowBackground } from '../component/NoRowBackground';
-
+import { AddSubject } from '../forms/AddSubject';
+import {ADDFORMPROFESSOR} from '../slice/AddFormSlice/AddProfessorSlice/AddProfessorSlice';
+import { PUT_STUDENT } from '../slice/FormSelectedRow/StudentSelected';
+import { imageBaseUrl } from '../base-url/based-url';
+import { AddProfessor } from '../forms/AddProfessor';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -32,26 +28,7 @@ const MenuProps = {
   },
 };
 
-const names = [
-  'Monday',
-  'Tuesday',
-  'Wednesday',
-  'Thursday',
-  'Friday',
-  'Saturday',
-  'Sunday',
-];
 
-
-
-function getStyles(name, personName, theme) {
-  return {
-    fontWeight:
-      personName.indexOf(name) === -1
-        ? theme.typography.fontWeightRegular
-        : theme.typography.fontWeightMedium,
-  };
-}
 
 
 const useFakeMutation = () => {
@@ -71,29 +48,22 @@ const useFakeMutation = () => {
 };
 
 function computeMutation(newRow, oldRow) {
-  if (newRow.professor_initial !== oldRow.professor_initial) {
-    console.log("Pumasok dto")
-    return `Professor from '${oldRow.professor_initial}' to '${newRow.professor_initial}'`;
-  }
   if (newRow.status !== oldRow.status) {
+   
     return `Status from '${oldRow.status}' to '${newRow.status}'`;
   }
-  if (newRow.schedule_day !== oldRow.schedule_day) {
-    return `Schedule in day(s) from '${oldRow.schedule_day}' to '${newRow.schedule_day}'`;
-  }
-  if (newRow.schedule_time !== oldRow.schedule_time) {
-    return `Schedule in day(s) from '${oldRow.schedule_time}' to '${newRow.schedule_time}'`;
+
+  if (newRow.contact !== oldRow.contact) {
+   
+    return `Contact from '${oldRow.contact}' to '${newRow.contact}'`;
   }
   return null;
 }
 
-export function SectionScheduleTable() {  
+export function StudentTable() {  
     //dispatch from redux
     const dispatch = useDispatch();
-        //Selected Section
-    const section = useSelector(state => state.sectionSelected.value);
     const [rows, setRows] = useState([]);
-    const [professors, setProfessors] = useState([]);
     const [loading, isLoading] = useState(false);
 
     const mutateRow = useFakeMutation();
@@ -107,183 +77,92 @@ export function SectionScheduleTable() {
   const handleCloseSnackbar = () => setSnackbar(null);
 
     //Open add form
-const  formOpenType = useSelector(state => state.addFormSection.value);
+const  formOpenType = useSelector(state => state.addFormProfessor.value);
 
 //Current User Session
 const user = useSelector(state => JSON.parse(state.user.session));
 
+const [faculty, setCourses] = useState(null);
 
+const [updatedCourse, setUpdateCourse] = useState('');
 
-const getAllData = async () =>{
-  isLoading(true)
-  try{ 
-    const data = new FormData();
-    data.append('SectionName', section.section_name);
-    data.append('AcademicYear', section.academic_year);
-
-    //online api
-       const sendRequest = await fetch(basedUrl+"/section-schedule-table.php",{
-          method: "POST",
-          body: data,
-      });
-      const getResponse = await sendRequest.json();
-      isLoading(false)
-      if(getResponse.statusCode === 201){
-      
-      }else{
-        //if succesfully retrieve data
+  // Get all student api
+  const getAllData = async () =>{
+    isLoading(true)
+    try{ 
+    
+      //online api
+        const sendRequest = await fetch(basedUrl+"/student-table.php");
+        const getResponse = await sendRequest.json();
         isLoading(false)
-        console.log(getResponse)
-        setRows(getResponse);
-      }
-  }catch(e){
-    console.error(e)
+        if(getResponse.statusCode === 201){
+        
+        }else{
+          //if succesfully retrieve data
+          isLoading(false)
+          setRows((prev) => prev = getResponse);
+        }
+    }catch(e){
+      console.error(e)
+    }
+    try{ 
+      //online api
+        const sendRequest = await fetch(basedUrl+"/course-table.php");
+        const getResponse = await sendRequest.json();
+   
+        if(getResponse.statusCode === 201){
+        
+        }else{
+          //if succesfully retrieve data'
+           setCourses(getResponse);
+           
+        }
+    }catch(e){
+      console.error(e)
+    }
   }
-}
-
-
-const getAllProfessors = async () =>{
-  isLoading(true)
-  try{ 
-  
-    //online api
-       const sendRequest = await fetch(basedUrl+"/professor-active.php");
-      const getResponse = await sendRequest.json();
-      isLoading(false)
-      if(getResponse.statusCode === 201){
-      
-      }else{
-        //if succesfully retrieve data
-        isLoading(false)
-        setProfessors(getResponse);
-      }
-  }catch(e){
-    console.error(e)
-  }
-}
-
-  // Get all users api
   useEffect( () => {
+  
     getAllData();
+
     return () =>{
-      //exit in memory;
+        //exit in memory
     }
   }, [formOpenType]);
  
-  //Get all professors api
-
-  useEffect(() => {
-    getAllProfessors();
-
-    return () =>{
-      //exit in memory
-    }
-  },[formOpenType]);
 
 
-  //Edit day via cell
-function EditDay(props) {
-  const theme = useTheme();
-  const [personName, setPersonName] = useState([]);
-
+   //Edit semester via cell
+function EditSemester(props) {
   const { id, value, field } = props;
   const apiRef = useGridApiContext();
   
-  const updateCellDay = async() =>{
-    await apiRef.current.setEditCellValue({ id, field, value: personName });
-      apiRef.current.stopCellEditMode({ id, field });
-}
-const handleChangeDay = (event) => {
-  const {
-    target: { value },
-  } = event;
-  setPersonName(
-    // On autofill we get a stringified value.
-    typeof value === 'string' ? value.split('/'): value,
-  );
-  
-};
-
-
-
-  return (
-    <>
-        <Select
-        fullWidth
-          labelId="demo-multiple-name-label"
-          id="demo-multiple-name"
-          multiple
-          value={personName}
-          onChange={handleChangeDay}
-          input={<OutlinedInput label="Name" />}
-          MenuProps={MenuProps}
-          onBlur = {updateCellDay}
-        >
-          {names.map((name) => (
-            <MenuItem
-              key={name}
-              value={name.substring(0,3)}
-              style={getStyles(name, personName, theme)}
-            >
-              {name.substring(0,3)}
-            </MenuItem>
-          ))}
-        </Select>
-    </>
-  );
-}
-
-EditDay.propTypes = {
-  /**
-   * The column field of the cell that triggered the event.
-   */
-  field: PropTypes.string.isRequired,
-  /**
-   * The grid row id.
-   */
-  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-  /**
-   * The cell value.
-   * If the column has `valueGetter`, use `params.row` to directly access the fields.
-   */
-  value: PropTypes.any,
-};
-
-const renderEditDay = (params) => {
-  return <EditDay {...params} />;
-};
-//End of edit day via cell 
-
-
- //Edit year via cell
-function EditProfessor(props) {
-
-  const { id, value, field } = props;
-  const apiRef = useGridApiContext();
-  
-  const handleChangeProfessor = async(event) =>{
+  const handleChange = async(event) =>{
     
     await apiRef.current.setEditCellValue({ id, field, value: event.target.value });
       apiRef.current.stopCellEditMode({ id, field });
-    console.log(value)
+  
 }
 
   return (
     <>
-    <Select
-     value={value}
+      <Select
+      value={value}
+      onChange={handleChange}
+      size="small"
       sx={{ height: 1 , width: 260}}
+      native
       autoFocus
-      onChange={handleChangeProfessor}
     >
-      {console.log(professors)}
-      {professors.map((activeProfessors) => (<MenuItem value = {activeProfessors.professor_username} >{activeProfessors.firstname+" "+activeProfessors.middlename+" "+activeProfessors.lastname}</MenuItem>))}
-    </Select>
+      <option>1st semester</option>
+      <option>2nd semester</option>
+      </Select>
     </>
+  
   );
 }
 
-EditProfessor.propTypes = {
+EditSemester.propTypes = {
   /**
    * The column field of the cell that triggered the event.
    */
@@ -299,10 +178,67 @@ EditProfessor.propTypes = {
   value: PropTypes.any,
 };
 
-const renderEditProfessor = (params) => {
-  return <EditProfessor {...params} />;
+const renderEditSemester = (params) => {
+  return <EditSemester {...params} />;
 };
-//End of edit professor via cell 
+//End of edit semester via cell 
+
+ 
+ //Edit year via cell
+function EditYear(props) {
+  const { id, value, field } = props;
+  const apiRef = useGridApiContext();
+  
+  const handleChange = async(event) =>{
+    
+    await apiRef.current.setEditCellValue({ id, field, value: event.target.value });
+      apiRef.current.stopCellEditMode({ id, field });
+  
+}
+
+  return (
+    <>
+      <Select
+      value={value}
+      onChange={handleChange}
+      size="small"
+      sx={{ height: 1 , width: 260}}
+      native
+      autoFocus
+    >
+      <option>1st year</option>
+      <option>2nd year</option>
+      <option>3rd year</option>
+      <option>4th year</option>
+      <option>5th year</option>
+      <option>6th year</option>
+
+    </Select>
+    </>
+  
+  );
+}
+
+EditYear.propTypes = {
+  /**
+   * The column field of the cell that triggered the event.
+   */
+  field: PropTypes.string.isRequired,
+  /**
+   * The grid row id.
+   */
+  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  /**
+   * The cell value.
+   * If the column has `valueGetter`, use `params.row` to directly access the fields.
+   */
+  value: PropTypes.any,
+};
+
+const renderEditYear = (params) => {
+  return <EditYear {...params} />;
+};
+//End of edit year via cell 
 
 
 
@@ -321,13 +257,15 @@ function EditStatus(props) {
 
   return (
     <>
-      <Select
+     <Select
       value={value}
       onChange={handleChange}
+
       sx={{ height: 1 , width: 260}}
+
       autoFocus
     >
-    
+      
       <MenuItem value ={'active'}><CheckIcon/>active</MenuItem>
       <MenuItem value = {'inactive'}><CloseIcon />inactive</MenuItem>
     </Select>
@@ -361,47 +299,55 @@ const renderEditStatus = (params) => {
  
   const columns = [
     {
-      field: 'subject_name',
-      headerName: 'Subject',
-      width: 150,
-     editable: false,
+        field: 'profile_url',
+        headerName: 'Avatar',
+        width: 100,
+        renderCell: (params) => {
+          return (
+            <>
+              <Avatar src={imageBaseUrl+params.value} />
+            </>
+          );
+        }
+      },
+      {
+        field: 'fullName',
+        headerName: 'Full name',
+        description: 'This column has a value getter and is not sortable.',
+        sortable: true,
+        width: 240,
+        valueGetter: (params) =>
+          `${params.row.firstname || ''} ${params.row.middlename || ''} ${params.row.lastname || ''}`,
+      },
+      {
+        field: 'email',
+        headerName: 'Email',
+        width: 259,
+        editable: false,
+     },
+    {
+            field: 'studentnumber',
+            headerName: 'Student Id',
+            width: 260,
+            editable: false,
     },
     {
-        field: 'description',
-        headerName: 'Description',
-        width: 200,
-       editable: false,
-    },
-      {
-        field: 'schedule_day',
-        headerName: 'Schedule Day',
-        renderEditCell: renderEditDay,
-        width: 200,
+        field: 'contact',
+        headerName: 'Contact',
+        width: 260,
         editable: true,
-      },
-      {
-        field: 'schedule_time',
-        headerName: 'Time',
-        width: 430,
-        editable: true,
-      },
-      {
-        field: 'professor_initial',
-        headerName: 'Professor',
-        renderEditCell: renderEditProfessor,
-        width: 150,
-        editable: true,
-      },
+},
       {
         field: 'status',
         headerName: 'Status',
         renderEditCell: renderEditStatus,
-        width: 100,
+        width: 121,
         editable: true,
         renderCell: (cellValues) => {
           return(
           <>
-        {cellValues.value == "active" ? (<Chip icon={<CheckIcon/>} label=" active  " color ="success" size = "small" variant = "outlined"/>) : (<Chip icon={<CloseIcon/>} label=" inactive" color ="error" size = "small" variant = "outlined"/>)}
+        {cellValues.value == "active" ? (<Chip icon={<CheckIcon/>} label="active  " color ="success" size = "small" variant = "outlined"/>) : (<Chip icon={<CloseIcon/>} label="inactive" color ="error" size = "small" variant = "outlined"/>)}
+
           </>
           );//end of return
         }
@@ -432,20 +378,31 @@ const renderEditStatus = (params) => {
   const handleYes = async () => {
     const { newRow, oldRow, reject, resolve } = promiseArguments;
 
+console.log("Pumasok dto")
     try {
       // Make the HTTP request to save in the backend
       const dataUpdate = new FormData();
-      dataUpdate.append('ID', newRow['id']);
-      dataUpdate.append('ProfessorUsername', newRow['professor_initial']);
-      dataUpdate.append('Time', newRow['schedule_time']);
-      dataUpdate.append('Day', newRow['schedule_day']);
+      dataUpdate.append('StudentNumber', newRow['studentnumber']);
+      dataUpdate.append('FirstnName', newRow['firstname']);
+      dataUpdate.append('MiddleName', newRow['middlename']);
+      dataUpdate.append('LastName', newRow['lastname']);
+      dataUpdate.append('Email', newRow['email']);
+      dataUpdate.append('Address', newRow['address']);
+      dataUpdate.append('Sex', newRow['sex']);
+      dataUpdate.append('Course', newRow['course']);
+      dataUpdate.append('Section', newRow['section']);
+      dataUpdate.append('Birthday', newRow['birthday']);
+      dataUpdate.append('Contact', newRow['contact']);
+      dataUpdate.append('Guardian', newRow['guardian']);
+      dataUpdate.append('GuardianContact', newRow['guardian_contact']);
+      dataUpdate.append('Faculty', newRow['faculty']);
       dataUpdate.append('Status', newRow['status']);
       dataUpdate.append('Action', 'Update');
       dataUpdate.append('EditorPosition', user.position);
       dataUpdate.append('EditorEmail', user.email);
-      dataUpdate.append('Category', 'SectionSchedule');
+      dataUpdate.append('Category', 'Student');
       const response = await mutateRow(newRow);
-      const sendRequest = await fetch(basedUrl+"/section-schedule-update.php",{
+      const sendRequest = await fetch(basedUrl+"/student-update.php",{
         method: "POST",
         body: dataUpdate,
     });
@@ -462,7 +419,7 @@ const renderEditStatus = (params) => {
       setPromiseArguments(null);
     }
     } catch (error) {
-      console.log(error)
+        console.error(error)
       setSnackbar({ children: "Field can't be empty", severity: 'error' });
       reject(oldRow);
       setPromiseArguments(null);
@@ -507,19 +464,15 @@ const renderEditStatus = (params) => {
   return(
     <>
      {renderConfirmDialog()}
-    <DataGrid components={{ Toolbar: CustomToolbarSection, LoadingOverlay: LinearProgress,NoResultsOverlay: () => (
-      <Stack height="100%" alignItems="center" justifyContent="center">
-        <NoRowBackground  />
-      </Stack>
-    ), }} loading = {loading} rows = {rows} columns={columns}  experimentalFeatures={{ newEditingApi: true }} style ={{height:'500px'}}
+    <DataGrid components={{ Toolbar: CustomToolbarProfessor, LoadingOverlay: LinearProgress, }} loading = {loading} rows = {rows} columns={columns}  experimentalFeatures={{ newEditingApi: true }} style ={{height:'500px'}}
      processRowUpdate={processRowUpdate}
-    //  onSelectionModelChange={(ids) => {
-    //   const selectedIDs = new Set(ids);
-    //   const selectedRowData = rows.filter((row) =>
-    //     selectedIDs.has(row.id.toString())
-    //   );
-    //   dispatch(PUT_SECTION(selectedRowData[0]))
-    // }}
+     onSelectionModelChange={(ids) => {
+      const selectedIDs = new Set(ids);
+      const selectedRowData = rows.filter((row) =>
+        selectedIDs.has(row.id.toString())
+      );
+      dispatch(PUT_STUDENT(selectedRowData[0]))
+    }}
     /> 
  {!!snackbar && (
         <Snackbar open onClose={handleCloseSnackbar} autoHideDuration={6000}>
@@ -531,15 +484,67 @@ const renderEditStatus = (params) => {
 }
 
  //Toolbar
- function CustomToolbarSection() {
+ function CustomToolbarProfessor() {
+  //Open add form
+  const  formOpenType = useSelector(state => state.addFormSub.value);
+  //dispatch from redux
+const dispatch = useDispatch();
+const [faculty, setFaculty] = useState({data: []});
+const [updatedFaculty, setUpdatedFaculty] = useState(false);
+//  Get all users api
+ useEffect( () => {
+  console.log('UseEffect called')
+  const getAllData = async () =>{
+     try{ 
+       //online api
+         const sendRequest = await fetch(basedUrl+"/faculty-active.php");
+         const getResponse = await sendRequest.json();
+    
+         if(getResponse.statusCode === 201){
+         
+         }else{
+           //if succesfully retrieve data'
+          //  console.log(getResponse)
+           setFaculty({data: getResponse});
+            
+         }
+     }catch(e){
+       console.error(e)
+     }
+   }
+   getAllData();
+ }, [formOpenType]);
+
+ useEffect(() => {
+  if(faculty.data.length > 0){
+    console.log("Faculty data = "+JSON.stringify(faculty));
+    setUpdatedFaculty(true)
+  }
+
+  return () =>{
+    //exit memory
+  }
+ }, [formOpenType, faculty]);
+
+
+ useEffect(() =>{
+
+
+  return () =>{
+    //exit in memory
+  }
+ },[updatedFaculty])
+
   return (<>
 
     <GridToolbarContainer>
-       <GridToolbarColumnsButton />
+      <Button variant="text"  color ="success" startIcon = {<PersonAddIcon />} onClick = {() => dispatch(ADDFORMPROFESSOR())}> Add</Button>
+      <GridToolbarColumnsButton />
       <GridToolbarFilterButton />
       <GridToolbarDensitySelector />
       <GridToolbarExport />
     </GridToolbarContainer>
-    </>
+    {updatedFaculty === true ? (<AddProfessor open = {formOpenType === 'professor'} faculty = {faculty.data} />) : (<></>)}
+  </>
   );
 }

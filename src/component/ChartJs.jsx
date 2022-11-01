@@ -36,7 +36,7 @@ export function ChartJs(props){
 
       //page current state
       const currentPage = useSelector(state => (state.selectedPage.value));
-
+    console.log(props.data)
     const [data, setData] = useState({
         labels: ['Employee', 'Professor', 'Student', 'Faculty', 'Course', 'Subject', 'Section'],
         datasets:[

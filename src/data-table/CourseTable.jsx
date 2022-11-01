@@ -354,7 +354,7 @@ const renderEditStatus = (params) => {
     {console.log('Here'+ activeFaculty)}
     {activeFaculty !== null ? (<AddCourse open = {formOpenType === 'course' } faculties ={activeFaculty} />) : (<></>)}
      {renderConfirmDialog()}
-    <DataGrid components={{ Toolbar: CustomToolbar, LoadingOverlay: LinearProgress,NoRowsOverlay: () => (
+    <DataGrid components={{ Toolbar: CustomToolbar, LoadingOverlay: LinearProgress,NoResultsOverlay: () => (
       <Stack height="100%" alignItems="center" justifyContent="center">
         <NoRowBackground  />
       

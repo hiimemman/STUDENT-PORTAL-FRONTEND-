@@ -505,7 +505,7 @@ const renderEditStatus = (params) => {
   return(
     <>
      {renderConfirmDialog()}
-    <DataGrid components={{ Toolbar: CustomToolbarSection, LoadingOverlay: LinearProgress,NoRowsOverlay: () => (
+    <DataGrid components={{ Toolbar: CustomToolbarSection, LoadingOverlay: LinearProgress,NoResultsOverlay: () => (
       <Stack height="100%" alignItems="center" justifyContent="center">
         <NoRowBackground  />
       </Stack>

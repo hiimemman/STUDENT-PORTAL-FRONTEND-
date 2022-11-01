@@ -95,9 +95,9 @@ const lightTheme = createTheme({
 
  useEffect(() =>{
  if(selectedTheme === 'lightTheme'){
-   setTheme(lightTheme)
+   setTheme((prev) => prev = lightTheme)
   }else{
- setTheme(darkTheme)
+ setTheme((prev) => prev = darkTheme)
   } 
   return () =>{
 

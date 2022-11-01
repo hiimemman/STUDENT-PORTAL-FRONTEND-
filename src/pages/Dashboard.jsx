@@ -31,28 +31,31 @@ const user = useSelector(state => JSON.parse(state.user.session))
     const currentPage = useSelector(state => (state.selectedPage.value));
 
 //employees
-const [employee, setEmployee] = useState(0);
+const [employee, setEmployee] = useState('');
 
 //professors
-const [professor, setProfessor] = useState(0);
+const [professor, setProfessor] = useState('');
 
 //students
-const [student, setStudent] = useState(0);
+const [student, setStudent] = useState('');
 
 //faculty
-const [faculty, setFaculty] = useState(0);
+const [faculty, setFaculty] = useState('');
 
 //course
-const [course, setCourse] = useState(0);
+const [course, setCourse] = useState('');
 
 //subject
-const [subject, setSubject] = useState(0);
+const [subject, setSubject] = useState('');
 
 //section
-const [section, setSection] = useState(0);
+const [section, setSection] = useState('');
 
 //chart data
 const [myChartData, setMyChartData ] = useState([]);
+
+//update chart
+const [updateChart, setUpdateChart] = useState(false);
 
 useEffect(() =>{
   if(user === null){
@@ -208,11 +211,21 @@ return () =>{
  },[currentPage])
 
  useEffect(() =>{
+
+  console.log(myChartData)
+
   
 return () =>{
   //exit in memory
 }
- },[myChartData])
+ },[myChartData, subject])
+
+ useEffect(() =>{
+  console.log(updateChart)
+  return () =>{
+    //exit in memory
+  }
+ },[updateChart])
 
     return(
       <>
@@ -265,8 +278,8 @@ return () =>{
           </Avatar>} />
               </Stack>
           <Paper  elevation={1} sx ={{m:3,marginLeft:.5, width: '100vh'}} >
-            {console.log(myChartData)}
-             <ChartJs data = {myChartData} />
+          
+           <ChartJs data = {myChartData} />
           </Paper>
 </div> 
       </Box>) :  (<Skeleton

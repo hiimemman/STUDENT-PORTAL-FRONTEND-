@@ -13,15 +13,14 @@ import { useState, Suspense } from 'react';
 import { basedUrl } from '../base-url/based-url';
 import { SubjectHistory } from '../viewhistory/SubjectHistory';
 import { Typography } from '@mui/material';
-import { SubjectView } from '../viewprofile/SubjectView';
-import { ProfessorTable } from '../data-table/ProfessorTable';
+import { StudentTable } from '../data-table/StudentTable';
 import { imageBaseUrl } from '../base-url/based-url';
-import { ProfessorView } from '../viewprofile/ProfessorView';
+import { StudentView } from '../viewprofile/StudentView';
 import { ProfessorHistory } from '../viewhistory/ProfessorHistory';
 
 export  function Student() {
-//Selected Professor
-const professor = useSelector(state => state.professorSelected.value)
+//Selected Student
+const student = useSelector(state => state.studentSelected.value)
 
 //get user
 const user = useSelector(state => JSON.parse(state.user.session));
@@ -41,6 +40,15 @@ const [loginStatus, setStatus] = useState("failed");// default is failed for log
 
 //Message of snackbar
 const [loginMessage, setMessage ] = useState("Try again");// Default message of alert
+
+//page current state
+const currentPage = useSelector(state => (state.selectedPage.value));
+
+//all active course
+const [course, setCourse] = useState([]);
+
+//all active section
+const [section, setSection] = useState([]);
 
 const handleClose = (event, reason) => {
   if (reason === 'clickaway') {
@@ -97,6 +105,78 @@ const handleClose = (event, reason) => {
       //exit in memory
     }
    },[faculty])
+
+   const getAllActiveCourse = async () =>{
+    try{ 
+   
+      //online api
+        const sendRequest = await fetch(basedUrl+"/all-course-active.php");
+        const getResponse = await sendRequest.json();
+    
+        if(getResponse.statusCode === 201){
+        
+        }else{
+          //if succesfully retrieve data
+   
+          setCourse((prev) => prev = getResponse);
+        }
+    }catch(e){
+      console.error(e)
+    }
+  }
+
+  useEffect(() =>{
+getAllActiveCourse();
+    return () =>{
+      //exit in memory
+    }
+  },[currentPage]);
+
+
+  useEffect(() =>{
+
+    console.log(course)
+
+    return () =>{
+        //exit in memory
+    }
+  },[course])
+
+
+  const getAllActiveSection = async () =>{
+    try{ 
+   
+      //online api
+        const sendRequest = await fetch(basedUrl+"/all-section-active.php");
+        const getResponse = await sendRequest.json();
+    
+        if(getResponse.statusCode === 201){
+        
+        }else{
+          //if succesfully retrieve data
+   
+          setSection((prev) => prev = getResponse);
+        }
+    }catch(e){
+      console.error(e)
+    }
+  }
+
+  useEffect(() =>{
+    getAllActiveSection();
+    return() => {
+      //exit in memory
+    }
+  },[currentPage])
+
+  useEffect(() =>{
+
+    //section event listener
+    return () =>{
+      //exit in memory
+    }
+  },[section])
+
   return (
     <>  
     {user !== null ?  (
@@ -117,17 +197,18 @@ const handleClose = (event, reason) => {
             <TabList onChange={handleChange} aria-label="lab API tabs example" >
                 <Tab label="DATA TABLE" value="1" />
                 <Tab label="HISTORY" value="2" />
-                {professor !== null ? (<Tab value="3" label={
+                {student !== null ? (<Tab value="3" label={
                 <Stack direction="row" spacing={2}>
-                 <Avatar src={imageBaseUrl+professor.profile_url} sx={{ width: 30, height: 30  }}/>
-                <Typography>{professor.firstname}</Typography>
+                 <Avatar src={imageBaseUrl+student.profile_url} sx={{ width: 30, height: 30  }}/>
+                <Typography>{student.firstname+" "+student.lastname}</Typography>
                 </Stack>
                 } />) : (<></>)}
              </TabList>
             </Box>
         <TabPanel value="1"  style={{height: 'auto'}} sx ={{marginLeft:'-24px'}}>
         <Paper elevation={1} sx ={{width:'500 '}} className ="rounded-xl">
-          <ProfessorTable />
+          <StudentTable />
+          
           </Paper>
           </TabPanel>
             <TabPanel value="2" sx ={{marginLeft:'-24px'}}>
@@ -136,8 +217,7 @@ const handleClose = (event, reason) => {
             </Paper>
             </TabPanel>
             <TabPanel value="3" sx ={{marginLeft:'-24px'}}>
-              {console.log(faculty)}
-              <ProfessorView faculty ={faculty}/>
+                <StudentView course = {course} section = {section} />
             </TabPanel>
           </TabContext>
        </div>
