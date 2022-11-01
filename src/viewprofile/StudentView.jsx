@@ -20,7 +20,9 @@ import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import Tab from '@mui/material/Tab';
 import { ProfessorScheduleTable } from '../data-table/ProfessorScheduleTable';
-
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from '@mui/x-date-pickers';
 
 //Course select required functions
 const ITEM_HEIGHT = 48;
@@ -89,6 +91,8 @@ const [course, setCourse] = useState(student.course);
 
 const [section, setSection] = useState(student.section);
 
+const [birthday, setBirthday] = useState(student.birthday);
+
 //Error handlers
 
 
@@ -155,8 +159,8 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
     event.preventDefault();
     console.log("Submited here")
       const data = new FormData(event.target);
-      data.append('Username', student.professor_username);
-      data.append('ID', student.id);
+      data.append('StudentNumber', student.studentnumber);
+      data.append('Email', student.email)
       data.append('Status', student.status);
       data.append('Action', 'Update');
       data.append('EditorPosition', user.position);
@@ -228,7 +232,7 @@ const OverviewPanel = () =>{
     <Stack direction="row" spacing={2} sx = {{width:'100%', marginBottom: '1.5rem'}}>
         <Typography variant ="overline" noWrap sx={{fontSize:'15px', width: '15rem'}}>Student id:  </Typography>
       <FormControl >
-         <TextField disabled  defaultValue = {student.studentnumber} name ="StudentNumber" id="StudentNumber" sx={{fontSize:'15px' , width: '50rem'}} variant="standard" inputProps={{ 'aria-label': 'description' }} />
+         <TextField disabled   defaultValue = {student.studentnumber} name ="StudentNumber" id="StudentNumber" sx={{fontSize:'15px' , width: '50rem'}} variant="standard" inputProps={{ 'aria-label': 'description' }} />
       </FormControl>
      </Stack>
 
@@ -321,8 +325,41 @@ const OverviewPanel = () =>{
   </FormControl>
 </Stack>
 
-  </Grid2>
-         
+<Stack direction="row" spacing={2} sx = {{width:'100%', marginBottom: '1.5rem'}}>
+<Typography variant ="overline" noWrap sx={{fontSize:'15px', width: '15rem'}}>Birthday:  </Typography>
+<FormControl sx={{fontSize:'15px' , width: '50rem'}} required>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+           <DatePicker
+            required
+            name = "Birthday"
+            id = "Birthday"
+            value={birthday}
+            onChange = {(event) =>{setBirthday(event); return () => {}} }
+           // onChange={handleChangeYear}
+           renderInput={(params) => <TextField variant ="standard" autoComplete='off' {...params} />}
+            />
+          </LocalizationProvider>
+        </FormControl>
+</Stack>
+<Stack direction="row" spacing={2} sx = {{width:'100%', marginBottom: '1.5rem'}}>
+        <Typography variant ="overline" noWrap sx={{fontSize:'15px', width: '15rem'}}>Contact:  </Typography>
+      <FormControl >
+         <TextField  defaultValue = {student.contact}  type ="number" name ="Contact" id="Contact" sx={{fontSize:'15px' , width: '50rem'}} variant="standard" inputProps={{ 'aria-label': 'description' }} />
+      </FormControl>
+     </Stack>
+</Grid2>
+<Stack direction="row" spacing={2} sx = {{width:'100%', marginBottom: '1.5rem'}}>
+        <Typography variant ="overline" noWrap sx={{fontSize:'15px', width: '15rem'}}>Guardian:  </Typography>
+      <FormControl >
+         <TextField  defaultValue = {student.guardian} name ="Guardian" id="Guardian" sx={{fontSize:'15px' , width: '50rem'}} variant="standard" inputProps={{ 'aria-label': 'description' }} />
+      </FormControl>
+     </Stack>
+     <Stack direction="row" spacing={2} sx = {{width:'100%', marginBottom: '1.5rem'}}>
+        <Typography variant ="overline" noWrap sx={{fontSize:'15px', width: '15rem'}}>Guardian Contact:  </Typography>
+      <FormControl >
+         <TextField  defaultValue = {student.guardian_contact} name ="GuardianContact" id="GuardianContact" sx={{fontSize:'15px' , width: '50rem'}} variant="standard" inputProps={{ 'aria-label': 'description' }} />
+      </FormControl>
+     </Stack>
     <Divider sx={{marginTop: '1.5rem'}} />
     <Container sx ={{m:'1rem',display:'flex', justifyContent:'center'}}>
     {isLoading === true ?( <LoadingButton

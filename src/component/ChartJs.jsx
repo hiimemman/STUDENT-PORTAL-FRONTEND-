@@ -36,13 +36,13 @@ export function ChartJs(props){
 
       //page current state
       const currentPage = useSelector(state => (state.selectedPage.value));
-    console.log(props.data)
+
     const [data, setData] = useState({
         labels: ['Employee', 'Professor', 'Student', 'Faculty', 'Course', 'Subject', 'Section'],
         datasets:[
             {
                 label: 'Active',
-                data: props.data,
+                data: props.dataChart,
                 backgroundColor:[
                     'rgba(255, 99, 132, 0.5)',
                     
@@ -51,27 +51,27 @@ export function ChartJs(props){
         ]
     })
     
-    useEffect(() =>{
-        setData((prev) => prev = {
-            labels: ['Employee', 'Professor', 'Student', 'Faculty', 'Course', 'Subject', 'Section'],
-            datasets:[
-                {
-                    label: 'Population',
-                    data: props.data,
-                    backgroundColor:[
-                        'rgba(255, 99, 132, 0.5)',
-                        
-                    ]
-                }
-            ]
-        })
-        return () =>{
-            //exit in memory
-        }
-    }, [currentPage]);
+    useState(() =>{
+        console.log(props.dataChart)
+        const timer = setTimeout(() => { 
+            setData((prev) =>  prev = {
+                labels: ['Employee', 'Professor', 'Student', 'Faculty', 'Course', 'Subject', 'Section'],
+                datasets:[
+                    {
+                        label: 'Active',
+                        data: props.dataChart,
+                        backgroundColor:[
+                            'rgba(255, 99, 132, 0.5)',
+                            
+                        ]
+                    }
+                ]
+            } )
+        }, 1000)
+        return () => clearTimeout(timer);
+    },[props.dataChart])
     return(
         <>
-        {console.log(props.data)}
        <Bar data ={data} option ={{ maintainAspectRatio: false }} options = {options}/>
         </>
     )

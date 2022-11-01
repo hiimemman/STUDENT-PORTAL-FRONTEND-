@@ -378,7 +378,6 @@ const renderEditStatus = (params) => {
   const handleYes = async () => {
     const { newRow, oldRow, reject, resolve } = promiseArguments;
 
-console.log("Pumasok dto")
     try {
       // Make the HTTP request to save in the backend
       const dataUpdate = new FormData();

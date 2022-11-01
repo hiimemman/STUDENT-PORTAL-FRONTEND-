@@ -52,7 +52,7 @@ const [subject, setSubject] = useState('');
 const [section, setSection] = useState('');
 
 //chart data
-const [myChartData, setMyChartData ] = useState([]);
+const [myChartData, setMyChartData ] = useState({data:[]});
 
 //update chart
 const [updateChart, setUpdateChart] = useState(false);
@@ -204,28 +204,26 @@ const getAllActiveSection = async () =>{
   getAllActiveCourse();
   getAllActiveSubject();
   getAllActiveSection();
-  setMyChartData((prev) => prev = [employee, professor, student, faculty, course, subject, section]);
+  
 return () =>{
   //exit in memory
 }
  },[currentPage])
 
  useEffect(() =>{
-
-  console.log(myChartData)
-
+  setMyChartData((prev) => prev.data = [employee, professor, student, faculty, course, subject, section]);
   
 return () =>{
   //exit in memory
 }
- },[myChartData, subject])
+ },[employee, professor, student, faculty, course, subject, section])
 
  useEffect(() =>{
-  console.log(updateChart)
+console.log(myChartData)
   return () =>{
     //exit in memory
   }
- },[updateChart])
+ },[myChartData])
 
     return(
       <>
@@ -278,8 +276,7 @@ return () =>{
           </Avatar>} />
               </Stack>
           <Paper  elevation={1} sx ={{m:3,marginLeft:.5, width: '100vh'}} >
-          
-           <ChartJs data = {myChartData} />
+           <ChartJs dataChart = {myChartData} />
           </Paper>
 </div> 
       </Box>) :  (<Skeleton
