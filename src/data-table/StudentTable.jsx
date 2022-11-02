@@ -11,12 +11,12 @@ import Button from '@mui/material/Button';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { useSelector, useDispatch } from 'react-redux';
 import { basedUrl } from '../base-url/based-url'
-import { AddSubject } from '../forms/AddSubject';
-import {ADDFORMPROFESSOR} from '../slice/AddFormSlice/AddProfessorSlice/AddProfessorSlice';
 import { PUT_STUDENT } from '../slice/FormSelectedRow/StudentSelected';
 import { imageBaseUrl } from '../base-url/based-url';
-import { AddProfessor } from '../forms/AddProfessor';
-
+import {ADDSTUDENT} from '../slice/AddFormSlice/AddStudentSlice/AddStudentSlice'
+import { AddStudent } from '../forms/AddStudent';
+import { generate } from 'generate-password';
+ 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -77,7 +77,7 @@ export function StudentTable() {
   const handleCloseSnackbar = () => setSnackbar(null);
 
     //Open add form
-const  formOpenType = useSelector(state => state.addFormProfessor.value);
+const  formOpenType = useSelector(state => state.addFormStudent.value);
 
 //Current User Session
 const user = useSelector(state => JSON.parse(state.user.session));
@@ -485,13 +485,15 @@ const renderEditStatus = (params) => {
  //Toolbar
  function CustomToolbarProfessor() {
   //Open add form
-  const  formOpenType = useSelector(state => state.addFormSub.value);
+  const  formOpenType = useSelector(state => state.addFormStudent.value);
   //dispatch from redux
 const dispatch = useDispatch();
 const [faculty, setFaculty] = useState({data: []});
+const [fourDigits, setFourDigits] = useState({data: '0000'});
 const [updatedFaculty, setUpdatedFaculty] = useState(false);
 //  Get all users api
- useEffect( () => {
+
+useEffect( () => {
   console.log('UseEffect called')
   const getAllData = async () =>{
      try{ 
@@ -514,6 +516,35 @@ const [updatedFaculty, setUpdatedFaculty] = useState(false);
    getAllData();
  }, [formOpenType]);
 
+ 
+ const generateFourDigit = async () =>{
+  try{ 
+    //online api
+      const sendRequest = await fetch(basedUrl+"/student-number-4digit-generate.php");
+      const getResponse = await sendRequest.json();
+      if(getResponse.statusCode === 201){
+      
+      }else{
+        //if succesfully retrieve data'
+       //  console.log(getResponse)
+        setFourDigits({data: getResponse.statusCode});  
+      }
+  }catch(e){
+    console.error(e)
+  }
+}
+
+useEffect(() =>{
+
+  generateFourDigit();
+
+return () =>{
+  //exit in memory
+}
+
+},[formOpenType])
+
+
  useEffect(() => {
   if(faculty.data.length > 0){
     console.log("Faculty data = "+JSON.stringify(faculty));
@@ -528,7 +559,6 @@ const [updatedFaculty, setUpdatedFaculty] = useState(false);
 
  useEffect(() =>{
 
-
   return () =>{
     //exit in memory
   }
@@ -537,13 +567,14 @@ const [updatedFaculty, setUpdatedFaculty] = useState(false);
   return (<>
 
     <GridToolbarContainer>
-      <Button variant="text"  color ="success" startIcon = {<PersonAddIcon />} onClick = {() => dispatch(ADDFORMPROFESSOR())}> Add</Button>
+      <Button variant="text"  color ="success" startIcon = {<PersonAddIcon />} onClick = {() => dispatch(ADDSTUDENT())}> Add</Button>
       <GridToolbarColumnsButton />
       <GridToolbarFilterButton />
       <GridToolbarDensitySelector />
       <GridToolbarExport />
     </GridToolbarContainer>
-    {updatedFaculty === true ? (<AddProfessor open = {formOpenType === 'professor'} faculty = {faculty.data} />) : (<></>)}
+    {console.log("Four digits "+ fourDigits.data)}
+    {updatedFaculty === true ? (<AddStudent open = {formOpenType === 'student'} faculty = {faculty.data} />) : (<></>)}
   </>
   );
 }
