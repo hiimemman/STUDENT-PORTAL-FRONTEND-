@@ -42,7 +42,7 @@ const user = useSelector(state => JSON.parse(state.user.session));
 const  formOpenType = useSelector(state => state.addFormStudent.value);
 
 //pre define state
-const [fourDigit, setFourDigit] = useState(props.fourDigits)
+const [studentNumber, setStudentNumber] = useState(props.currentYear +""+props.fourDigits);
 
 //Snackbar
   const [snackbar, setSnackbar] = useState(null);
@@ -218,7 +218,7 @@ const handleSubmitForm = async (event) =>{
     }
   }
 
-  const currentYear = new Date().getFullYear().toString().substr(0, 2);
+ 
   return(
     <>
       <Dialog
@@ -229,7 +229,7 @@ const handleSubmitForm = async (event) =>{
         aria-describedby="scroll-dialog-description"
         fullWidth
       >
-        {console.log(currentYear)}
+     
         <DialogTitle id="scroll-dialog-title">Add Student</DialogTitle>
         
       
@@ -241,7 +241,7 @@ const handleSubmitForm = async (event) =>{
         <Grid2 item xs={12}>
            <FormControl fullWidth error = {errorStudentNumber} required>
                <InputLabel htmlFor="StudentNumber">Student Number</InputLabel>
-               <OutlinedInput name ="StudentNumber" id ="StudentNumber" type ="number" required label = "Student Number" onChange ={handleChangeStudentnumber} />
+               <OutlinedInput name ="StudentNumber" defaultValue={studentNumber} id ="StudentNumber" type ="number" required label = "Student Number" onChange ={handleChangeStudentnumber} />
                {errorStudentNumber === true ? (<FormHelperText id="component-error-text" >Student number must 6 numeric characters</FormHelperText>) : (<></>)}
            </FormControl>
         </Grid2>  

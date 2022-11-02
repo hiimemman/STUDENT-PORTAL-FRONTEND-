@@ -491,6 +491,7 @@ const dispatch = useDispatch();
 const [faculty, setFaculty] = useState({data: []});
 const [fourDigits, setFourDigits] = useState({data: '0000'});
 const [updatedFaculty, setUpdatedFaculty] = useState(false);
+const currentYear = new Date().getFullYear().toString().substr(0, 2);
 //  Get all users api
 
 useEffect( () => {
@@ -527,7 +528,27 @@ useEffect( () => {
       }else{
         //if succesfully retrieve data'
        //  console.log(getResponse)
-        setFourDigits({data: getResponse.statusCode});  
+       if(parseFloat(getResponse.statusCode) < 10){
+        let x = '000'+getResponse.statusCode;
+        setFourDigits({data: x});  
+        return;
+       }
+       
+       if(parseFloat(getResponse.statusCode) < 100){
+        let x = '00'+getResponse.statusCode;
+        setFourDigits({data: x});  
+        return;
+       }
+       if(parseFloat(getResponse.statusCode) < 1000){
+        let x = '0'+getResponse.statusCode;
+        setFourDigits({data: x});  
+        return;
+       }
+       if(parseFloat(getResponse.statusCode) > 999){
+        let x = getResponse.statusCode;
+        setFourDigits({data: x});  
+        return;
+       }
       }
   }catch(e){
     console.error(e)
@@ -574,7 +595,7 @@ return () =>{
       <GridToolbarExport />
     </GridToolbarContainer>
     {console.log("Four digits "+ fourDigits.data)}
-    {updatedFaculty === true ? (<AddStudent open = {formOpenType === 'student'} faculty = {faculty.data} />) : (<></>)}
+    {updatedFaculty === true ? (<AddStudent open = {formOpenType === 'student'} faculty = {faculty.data} fourDigits ={fourDigits.data} currentYear = {currentYear}/>) : (<></>)}
   </>
   );
 }
