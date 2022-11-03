@@ -167,7 +167,7 @@ const handleSubmitForm = async (event) =>{
     data.append('AcademicYear', academicYear);
     data.append('StartYear', startYear.toString().substr(12, 4));
     data.append('EndYear', endYear.toString().substr(12, 4));
-    data.append('SectionAndYear', sectionName+""+academicYear);
+    data.append('SectionAndYear', sectionName+" "+academicYear);
     //const
     data.append('Action', 'Create');
     data.append('EditorPosition', user.position);

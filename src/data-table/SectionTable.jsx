@@ -295,6 +295,7 @@ const renderEditStatus = (params) => {
       // Make the HTTP request to save in the backend
       const dataUpdate = new FormData();
       dataUpdate.append('ID', newRow['id']);
+      dataUpdate.append('SectionAndYear', newRow['sectionandacademicyear']);
       dataUpdate.append('Semester', newRow['semester']);
       dataUpdate.append('SectionName', newRow['section_name']);
       dataUpdate.append('Status', newRow['status']);

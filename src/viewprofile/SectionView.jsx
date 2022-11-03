@@ -157,6 +157,7 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
     console.log("Submited here")
       const data = new FormData(event.target);
       data.append('ID', section.id);
+      data.append('SectionAndYear', section.sectionandacademicyear)
       data.append('Status', section.status);
       data.append('Subject_Code', section.subject_code);
       data.append('Course', courseName);
