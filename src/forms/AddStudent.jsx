@@ -44,6 +44,9 @@ const user = useSelector(state => JSON.parse(state.user.session));
   const [activeFaculty, setActiveFaculty] = useState(props.faculty);
   const [activeCourse, setActiveCourse] = useState(props.courses.data);
   const [activeSection, setActiveSection] = useState(props.sections.data);
+
+  //selected states
+  const [selectedCourse, setSelectedCourse] = useState('');
  //Open add form
 const  formOpenType = useSelector(state => state.addFormStudent.value);
 
@@ -74,11 +77,27 @@ return ()=> {isCancelled = true}
 
 const handleChangeCourse = (event) =>{
     if((event.target.value).toString().length >0){
-        setErrorCourse(false)
+      
+        setErrorCourse((errorCourse) => errorCourse =false)
       }else{
-        setErrorCourse(true)
+        setErrorCourse((errorCourse) => errorCourse = false)
       }
+      setSelectedCourse((selectedCourse) => selectedCourse = event.target.value)
 }
+
+useEffect(() =>{
+  let isCancelled = false;
+  
+  return ()=> {isCancelled = true}
+  },[errorCourse])
+
+  
+useEffect(() =>{
+  let isCancelled = false;
+  
+  return ()=> {isCancelled = true}
+},[selectedCourse])
+
 
 const handleChangeBday = (event) =>{
   setbirthDay((birthDay) => birthDay = event);
@@ -90,11 +109,7 @@ let isCancelled = false
 return () =>{isCancelled = true}
 },[birthDay])
 
-useEffect(() =>{
-let isCancelled = false;
 
-return ()=> {isCancelled = true}
-},[errorCourse])
  
   const handleClose = () => {
    dispatch(CLOSEFORM());
@@ -377,6 +392,8 @@ const handleSubmitForm = async (event) =>{
 
   <Grid2 item xs={12}>
     <FormControl fullWidth error ={errorSection}>
+    {console.log(selectedCourse)}
+         {console.log(JSON.stringify(activeSection))}
       <InputLabel id="demo-simple-select-label">Section*</InputLabel>
           <Select
           required
@@ -386,7 +403,11 @@ const handleSubmitForm = async (event) =>{
           label="Section"
           onChange={handleChangeSection}
         >
-          {activeSection.map((section) => <MenuItem key = {section.id} value ={section.sectionandacademicyear}>{section.sectionandacademicyear}</MenuItem>)}
+         
+       {activeSection.filter(section => {
+          return section.course === selectedCourse;
+        }).map((section) =><MenuItem key = {section.id} value = {section.sectionandacademicyear} >{section.section_name}</MenuItem>)}
+        
         </Select>
    </FormControl>
   </Grid2>
