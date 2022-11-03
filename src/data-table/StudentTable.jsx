@@ -489,6 +489,8 @@ const renderEditStatus = (params) => {
   //dispatch from redux
 const dispatch = useDispatch();
 const [faculty, setFaculty] = useState({data: []});
+const [course, setCourse] = useState({data: []});
+const [section, setSection] = useState({data: []});
 const [fourDigits, setFourDigits] = useState({data: '0000'});
 const [updatedFaculty, setUpdatedFaculty] = useState(false);
 const currentYear = new Date().getFullYear().toString().substr(0, 2);
@@ -585,6 +587,54 @@ return () =>{
   }
  },[updatedFaculty])
 
+ const getAllActiveCourse = async () =>{
+  try{ 
+    //online api
+      const sendRequest = await fetch(basedUrl+"/course-active.php");
+      const getResponse = await sendRequest.json();
+ 
+      if(getResponse.statusCode === 201){
+      
+      }else{
+        //if succesfully retrieve data'
+       //  console.log(getResponse)
+        setCourse((course) => course = {...course, data: getResponse});
+      }
+  }catch(e){
+    console.error(e)
+  }
+}
+
+useEffect(() =>{
+let isCancelled = false;
+getAllActiveCourse();
+return () => {isCancelled = true}
+},[formOpenType])
+
+const getAllActiveSection = async () =>{
+  try{ 
+    //online api
+      const sendRequest = await fetch(basedUrl+"/section-active.php");
+      const getResponse = await sendRequest.json();
+ 
+      if(getResponse.statusCode === 201){
+      
+      }else{
+        //if succesfully retrieve data'
+       //  console.log(getResponse)
+        setSection((section) => section = {...section, data: getResponse});
+      }
+  }catch(e){
+    console.error(e)
+  }
+}
+
+useEffect(() =>{
+  let isCancelled = false;
+  getAllActiveSection();
+  return () => {isCancelled = true}
+  },[formOpenType])
+
   return (<>
 
     <GridToolbarContainer>
@@ -594,8 +644,7 @@ return () =>{
       <GridToolbarDensitySelector />
       <GridToolbarExport />
     </GridToolbarContainer>
-    {console.log("Four digits "+ fourDigits.data)}
-    {updatedFaculty === true ? (<AddStudent open = {formOpenType === 'student'} faculty = {faculty.data} fourDigits ={fourDigits.data} currentYear = {currentYear}/>) : (<></>)}
+    {updatedFaculty === true ? (<AddStudent open = {formOpenType === 'student'} faculty = {faculty.data} fourDigits ={fourDigits.data} currentYear = {currentYear} courses ={course} sections ={section}/>) : (<></>)}
   </>
   );
 }

@@ -11,6 +11,9 @@ import { Box } from '@mui/system';
 import { CLOSEFORM } from '../slice/AddFormSlice/AddStudentSlice/AddStudentSlice';
 import { basedUrl } from '../base-url/based-url';
 import validator from 'validator'
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from '@mui/x-date-pickers';
 
 export function AddStudent(props){
   const [scroll, setScroll] = useState('paper');
@@ -29,35 +32,69 @@ const user = useSelector(state => JSON.parse(state.user.session));
   const [errorEmail, setErrorEmail] = useState('');
   const [errorProfessorUsername, setErrorProfileUsername] = useState(''); 
   const [errorFaculty, setErrorFaculty] = useState('');
-
+  const [errorAddress, setErrorAddress] = useState('');
+  const [errorCourse, setErrorCourse] = useState('');
+  const [errorSection, setErrorSection] = useState('');
   //error message
   const [emailHelpertext, setEmailHelperText] = useState('');
   const [usernameHelpertext, setUsernameHelpertext] = useState('');
-
+  const [studentNumberHelpertext, setStudentNumberHelpertext] = useState('');
+  const [addressHelperText, setAddressHelpertext] = useState('');
   //states
   const [activeFaculty, setActiveFaculty] = useState(props.faculty);
-  
- 
+  const [activeCourse, setActiveCourse] = useState(props.courses.data);
+  const [activeSection, setActiveSection] = useState(props.sections.data);
  //Open add form
 const  formOpenType = useSelector(state => state.addFormStudent.value);
 
 //pre define state
 const [studentNumber, setStudentNumber] = useState(props.currentYear +""+props.fourDigits);
 
+//calendar default value
+const [birthDay, setbirthDay] = useState(null);
+
 //Snackbar
   const [snackbar, setSnackbar] = useState(null);
 
   const handleCloseSnackbar = () => {setSnackbar(null)};
-  
 
-  const handleChangeFaculty = (event) =>{
+  const handleChangeSection = (event) =>{
     if((event.target.value).toString().length >0){
-        setErrorFaculty(false)
+        setErrorSection(false)
       }else{
-        setErrorFaculty(true)
+        setErrorSection(true)
       }
 }
 
+useEffect(() =>{
+let isCancelled = false;
+
+return ()=> {isCancelled = true}
+},[errorSection])
+
+const handleChangeCourse = (event) =>{
+    if((event.target.value).toString().length >0){
+        setErrorCourse(false)
+      }else{
+        setErrorCourse(true)
+      }
+}
+
+const handleChangeBday = (event) =>{
+  setbirthDay((birthDay) => birthDay = event);
+}
+
+useEffect(() =>{
+let isCancelled = false
+
+return () =>{isCancelled = true}
+},[birthDay])
+
+useEffect(() =>{
+let isCancelled = false;
+
+return ()=> {isCancelled = true}
+},[errorCourse])
  
   const handleClose = () => {
    dispatch(CLOSEFORM());
@@ -78,11 +115,35 @@ const [studentNumber, setStudentNumber] = useState(props.currentYear +""+props.f
 
 //event change handlers
 
-const handleChangeStudentnumber = (event) =>{
-    if((event.target.value).toString().length === 6 ){
-      setErrorStudentNumber((prev) => prev = false);
-    }else{
+const handleChangeStudentnumber = async (event) =>{
+    if((event.target.value).toString().length !== 6 ){
       setErrorStudentNumber((prev) => prev = true);
+      console.log("Pumasok dito")
+    }else{
+      try{
+        const data = new FormData();
+        data.append('StudentNumber', event.target.value);
+        const sendRequest = await fetch(basedUrl+"/exist-student-number.php",{
+          method: "POST",
+          body: data,
+      });
+      
+      for (var pair of data.entries()) {
+        console.log(pair[0]+ ' - ' + pair[1]); 
+      }
+      const getResponse = await sendRequest.json();
+      console.log("Response:")
+      console.log(getResponse.statusCode)
+      if(getResponse.statusCode === 200){
+        setErrorStudentNumber((prev) => prev = false);
+      }else{
+        setErrorStudentNumber((prev) => prev = true);
+        setStudentNumberHelpertext((prev) => prev = "Student number already exist!")
+      }
+      }catch(e){
+        setErrorStudentNumber((prev) => prev = true);
+        setStudentNumberHelpertext('Server problem!');
+      }  
     } 
   }
 
@@ -94,6 +155,12 @@ const handleChangeFirstname = (event) =>{
   } 
 }
 
+
+useEffect(() =>{
+let isCancelled = false;
+
+return () => {isCancelled = true}
+},[errorStudentNumber, studentNumberHelpertext]);
 
 
 const handleChangeLastName = (event) =>{
@@ -112,7 +179,7 @@ const handleChangeEmail = async (event) =>{
     try{
       const data = new FormData();
       data.append('Email', event.target.value);
-      const sendRequest = await fetch(basedUrl+"/exist-professor-email.php",{
+      const sendRequest = await fetch(basedUrl+"/exist-student-email.php",{
         method: "POST",
         body: data,
     });
@@ -131,37 +198,13 @@ const handleChangeEmail = async (event) =>{
   }
 }
 
-const handleChangeProfessorUsername = async (event) =>{
-
-  if((event.target.value).toString().length <= 0 ){
-    console.log("pumasok dto")
-    setErrorProfileUsername((prev) => prev = true);
-    setUsernameHelpertext((prev) => prev = "Username must not be empty");
-    return;
+const handleChangeAddress = (event) =>{
+  if((event.target.value).toString().length > 0){
+    setErrorAddress((prev) => prev = false);
   }else{
-    try{
-      const data = new FormData();
-      data.append('ProfessorUsername', event.target.value);
-      const sendRequest = await fetch(basedUrl+"/exist-professor-username.php",{
-        method: "POST",
-        body: data,
-    });
-
-    const getResponse = await sendRequest.json();
-    if(getResponse.statusCode === 200){
-      setErrorProfileUsername((prev) => prev = false);
-      return;
-    }else{
-      setErrorProfileUsername((prev) => prev = true);
-      setUsernameHelpertext((prev) => prev = "Username already exist!");
-      return;
-    }
-    }catch(e){
-      setErrorProfileUsername((prev) => prev = true);
-      setUsernameHelpertext((prev) => prev = "Server problem!");
-      return;
-    }  
-  }
+    setErrorAddress((prev) => prev = true);
+    setAddressHelpertext((prev)=> prev ='Address must not be empty')
+  } 
 }
 
 useEffect( () => {
@@ -170,7 +213,7 @@ useEffect( () => {
   return () =>{
     //exit in memory
   }
-},[errorStudentNumber, errorFirstName, errorLastName, errorEmail]);
+},[errorStudentNumber, errorFirstName, errorLastName, errorEmail, errorAddress]);
  
 useEffect (() => {
 //helper text listener
@@ -242,7 +285,7 @@ const handleSubmitForm = async (event) =>{
            <FormControl fullWidth error = {errorStudentNumber} required>
                <InputLabel htmlFor="StudentNumber">Student Number</InputLabel>
                <OutlinedInput name ="StudentNumber" defaultValue={studentNumber} id ="StudentNumber" type ="number" required label = "Student Number" onChange ={handleChangeStudentnumber} />
-               {errorStudentNumber === true ? (<FormHelperText id="component-error-text" >Student number must 6 numeric characters</FormHelperText>) : (<></>)}
+               {errorStudentNumber === true ? (<FormHelperText id="component-error-text" >{studentNumberHelpertext}</FormHelperText>) : (<></>)}
            </FormControl>
         </Grid2>  
 
@@ -277,30 +320,77 @@ const handleSubmitForm = async (event) =>{
                </FormControl>
         </Grid2>
 
+     
         <Grid2 item xs={12}>
-              <FormControl fullWidth required error = {errorProfessorUsername}>
-                <InputLabel htmlFor="ProfessorUsername">Username</InputLabel>
-                <OutlinedInput name ="ProfessorUsername" id ="ProfessorUsername" required label = "Username" onChange ={handleChangeProfessorUsername} />
-                {errorProfessorUsername === true ? (<FormHelperText id="component-error-text" >{usernameHelpertext}</FormHelperText>) : (<></>)}
-              </FormControl>
-        </Grid2>
-
+              <FormControl fullWidth required error = {errorAddress}>
+                  <InputLabel htmlFor="Address">Address</InputLabel>
+                  <OutlinedInput name ="Address" id ="Address" required label = "Address" onChange = {handleChangeAddress} />
+                  {errorAddress === true ? (<FormHelperText id="component-error-text" >{addressHelperText}</FormHelperText>) : (<></>)}
+               </FormControl>
+        </Grid2> 
         <Grid2 item xs={12}>
-        <FormControl fullWidth error ={errorFaculty}>
-         <InputLabel id="demo-simple-select-label">Faculty*</InputLabel>
+             <FormControl fullWidth  required>
+              <InputLabel id="demo-simple-select-label">Type</InputLabel>
+                <Select
+                required
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                name = "Type"
+                label="Type"
+                defaultValue ={''}
+                >
+                <MenuItem value={'Regular'}>Regular</MenuItem>
+                <MenuItem value={'Irregular'}>Irregular</MenuItem>
+              </Select>
+            </FormControl>
+  </Grid2>
+        
+  <Grid2 item xs={12}>
+    <FormControl fullWidth error ={errorCourse}>
+         <InputLabel id="demo-simple-select-label">Course*</InputLabel>
      <Select
      required
      labelId="demo-simple-select-label"
      id="demo-simple-select"
-     name = "Faculty"
-     label="Faculty"
-     onChange={handleChangeFaculty}
+     name = "Course"
+     label="Course"
+     onChange={handleChangeCourse}
    >
-    {activeFaculty.map((faculty) => <MenuItem key = {faculty} value ={faculty.faculty_name}>{faculty.faculty_name}</MenuItem>)}
+    {activeCourse.map((course) => <MenuItem key = {course.id} value ={course.course_name}>{course.course_name}</MenuItem>)}
    </Select>
    </FormControl>
-        </Grid2>
-             
+  </Grid2>
+
+  <Grid2 item xs={12}>
+    <FormControl fullWidth error ={errorSection}>
+         <InputLabel id="demo-simple-select-label">Section*</InputLabel>
+     <Select
+     required
+     labelId="demo-simple-select-label"
+     id="demo-simple-select"
+     name = "Section"
+     label="Section"
+     onChange={handleChangeSection}
+   >
+    {activeSection.map((section) => <MenuItem key = {section.id} value ={section.section_name}>{section.section_name}</MenuItem>)}
+   </Select>
+   </FormControl>
+  </Grid2>
+  
+  <Grid2 item xs={12}>
+    <FormControl fullWidth required>
+  <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DatePicker
+          required
+          label ="Date of Birth"
+          inputFormat="MM/DD/YYYY"
+          value={birthDay}
+          onChange={handleChangeBday}
+          renderInput={(params) => <TextField autoComplete='off' {...params} />}
+        />
+        </LocalizationProvider>
+        </FormControl>
+  </Grid2>
         </Grid2>
         </Box>
         </DialogContent>
