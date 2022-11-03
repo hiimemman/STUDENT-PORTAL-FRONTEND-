@@ -320,7 +320,21 @@ const handleSubmitForm = async (event) =>{
                </FormControl>
         </Grid2>
 
-     
+        <Grid2 item xs={12}>
+    <FormControl fullWidth required>
+  <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DatePicker
+          required
+          label ="Date of Birth"
+          inputFormat="MM/DD/YYYY"
+          value={birthDay}
+          onChange={handleChangeBday}
+          renderInput={(params) => <TextField autoComplete='off' {...params} />}
+        />
+        </LocalizationProvider>
+        </FormControl>
+  </Grid2>
+
         <Grid2 item xs={12}>
               <FormControl fullWidth required error = {errorAddress}>
                   <InputLabel htmlFor="Address">Address</InputLabel>
@@ -363,34 +377,21 @@ const handleSubmitForm = async (event) =>{
 
   <Grid2 item xs={12}>
     <FormControl fullWidth error ={errorSection}>
-         <InputLabel id="demo-simple-select-label">Section*</InputLabel>
-     <Select
-     required
-     labelId="demo-simple-select-label"
-     id="demo-simple-select"
-     name = "Section"
-     label="Section"
-     onChange={handleChangeSection}
-   >
-    {activeSection.map((section) => <MenuItem key = {section.id} value ={section.section_name}>{section.section_name}</MenuItem>)}
-   </Select>
+      <InputLabel id="demo-simple-select-label">Section*</InputLabel>
+          <Select
+          required
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          name = "Section"
+          label="Section"
+          onChange={handleChangeSection}
+        >
+          {activeSection.map((section) => <MenuItem key = {section.id} value ={section.sectionandacademicyear}>{section.sectionandacademicyear}</MenuItem>)}
+        </Select>
    </FormControl>
   </Grid2>
   
-  <Grid2 item xs={12}>
-    <FormControl fullWidth required>
-  <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DatePicker
-          required
-          label ="Date of Birth"
-          inputFormat="MM/DD/YYYY"
-          value={birthDay}
-          onChange={handleChangeBday}
-          renderInput={(params) => <TextField autoComplete='off' {...params} />}
-        />
-        </LocalizationProvider>
-        </FormControl>
-  </Grid2>
+ 
         </Grid2>
         </Box>
         </DialogContent>

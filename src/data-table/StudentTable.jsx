@@ -407,7 +407,7 @@ const renderEditStatus = (params) => {
     });
     
     const getResponse = await sendRequest.json();
-    console.log(getResponse)
+
     if(getResponse.statusCode !== 201){
       setSnackbar({ children: 'Update successfully', severity: 'success' });
       resolve(response);
@@ -497,7 +497,6 @@ const currentYear = new Date().getFullYear().toString().substr(0, 2);
 //  Get all users api
 
 useEffect( () => {
-  console.log('UseEffect called')
   const getAllData = async () =>{
      try{ 
        //online api
@@ -570,8 +569,7 @@ return () =>{
 
  useEffect(() => {
   if(faculty.data.length > 0){
-    console.log("Faculty data = "+JSON.stringify(faculty));
-    setUpdatedFaculty(true)
+    setUpdatedFaculty((faculty) => faculty = true)
   }
 
   return () =>{
