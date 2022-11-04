@@ -15,7 +15,7 @@ import { PUT_STUDENT } from '../slice/FormSelectedRow/StudentSelected';
 import { imageBaseUrl } from '../base-url/based-url';
 import {ADDSTUDENT} from '../slice/AddFormSlice/AddStudentSlice/AddStudentSlice'
 import { AddStudent } from '../forms/AddStudent';
-import { generate } from 'generate-password';
+
  
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -130,7 +130,6 @@ const [updatedCourse, setUpdateCourse] = useState('');
     }
   }, [formOpenType]);
  
-
 
    //Edit semester via cell
 function EditSemester(props) {
@@ -524,30 +523,28 @@ useEffect( () => {
     //online api
       const sendRequest = await fetch(basedUrl+"/student-number-4digit-generate.php");
       const getResponse = await sendRequest.json();
+      console.log(getResponse.statusCode)
       if(getResponse.statusCode === 201){
       
       }else{
         //if succesfully retrieve data'
        //  console.log(getResponse)
        if(parseFloat(getResponse.statusCode) < 10){
-        let x = '000'+getResponse.statusCode;
-        setFourDigits({data: x});  
+       
+        setFourDigits((fourDigits) => fourDigits = {...fourDigits, data: '000'+getResponse.statusCode});  
         return;
        }
        
        if(parseFloat(getResponse.statusCode) < 100){
-        let x = '00'+getResponse.statusCode;
-        setFourDigits({data: x});  
+        setFourDigits((fourDigits) => fourDigits = {...fourDigits, data: '00'+getResponse.statusCode});  
         return;
        }
-       if(parseFloat(getResponse.statusCode) < 1000){
-        let x = '0'+getResponse.statusCode;
-        setFourDigits({data: x});  
+       if(parseFloat(getResponse.statusCode) < 1000){   
+        setFourDigits((fourDigits) => fourDigits = {...fourDigits, data: '0'+getResponse.statusCode});  
         return;
        }
        if(parseFloat(getResponse.statusCode) > 999){
-        let x = getResponse.statusCode;
-        setFourDigits({data: x});  
+        setFourDigits((fourDigits) => fourDigits = {...fourDigits, data: getResponse.statusCode});  
         return;
        }
       }
@@ -565,6 +562,15 @@ return () =>{
 }
 
 },[formOpenType])
+
+useEffect(() =>{
+let isCancelled = false;
+
+return () =>{
+  isCancelled = true;
+  //exit in memory
+}
+},[fourDigits]);
 
 
  useEffect(() => {

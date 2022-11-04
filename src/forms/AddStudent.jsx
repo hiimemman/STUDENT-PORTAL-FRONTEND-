@@ -35,11 +35,13 @@ const user = useSelector(state => JSON.parse(state.user.session));
   const [errorAddress, setErrorAddress] = useState('');
   const [errorCourse, setErrorCourse] = useState('');
   const [errorSection, setErrorSection] = useState('');
+  const [errorContact, setErrorContact] = useState('');
   //error message
   const [emailHelpertext, setEmailHelperText] = useState('');
   const [usernameHelpertext, setUsernameHelpertext] = useState('');
   const [studentNumberHelpertext, setStudentNumberHelpertext] = useState('');
   const [addressHelperText, setAddressHelpertext] = useState('');
+  const [contactHelperText, setContactHelpertext] = useState('');
   //states
   const [activeFaculty, setActiveFaculty] = useState(props.faculty);
   const [activeCourse, setActiveCourse] = useState(props.courses.data);
@@ -125,6 +127,7 @@ return () =>{isCancelled = true}
     }
   }, [formOpenType]);
  
+  
 
 
 
@@ -133,7 +136,7 @@ return () =>{isCancelled = true}
 const handleChangeStudentnumber = async (event) =>{
     if((event.target.value).toString().length !== 6 ){
       setErrorStudentNumber((prev) => prev = true);
-      console.log("Pumasok dito")
+
     }else{
       try{
         const data = new FormData();
@@ -147,8 +150,7 @@ const handleChangeStudentnumber = async (event) =>{
         console.log(pair[0]+ ' - ' + pair[1]); 
       }
       const getResponse = await sendRequest.json();
-      console.log("Response:")
-      console.log(getResponse.statusCode)
+
       if(getResponse.statusCode === 200){
         setErrorStudentNumber((prev) => prev = false);
       }else{
@@ -185,6 +187,42 @@ const handleChangeLastName = (event) =>{
     setErrorLastName((prev) => prev = true);
   } 
 }
+
+const handleChangeContact = async (event) =>{
+  const isValidPhoneNumber = validator.isMobilePhone(event.target.value)
+  if(!isValidPhoneNumber || (event.target.value).toString().length !== 11){
+    setErrorContact((prev) => prev = true);
+    setContactHelpertext((prev) => prev = "Invalid Contact number")
+  }else{
+    try{
+      const data = new FormData();
+      data.append('Contact', event.target.value);
+      const sendRequest = await fetch(basedUrl+"/exist-student-contact.php",{
+        method: "POST",
+        body: data,
+    });
+
+    const getResponse = await sendRequest.json();
+    if(getResponse.statusCode === 200){
+      setErrorContact((prev) => prev = false);
+    }else{
+      setErrorContact((prev) => prev = true);
+      setContactHelpertext((prev) => prev = "Contact number already exist!")
+    }
+    }catch(e){
+      setErrorContact((prev) => prev = true);
+      setEmailHelperText('Server problem!');
+    }  
+  }
+}
+
+useEffect(() =>{
+let isCancelled = false;
+
+return () =>{
+  isCancelled = true;
+}
+},[errorContact, contactHelperText])
 
 const handleChangeEmail = async (event) =>{
   if(!validator.isEmail(event.target.value)){
@@ -232,8 +270,7 @@ useEffect( () => {
  
 useEffect (() => {
 //helper text listener
-console.log(errorProfessorUsername) 
-  
+
 }, [emailHelpertext, usernameHelpertext, errorProfessorUsername ]);
 
 
@@ -243,24 +280,28 @@ const handleSubmitForm = async (event) =>{
   //`action`,`category`,`editor_position`,`editor_email`,`edited_email`
     event.preventDefault();
     if(!errorFirstName && !errorLastName && !errorEmail && !errorProfessorUsername && !errorFaculty){
+    const randomPassword =
+    Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2);
     const data = new FormData(event.currentTarget);
+    data.append('Password', randomPassword);
+    data.append('Birthday', birthDay);
     data.append('Action', 'Create');
     data.append('EditorPosition', user.position);
     data.append('EditorEmail', user.email);
-    data.append('Category', 'Professor');
+    data.append('Category', 'Student');
 
     for (var pair of data.entries()) {
       console.log(pair[0]+ ', ' + pair[1]); 
   }
   
     try{
-      const sendRequest = await fetch(basedUrl+"/professor-add.php",{
+      const sendRequest = await fetch(basedUrl+"/student-add.php",{
                 method: "POST",
                 body: data,
             });
   
             const getResponse = await sendRequest.json();
-           console.log(getResponse.statusCode)
+            console.log(getResponse.statusCode)
             if(getResponse.statusCode === 200){
               setSnackbar({ children: 'Update successfully', severity: 'success' });
               dispatch(CLOSEFORM())
@@ -268,7 +309,7 @@ const handleSubmitForm = async (event) =>{
               setSnackbar({ children: "Field can't be empty", severity: 'error' });
             }
     }catch(e){
-      
+      console.log(e)
       setSnackbar({ children: "Field can't be empty", severity: 'error' });
     }
     }else{
@@ -306,23 +347,23 @@ const handleSubmitForm = async (event) =>{
 
         <Grid2 item xs={12}>
            <FormControl fullWidth error = {errorFirstName} required>
-               <InputLabel htmlFor="Firstname">First name</InputLabel>
-               <OutlinedInput name ="Firstname" id ="Firstname" required label = "First name" onChange ={handleChangeFirstname} />
+               <InputLabel htmlFor="FirstName">First name</InputLabel>
+               <OutlinedInput name ="FirstName" id ="FirstName" required label = "First name" onChange ={handleChangeFirstname} />
                {errorFirstName === true ? (<FormHelperText id="component-error-text" >First name must not be empty</FormHelperText>) : (<></>)}
            </FormControl>
         </Grid2>  
 
         <Grid2 item xs={12}>
               <FormControl fullWidth >
-              <InputLabel htmlFor="Middlename">Middle name</InputLabel>
-               <OutlinedInput name ="Middlename" id ="Middlename"  label = "Middle name" />
+              <InputLabel htmlFor="MiddleName">Middle name</InputLabel>
+               <OutlinedInput name ="MiddleName" id ="MiddleName"  label = "Middle name" />
                </FormControl>
         </Grid2>
 
         <Grid2 item xs={12}>
               <FormControl fullWidth required error ={errorLastName}>
-                <InputLabel htmlFor="Lastname">Last name</InputLabel>
-                <OutlinedInput name ="Lastname" id ="Lastname" required label = "Last name" onChange={handleChangeLastName} />
+                <InputLabel htmlFor="LastName">Last name</InputLabel>
+                <OutlinedInput name ="LastName" id ="LastName" required label = "Last name" onChange={handleChangeLastName} />
                 {errorLastName === true ? (<FormHelperText id="component-error-text" >Last name must not be empty</FormHelperText>) : (<></>)}
                </FormControl>
         </Grid2>
@@ -332,6 +373,14 @@ const handleSubmitForm = async (event) =>{
                   <InputLabel htmlFor="Email">Email</InputLabel>
                   <OutlinedInput name ="Email" id ="Email" required label = "Email" onChange = {handleChangeEmail} />
                   {errorEmail === true ? (<FormHelperText id="component-error-text" >{emailHelpertext}</FormHelperText>) : (<></>)}
+               </FormControl>
+        </Grid2>
+
+        <Grid2 item xs={12}>
+              <FormControl fullWidth required error = {errorContact}>
+                  <InputLabel htmlFor="Contact">Contact</InputLabel>
+                  <OutlinedInput name ="Contact" id ="Contact" type ="number" required label = "Contact" onChange = {handleChangeContact} />
+                  {errorContact === true ? (<FormHelperText id="component-error-text" >{contactHelperText}</FormHelperText>) : (<></>)}
                </FormControl>
         </Grid2>
 
@@ -392,8 +441,7 @@ const handleSubmitForm = async (event) =>{
 
   <Grid2 item xs={12}>
     <FormControl fullWidth error ={errorSection}>
-    {console.log(selectedCourse)}
-         {console.log(JSON.stringify(activeSection))}
+  
       <InputLabel id="demo-simple-select-label">Section*</InputLabel>
           <Select
           required
@@ -406,7 +454,7 @@ const handleSubmitForm = async (event) =>{
          
        {activeSection.filter(section => {
           return section.course === selectedCourse;
-        }).map((section) =><MenuItem key = {section.id} value = {section.sectionandacademicyear} >{section.section_name3}</MenuItem>)}
+        }).map((section) =><MenuItem key = {section.id} value = {section.sectionandacademicyear} >{section.section_name}</MenuItem>)}
         
         </Select>
    </FormControl>

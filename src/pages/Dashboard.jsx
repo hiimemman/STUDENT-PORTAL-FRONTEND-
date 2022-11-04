@@ -113,7 +113,7 @@ const getAllActiveStudent = async () =>{
       }else{
         //if succesfully retrieve data
  
-        setFaculty(getResponse.length);
+        setStudent(getResponse.length);
       }
   }catch(e){
     console.error(e)
@@ -131,8 +131,8 @@ const getAllActiveFaculty = async () =>{
       
       }else{
         //if succesfully retrieve data
- 
-        setStudent(getResponse.length);
+
+        setFaculty(getResponse.length);
       }
   }catch(e){
     console.error(e)
@@ -204,7 +204,6 @@ const getAllActiveSection = async () =>{
   getAllActiveCourse();
   getAllActiveSubject();
   getAllActiveSection();
-  
 return () =>{
   //exit in memory
 }

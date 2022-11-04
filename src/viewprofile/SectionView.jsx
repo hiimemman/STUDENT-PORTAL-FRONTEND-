@@ -14,7 +14,7 @@ import { basedUrl } from '../base-url/based-url';
 import { useTheme } from '@mui/material/styles';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
-
+import { Link, animateScroll as scroll } from "react-scroll";
 
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
@@ -22,6 +22,7 @@ import TabPanel from '@mui/lab/TabPanel';
 import Tab from '@mui/material/Tab';
 import { SectionScheduleTable } from '../data-table/SectionScheduleTable';
 import { SectionScheduleHistory } from '../viewhistory/SectionScheduleHistory';
+import { StudentPerSectionView } from './StudentPerSectionView';
 
 
 //Course select required functions
@@ -330,9 +331,9 @@ const OverviewPanel = () =>{
 const SchedulePanel = () =>{
   return (
     <>
-     <Paper elevation={1} sx ={{width:'500 ',marginTop:'1.5rem'}} className ="rounded-xl">
-     <SectionScheduleTable  />
-      </Paper>
+    <Paper elevation={1} sx ={{width:'500 ',marginTop:'1.5rem'}} className ="rounded-xl">
+       <SectionScheduleTable  />
+    </Paper>
     </>
   )
 }
@@ -358,7 +359,8 @@ const handleChangeTab = (event, newValue) =>{
             <TabList onChange = {handleChangeTab} aria-label="lab API tabs example" className='mt-2 ml-2'>
                 <Tab label="OVERVIEW" value = {1} />
                 <Tab label="SCHEDULES" value= {2} />
-                <Tab label="HISTORY" value= {3} />
+                <Tab label="STUDENTS" value= {3} />
+                <Tab label="HISTORY" value= {4} />
              </TabList>
             
          
@@ -370,10 +372,13 @@ const handleChangeTab = (event, newValue) =>{
                 <OverviewPanel />
              </TabPanel>
              
-             <TabPanel value  = {2} sx ={{p:0, marginTop:'1.5rem'}}>
+             <TabPanel value  = {2} sx ={{p:0}}>
                <SchedulePanel />
              </TabPanel>
-             <TabPanel value  = {3} sx ={{p:0, marginTop:'1.5rem'}}>
+             <TabPanel value  = {3} sx ={{p:0}}>
+               <StudentPerSectionView />
+             </TabPanel>
+             <TabPanel value  = {4} sx ={{p:0}}>
                <SectionScheduleHistory />
              </TabPanel>
       </TabContext>        
