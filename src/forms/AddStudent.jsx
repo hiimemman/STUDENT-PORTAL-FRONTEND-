@@ -406,7 +406,7 @@ const handleSubmitForm = async (event) =>{
          
        {activeSection.filter(section => {
           return section.course === selectedCourse;
-        }).map((section) =><MenuItem key = {section.id} value = {section.sectionandacademicyear} >{section.section_name}</MenuItem>)}
+        }).map((section) =><MenuItem key = {section.id} value = {section.sectionandacademicyear} >{section.section_name3}</MenuItem>)}
         
         </Select>
    </FormControl>

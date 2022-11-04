@@ -168,11 +168,13 @@ console.log(errorProfessorUsername)
 
 
 const handleSubmitForm = async (event) =>{
- 
+  const randomPassword =
+  Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2);
   //`action`,`category`,`editor_position`,`editor_email`,`edited_email`
     event.preventDefault();
     if(!errorFirstName && !errorLastName && !errorEmail && !errorProfessorUsername && !errorFaculty){
     const data = new FormData(event.currentTarget);
+    data.append('Password', randomPassword);
     data.append('Action', 'Create');
     data.append('EditorPosition', user.position);
     data.append('EditorEmail', user.email);
