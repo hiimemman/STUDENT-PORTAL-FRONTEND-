@@ -82,14 +82,14 @@ const [loginMessage, setMessage ] = useState("Try again");// Default message of 
 
 const [courses, setCourses] = useState(props.course);
 
-
+console.log(JSON.stringify(student))
 
 //Field states
 const [valueTab, setValueTab] = useState(1);//default tab
 
 const [course, setCourse] = useState(student.course);
 
-const [section, setSection] = useState(student.section);
+const [section, setSection] = useState(student.section_name);
 
 const [birthday, setBirthday] = useState(student.birthday);
 
@@ -271,23 +271,6 @@ const OverviewPanel = () =>{
       </FormControl>
      </Stack> 
     
-     <Stack direction="row" spacing={2} sx = {{width:'100%', marginBottom: '1.5rem'}}> 
-       <Typography variant ="overline" noWrap sx={{fontSize:'15px', width: '15rem'}}>SEX:  </Typography>
-       <FormControl sx={{fontSize:'15px' , width: '50rem'}} >
-           <RadioGroup
-           row
-           aria-labelledby="demo-row-radio-buttons-group-label"
-           name="Sex"
-           id="Sex"
-           defaultValue ={student.sex}
-              >
-           <FormControlLabel value="Female" control={<Radio />} label="Female" />
-          <FormControlLabel value="Male" control={<Radio />}  label="Male"  />
-         </RadioGroup>
-        </FormControl>
-     </Stack>  
-
-   
 
 <Stack direction="row" spacing={2} sx = {{width:'100%', marginBottom: '1.5rem'}}>
   <Typography variant ="overline" noWrap sx={{fontSize:'15px', width: '15rem'}}>Course:  </Typography>

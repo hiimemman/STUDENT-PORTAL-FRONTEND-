@@ -37,42 +37,9 @@ export function ChartJs(props){
       //page current state
       const currentPage = useSelector(state => (state.selectedPage.value));
 
-    const [data, setData] = useState({
-        labels: ['Employee', 'Professor', 'Student', 'Faculty', 'Course', 'Subject', 'Section'],
-        datasets:[
-            {
-                label: 'Active',
-                data: props.dataChart,
-                backgroundColor:[
-                    'rgba(255, 99, 132, 0.5)',
-                    
-                ]
-            }
-        ]
-    })
-    
-    useState(() =>{
-        console.log(props.dataChart)
-        const timer = setTimeout(() => { 
-            setData((prev) =>  prev = {
-                labels: ['Employee', 'Professor', 'Student', 'Faculty', 'Course', 'Subject', 'Section'],
-                datasets:[
-                    {
-                        label: 'Active',
-                        data: props.dataChart,
-                        backgroundColor:[
-                            'rgba(255, 99, 132, 0.5)',
-                            
-                        ]
-                    }
-                ]
-            } )
-        }, 1000)
-        return () => clearTimeout(timer);
-    },[props.dataChart])
     return(
         <>
-       <Bar data ={data} option ={{ maintainAspectRatio: false }} options = {options}/>
+       <Bar data ={props.dataChart} option ={{ maintainAspectRatio: false }} options = {options}/>
         </>
     )
 }

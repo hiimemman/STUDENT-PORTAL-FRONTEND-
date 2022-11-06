@@ -375,7 +375,7 @@ const handleChangeTab = (event, newValue) =>{
              <TabPanel value  = {2} sx ={{p:0}}>
                <SchedulePanel />
              </TabPanel>
-             <TabPanel value  = {3} sx ={{p:0}}>
+             <TabPanel value  = {3} sx ={{width:'500 ', p:'0',marginTop:'1.5rem'}}>
                <StudentPerSectionView />
              </TabPanel>
              <TabPanel value  = {4} sx ={{p:0}}>
