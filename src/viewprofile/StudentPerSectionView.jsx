@@ -48,14 +48,14 @@ const names = [
 ];
 
 
-function LongMenu() {
+function LongMenu(props) {
   const navigate = useNavigate();
 
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
-    navigate("student/"+123);
+    navigate("student/"+props.id);
   };
   const handleClose = () => {
     setAnchorEl(null);
@@ -446,7 +446,7 @@ const renderEditStatus = (params) => {
         renderCell: (cellValues) => {
           return(
           <>
-        <LongMenu />
+        <LongMenu id ={cellValues.value} />
           </>
           );//end of return
         }

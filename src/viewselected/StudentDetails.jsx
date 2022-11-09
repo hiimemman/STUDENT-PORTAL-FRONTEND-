@@ -102,8 +102,8 @@ const [birthday, setBirthday] = useState(student.birthday);
 const getStudentDetails = async () =>{
   try{ 
     const data = new FormData();
-    data.append('StudentID', {id});
-    
+    data.append('StudentID', id);
+    console.log(id)
     //online api
        const sendRequest = await fetch(basedUrl+"/student-details.php",{
           method: "POST",
@@ -118,7 +118,7 @@ const getStudentDetails = async () =>{
         //if succesfully retrieve data
        
         console.log(getResponse)
-        setStudent((prev) => prev = getResponse);
+        setStudent((prev) => prev = getResponse[0]);
       }
   }catch(e){
     console.error(e)
@@ -370,18 +370,8 @@ const OverviewPanel = () =>{
       </FormControl>
      </Stack>
 </Grid2>
-<Stack direction="row" spacing={2} sx = {{width:'100%', marginBottom: '1.5rem'}}>
-        <Typography variant ="overline" noWrap sx={{fontSize:'15px', width: '15rem'}}>Guardian:  </Typography>
-      <FormControl >
-         <TextField  defaultValue = {student.guardian} name ="Guardian" id="Guardian" sx={{fontSize:'15px' , width: '50rem'}} variant="standard" inputProps={{ 'aria-label': 'description' }} />
-      </FormControl>
-     </Stack>
-     <Stack direction="row" spacing={2} sx = {{width:'100%', marginBottom: '1.5rem'}}>
-        <Typography variant ="overline" noWrap sx={{fontSize:'15px', width: '15rem'}}>Guardian Contact:  </Typography>
-      <FormControl >
-         <TextField  defaultValue = {student.guardian_contact} name ="GuardianContact" id="GuardianContact" sx={{fontSize:'15px' , width: '50rem'}} variant="standard" inputProps={{ 'aria-label': 'description' }} />
-      </FormControl>
-     </Stack>
+
+   
     <Divider sx={{marginTop: '1.5rem'}} />
     <Container sx ={{m:'1rem',display:'flex', justifyContent:'center'}}>
     {isLoading === true ?( <LoadingButton
