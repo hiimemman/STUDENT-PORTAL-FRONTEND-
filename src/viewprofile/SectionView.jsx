@@ -14,7 +14,7 @@ import { basedUrl } from '../base-url/based-url';
 import { useTheme } from '@mui/material/styles';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
-import { Link, animateScroll as scroll } from "react-scroll";
+
 
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
@@ -376,7 +376,9 @@ const handleChangeTab = (event, newValue) =>{
                <SchedulePanel />
              </TabPanel>
              <TabPanel value  = {3} sx ={{width:'500 ', p:'0',marginTop:'1.5rem'}}>
-               <StudentPerSectionView />
+             <Paper elevation={1} sx ={{width:'500 ',marginTop:'1.5rem'}} className ="rounded-xl">
+                 <StudentPerSectionView />
+              </Paper>
              </TabPanel>
              <TabPanel value  = {4} sx ={{p:0}}>
                <SectionScheduleHistory />

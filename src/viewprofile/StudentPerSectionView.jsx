@@ -15,12 +15,12 @@ import { basedUrl } from '../base-url/based-url'
 
 import {ADDSECTION} from '../slice/AddFormSlice/AddSectionSlice/AddSectionSlice'
 import { useTheme } from '@mui/material/styles';
-import { Box } from '@mui/system';
+
 import { Suspense } from 'react';
 import { PUT_SECTION } from '../slice/FormSelectedRow/SectionSelected';
 import { AddSection } from '../forms/AddSection';
 import { NoRowBackground } from '../component/NoRowBackground';
-
+import { imageBaseUrl } from '../base-url/based-url';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -119,8 +119,8 @@ const getAllData = async () =>{
   isLoading(true)
   try{ 
     const data = new FormData();
-    data.append('SectionName', section.section_name);
-
+    data.append('SectionName', section.sectionandacademicyear);
+    console.log(section.sectionandacademicyear)
     //online api
        const sendRequest = await fetch(basedUrl+"/section-student-table.php",{
           method: "POST",
@@ -362,37 +362,45 @@ const renderEditStatus = (params) => {
  
   const columns = [
     {
-      field: 'subject_name',
-      headerName: 'Subject',
+      field: 'profile_url',
+      headerName: 'Avatar',
       width: 150,
      editable: false,
+     renderCell: (params) => {
+      return (
+        <>
+          <Avatar src={imageBaseUrl+params.value} />
+        </>
+      );
+    },
     },
     {
-        field: 'description',
-        headerName: 'Description',
-        width: 200,
-       editable: false,
+      field: 'fullName',
+      headerName: 'Full name',
+      description: 'This column has a value getter and is not sortable.',
+      sortable: true,
+      width: 240,
+      valueGetter: (params) =>
+        `${params.row.firstname || ''} ${params.row.middlename || ''} ${params.row.lastname || ''}`,
     },
-      {
-        field: 'schedule_day',
-        headerName: 'Schedule Day',
-        renderEditCell: renderEditDay,
-        width: 200,
-        editable: true,
-      },
-      {
-        field: 'schedule_time',
-        headerName: 'Time',
-        width: 430,
-        editable: true,
-      },
-      {
-        field: 'professor_initial',
-        headerName: 'Professor',
-        renderEditCell: renderEditProfessor,
-        width: 150,
-        editable: true,
-      },
+    {
+      field: 'email',
+      headerName: 'Email',
+      width: 259,
+      editable: false,
+   },
+  {
+          field: 'studentnumber',
+          headerName: 'Student Id',
+          width: 260,
+          editable: false,
+  },
+  {
+      field: 'contact',
+      headerName: 'Contact',
+      width: 200,
+      editable: true,
+},
       {
         field: 'status',
         headerName: 'Status',
