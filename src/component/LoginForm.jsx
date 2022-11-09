@@ -25,6 +25,7 @@ import { ParticlesBackground } from './ParticlesBackground';
 import { basedUrl, imageBaseUrl } from '../base-url/based-url';
 import HomeIcon from '@mui/icons-material/Home';
 import { IconButton } from '@mui/material';
+import {DASHBOARD} from '../slice/PageSlice/PageSlice';
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -81,6 +82,7 @@ const dispatch = useDispatch();
             setMessage("Wrong email or password")
             setisLoading(false);
           }else{
+            dispatch(DASHBOARD());
             setisLoading(false);
             setMessage("Log in successfull")
             setStatus("success");

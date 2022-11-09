@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import {  Alert, Skeleton, Snackbar, Stack, Paper, Avatar } from '@mui/material';
 import { DrawerAppBar } from '../component/DrawerAppBar';
@@ -18,6 +18,7 @@ import { ProfessorTable } from '../data-table/ProfessorTable';
 import { imageBaseUrl } from '../base-url/based-url';
 import { ProfessorView } from '../viewprofile/ProfessorView';
 import { ProfessorHistory } from '../viewhistory/ProfessorHistory';
+import { PROFESSOR } from '../slice/PageSlice/PageSlice';
 
 export  function Professor() {
 //Selected Professor
@@ -38,6 +39,7 @@ const [open, setOpen] = useState(false);// for snackbar
 //snackbar status
 const [loginStatus, setStatus] = useState("failed");// default is failed for login atttempt alert
 
+const dispatch = useDispatch();
 
 //Message of snackbar
 const [loginMessage, setMessage ] = useState("Try again");// Default message of alert
@@ -50,6 +52,15 @@ const handleClose = (event, reason) => {
 };
 
 
+useEffect(() =>{
+let isCancelled = false;
+
+dispatch(PROFESSOR())
+
+return () =>{
+  isCancelled = true;
+}
+},[])
 
   const handleChange = (event, newValue) => {
     setValue(newValue);

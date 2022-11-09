@@ -142,7 +142,7 @@ const changeTheme = () =>{
         </Typography>
           <Grid container justifyContent="center" display ='flex'>
           <Typography variant = "h5" className ='font-nunito'>
-            {currentPage.charAt(0).toUpperCase() + currentPage.slice(1)}
+            {currentPage !== null ?  (currentPage.charAt(0).toUpperCase() + currentPage.slice(1)) : ('')}
           </Typography>
           </Grid>
 

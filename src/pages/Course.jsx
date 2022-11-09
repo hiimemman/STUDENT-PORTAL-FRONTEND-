@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import {  Alert, Skeleton, Snackbar, Paper } from '@mui/material';
 import { DrawerAppBar } from '../component/DrawerAppBar';
@@ -16,6 +16,7 @@ import MailIcon from '@mui/icons-material/Mail';
 import Avatar from "@mui/material/Avatar";
 import { CourseTable } from '../data-table/CourseTable';
 import { CourseHistory } from '../viewhistory/CourseHistory';
+import {COURSE} from '../slice/PageSlice/PageSlice';
 
 export  function Course() {
 //Selected Employee
@@ -24,6 +25,7 @@ const employee = useSelector(state => state.employeeSelected.value)
 //get user
 const user = useSelector(state => JSON.parse(state.user.session))
 
+const dispatch = useDispatch();
 
 const [value, setValue] = useState('1');//default tab
 
@@ -56,7 +58,17 @@ const handleClose = (event, reason) => {
     } 
    },[user])
 
-  
+  useEffect(() =>{
+
+    let isCancelled = false;
+
+    dispatch(COURSE());
+
+    return () => {isCancelled = true}
+
+  },[])
+
+
   return (
     <>
   

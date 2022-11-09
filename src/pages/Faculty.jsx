@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import {  Alert, Skeleton, Snackbar, Paper } from '@mui/material';
 import { DrawerAppBar } from '../component/DrawerAppBar';
@@ -16,6 +16,7 @@ import MailIcon from '@mui/icons-material/Mail';
 import Avatar from "@mui/material/Avatar";
 import { FacultyTable } from '../data-table/FacultyTable';
 import { FacultyHistory } from '../viewhistory/FacultyHistory';
+import { FACULTY } from '../slice/PageSlice/PageSlice';
 
 export  function Faculty() {
 //Selected Employee
@@ -32,6 +33,15 @@ const [open, setOpen] = useState(false);// for snackbar
 //snackbar status
 const [loginStatus, setStatus] = useState("failed");// default is failed for login atttempt alert
 
+const dispatch = useDispatch();
+
+useEffect(() =>{
+let isCancelled = false;
+
+dispatch(FACULTY());
+
+return () =>{isCancelled = true}
+},[])
 
 //Message of snackbar
 const [loginMessage, setMessage ] = useState("Try again");// Default message of alert
@@ -93,6 +103,7 @@ const handleClose = (event, reason) => {
             </Paper>
             </TabPanel>
           </TabContext>
+          
        </div>
        <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
              <Alert onClose={handleClose} severity= {loginStatus} sx={{ width: '100%' }}>

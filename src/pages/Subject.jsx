@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import {  Alert, Skeleton, Snackbar, Stack, Paper } from '@mui/material';
 import { DrawerAppBar } from '../component/DrawerAppBar';
@@ -19,6 +19,7 @@ import { SubjectTable } from '../data-table/SubjectTable';
 import { SubjectHistory } from '../viewhistory/SubjectHistory';
 import { Typography } from '@mui/material';
 import { SubjectView } from '../viewprofile/SubjectView';
+import { SUBJECT } from '../slice/PageSlice/PageSlice';
 export  function Subject() {
 //Selected Subject
 const subject = useSelector(state => state.subjectSelected.value)
@@ -34,6 +35,7 @@ const [open, setOpen] = useState(false);// for snackbar
 //snackbar status
 const [loginStatus, setStatus] = useState("failed");// default is failed for login atttempt alert
 
+const dispatch = useDispatch();
 
 //Message of snackbar
 const [loginMessage, setMessage ] = useState("Try again");// Default message of alert
@@ -45,6 +47,14 @@ const handleClose = (event, reason) => {
   setOpen(false);
 };
 
+useEffect(() =>{
+let isCancelled = false;
+
+dispatch(SUBJECT())
+return () =>{
+  isCancelled = true;
+}
+},[])
 
 
   const handleChange = (event, newValue) => {

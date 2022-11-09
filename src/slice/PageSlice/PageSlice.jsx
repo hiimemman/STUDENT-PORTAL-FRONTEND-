@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-   value: 'dashboard',
+   value: null,
 }
 
 export const pageState = createSlice({
@@ -32,12 +32,15 @@ export const pageState = createSlice({
         SECTION: (state) =>{
             state.value = 'section'
         },
+        NULL: (state) =>{
+            state.value = initialState;
+        }
     },
 })
 
 
 // Action creators are generated for each case reducer function
-export const { DASHBOARD, EMPLOYEE, PROFESSOR, STUDENT, SUBJECT,FACULTY,COURSE, SECTION } = pageState.actions
+export const { DASHBOARD, EMPLOYEE, PROFESSOR, STUDENT, SUBJECT,FACULTY,COURSE, SECTION, NULL } = pageState.actions
 
 export default pageState.reducer
 

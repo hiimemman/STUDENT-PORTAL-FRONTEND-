@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import {  Alert, Paper, Skeleton, Snackbar, Stack } from '@mui/material';
 import { DrawerAppBar } from '../component/DrawerAppBar';
@@ -15,6 +15,7 @@ import { SelectedLine } from '../component/SelectedLine';
 import { SectionTable } from '../data-table/SectionTable';
 import { SectionView } from '../viewprofile/SectionView';
 import { SectionHistory } from '../viewhistory/SectionHistory';
+import { SECTION } from '../slice/PageSlice/PageSlice';
 export  function Section() {
 //Selected Section
 const section = useSelector(state => state.sectionSelected.value)
@@ -22,6 +23,7 @@ const section = useSelector(state => state.sectionSelected.value)
 //get user
 const user = useSelector(state => JSON.parse(state.user.session))
 
+const dispatch = useDispatch();
 
 const [value, setValue] = useState('1');//default tab
 
@@ -41,6 +43,13 @@ const handleClose = (event, reason) => {
   setOpen(false);
 };
 
+useEffect(() =>{
+let isCancelled = false;
+
+dispatch(SECTION());
+
+return () =>{isCancelled = true}
+},[])
 
 
   const handleChange = (event, newValue) => {

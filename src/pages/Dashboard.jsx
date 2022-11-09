@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import Skeleton from '@mui/material/Skeleton';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -18,6 +18,7 @@ import BiotechIcon from '@mui/icons-material/Biotech';
 import GroupsIcon from '@mui/icons-material/Groups';
 import { basedUrl } from '../base-url/based-url';
 import { ChartJs } from '../component/ChartJs';
+import { DASHBOARD } from '../slice/PageSlice/PageSlice';
 
 
 // import myLogo from './aisat-logo.svg'
@@ -27,6 +28,7 @@ export function Dashboard(){
 //get user
 const user = useSelector(state => JSON.parse(state.user.session))
 
+const dispatch = useDispatch();
     //page current state
     const currentPage = useSelector(state => (state.selectedPage.value));
 
@@ -91,6 +93,13 @@ const [data, setData] = useState({
       }
   ]
 })
+
+useEffect(() =>{
+let isCancelled = false;
+
+dispatch(DASHBOARD())
+return () => {isCancelled = true}
+},[])
 
 //update chart
 const [updateChart, setUpdateChart] = useState(false);

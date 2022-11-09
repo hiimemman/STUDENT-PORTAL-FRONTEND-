@@ -7,7 +7,6 @@ import { useEffect } from 'react';
 import { PUT_USER, REMOVE_USER } from '../slice/UserSession/userSession';
 import { imageBaseUrl } from '../base-url/based-url';
 import { useState } from 'react';
-
 export function SignIn() {
 
 //get user
@@ -24,7 +23,7 @@ useEffect(() =>{
   if(sessionStorage.getItem('user') !== null && user === null){
     dispatch(REMOVE_USER());
     dispatch(PUT_USER(JSON.stringify(sessionStorage.getItem('user'))))
-   navigate('/Dashboard')
+   navigate('/dashboard')
   } 
  },[])
 

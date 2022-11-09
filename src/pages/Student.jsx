@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import {  Alert, Skeleton, Snackbar, Stack, Paper, Avatar } from '@mui/material';
 import { DrawerAppBar } from '../component/DrawerAppBar';
@@ -17,6 +17,7 @@ import { StudentTable } from '../data-table/StudentTable';
 import { imageBaseUrl } from '../base-url/based-url';
 import { StudentView } from '../viewprofile/StudentView';
 import { ProfessorHistory } from '../viewhistory/ProfessorHistory';
+import { STUDENT } from '../slice/PageSlice/PageSlice';
 
 export  function Student() {
 //Selected Student
@@ -49,6 +50,15 @@ const [course, setCourse] = useState([]);
 
 //all active section
 const [section, setSection] = useState([]);
+
+const dispatch = useDispatch();
+
+useEffect(() =>{
+let isCancelled = false;
+
+dispatch(STUDENT())
+return () =>{isCancelled = true}
+},[])
 
 const handleClose = (event, reason) => {
   if (reason === 'clickaway') {

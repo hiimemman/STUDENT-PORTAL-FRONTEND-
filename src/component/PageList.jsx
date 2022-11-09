@@ -15,7 +15,7 @@ import GroupsIcon from '@mui/icons-material/Groups';
 import AnnouncementIcon from '@mui/icons-material/Announcement';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import HandymanIcon from '@mui/icons-material/Handyman';
-import {DASHBOARD, EMPLOYEE,PROFESSOR, STUDENT, SUBJECT, COURSE, FACULTY, SECTION} from '../slice/PageSlice/PageSlice';
+import {DASHBOARD, EMPLOYEE,PROFESSOR, STUDENT, SUBJECT, COURSE, FACULTY, SECTION, NULL} from '../slice/PageSlice/PageSlice';
 import SchoolIcon from '@mui/icons-material/School';
 import BiotechIcon from '@mui/icons-material/Biotech';
 import { useEffect } from 'react';
@@ -53,28 +53,31 @@ const currentPage = useSelector(state => (state.selectedPage.value));
 
 useEffect(() => {
 if(currentPage === 'dashboard'){
-  navigate('/employee/dashboard');
+  // navigate('/employee/dashboard');
 }
 if(currentPage === 'employee'){
-  navigate('/employee/employees')
+  // navigate('/employee/employees')
 }
 if(currentPage === 'professor'){
-  navigate('/employee/professor')
+  // navigate('/employee/professor')
 }
 if(currentPage === 'student'){
-  navigate('/employee/student')
+  // navigate('/employee/student')
 }
 if(currentPage === 'subject'){
-  navigate('/employee/subject')
+  // navigate('/employee/subject')
 }
 if(currentPage === 'faculty'){
-  navigate('/employee/faculty')
+  // navigate('/employee/faculty')
 }
 if(currentPage === 'course'){
-  navigate('/employee/course')
+  // navigate('/employee/course')
 }
 if(currentPage === 'section'){
-  navigate('/employee/section')
+  // navigate('/employee/section')
+}
+if(currentPage === null){
+  return () => {}
 }
 return ()=> {}
 }, [currentPage]);
@@ -100,7 +103,7 @@ return(
     <ListItem  disablePadding sx={{ display: 'block' }} className="transition ease-in-out delay-2 hover:bg-slate-300 duration-300">
     <Stack direction="row" justifyContent="center" alignItems="center" spacing={0}>
 <SelectedLine selected ={currentPage === 'dashboard'}  />
-      <ListItemButton onClick ={ ()=>dispatch(DASHBOARD()) } onMouseEnter = {handleDrawerOpen} onMouseLeave ={handleDrawerClose}
+      <ListItemButton onClick ={ ()=> {dispatch(DASHBOARD()); navigate('/employee/dashboard');} } onMouseEnter = {handleDrawerOpen} onMouseLeave ={handleDrawerClose}
         sx={{
           minHeight: 48,
           justifyContent: isOpen ? 'initial' : 'center',
@@ -139,7 +142,7 @@ return(
     <ListItem  disablePadding sx={{ display: 'block'}} className="transition ease-in-out delay-2 hover:bg-slate-300  duration-300">
     <Stack direction="row" justifyContent="center" alignItems="center" spacing={0}>
 <SelectedLine selected ={currentPage === 'employee'}  />
-      <ListItemButton onClick ={ ()=>dispatch(EMPLOYEE())}   onMouseEnter = {handleDrawerOpen} onMouseLeave ={handleDrawerClose}
+      <ListItemButton onClick ={ ()=>{dispatch(EMPLOYEE()); navigate('/employee/employees')}}   onMouseEnter = {handleDrawerOpen} onMouseLeave ={handleDrawerClose}
         sx={{
           minHeight: 48,
           justifyContent: isOpen ? 'initial' : 'center',
@@ -179,7 +182,7 @@ return(
     <ListItem  disablePadding sx={{ display: 'block' }} className="transition ease-in-out delay-2 hover:bg-slate-300 duration-300">
     <Stack direction="row" justifyContent="center" alignItems="center" spacing={0}>
 <SelectedLine selected ={currentPage === 'professor'}  />
-      <ListItemButton onClick ={ ()=>dispatch(PROFESSOR()) } onMouseEnter = {handleDrawerOpen} onMouseLeave ={handleDrawerClose}
+      <ListItemButton onClick ={ ()=>{dispatch(PROFESSOR()); navigate('/employee/professor')} } onMouseEnter = {handleDrawerOpen} onMouseLeave ={handleDrawerClose}
         sx={{
           minHeight: 48,
           justifyContent: isOpen ? 'initial' : 'center',
@@ -219,7 +222,7 @@ return(
     <Stack direction="row" justifyContent="center" alignItems="center" spacing={0}>
 <SelectedLine selected ={currentPage === 'student'}  />
 
-      <ListItemButton onClick ={ ()=>dispatch(STUDENT())}    onMouseEnter = {handleDrawerOpen} onMouseLeave ={handleDrawerClose}
+      <ListItemButton onClick ={ ()=>{dispatch(STUDENT()); navigate('/employee/student')}}    onMouseEnter = {handleDrawerOpen} onMouseLeave ={handleDrawerClose}
         sx={{
           minHeight: 48,
           justifyContent: isOpen ? 'initial' : 'center',
@@ -256,7 +259,7 @@ return(
     <ListItem  disablePadding sx={{ display: 'block'}} className="transition ease-in-out delay-2 hover:bg-slate-300  duration-300">
     <Stack direction="row" justifyContent="center" alignItems="center" spacing={0}>
 <SelectedLine selected ={currentPage === 'subject'}  />
-      <ListItemButton onClick ={ ()=>dispatch(SUBJECT())}   onMouseEnter = {handleDrawerOpen} onMouseLeave ={handleDrawerClose}
+      <ListItemButton onClick ={ ()=>{dispatch(SUBJECT()); ; navigate('/employee/subject')}}   onMouseEnter = {handleDrawerOpen} onMouseLeave ={handleDrawerClose}
         sx={{
           minHeight: 48,
           justifyContent: isOpen ? 'initial' : 'center',
@@ -294,7 +297,7 @@ return(
     <ListItem  disablePadding sx={{ display: 'block'}} className="transition ease-in-out delay-2 hover:bg-slate-300  duration-300">
     <Stack direction="row" justifyContent="center" alignItems="center" spacing={0}>
 <SelectedLine selected ={currentPage === 'faculty'}  />
-      <ListItemButton onClick ={() => dispatch(FACULTY())}  onMouseEnter = {handleDrawerOpen} onMouseLeave ={handleDrawerClose}
+      <ListItemButton onClick ={() => {dispatch(FACULTY()); ; navigate('/employee/faculty')}}  onMouseEnter = {handleDrawerOpen} onMouseLeave ={handleDrawerClose}
         sx={{
           minHeight: 48,
           justifyContent: isOpen ? 'initial' : 'center',
@@ -333,7 +336,7 @@ return(
 
 <Stack direction="row" justifyContent="center" alignItems="center" spacing={0}>
 <SelectedLine selected ={currentPage === 'course'}  />
-      <ListItemButton onClick ={() => dispatch(COURSE())}   onMouseEnter = {handleDrawerOpen} onMouseLeave ={handleDrawerClose}
+      <ListItemButton onClick ={() => {dispatch(COURSE()); navigate('/employee/course')}}   onMouseEnter = {handleDrawerOpen} onMouseLeave ={handleDrawerClose}
       >
         
         {currentPage === 'course' ?  <ListItemIcon
@@ -368,7 +371,7 @@ return(
     <ListItem  disablePadding sx={{ display: 'block'}} className="transition ease-in-out delay-2 hover:bg-slate-300  duration-300">
     <Stack direction="row" justifyContent="center" alignItems="center" spacing={0}>
 <SelectedLine selected ={currentPage === 'section'}  />
-      <ListItemButton onClick ={()=>dispatch(SECTION())} onMouseEnter = {handleDrawerOpen} onMouseLeave ={handleDrawerClose}
+      <ListItemButton onClick ={()=>{dispatch(SECTION());navigate('/employee/section') }} onMouseEnter = {handleDrawerOpen} onMouseLeave ={handleDrawerClose}
         sx={{
           minHeight: 48,
           justifyContent: isOpen ? 'initial' : 'center',

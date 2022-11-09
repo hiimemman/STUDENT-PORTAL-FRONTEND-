@@ -1,7 +1,7 @@
 import { Alert, Button, Chip, Divider, FormControl, FormControlLabel, FormHelperText, InputBase,  InputLabel,  NativeSelect, OutlinedInput, Snackbar, Stack, TextField, Typography } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import Grid2 from '@mui/material/Unstable_Grid2'; // Grid2 version 2
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Avatar from '@mui/material/Avatar';
 import { styled } from '@mui/material/styles';
@@ -23,8 +23,10 @@ import { ProfessorScheduleTable } from '../data-table/ProfessorScheduleTable';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers';
-
-
+import { useNavigate, useParams } from 'react-router-dom';
+import CssBaseline from '@mui/material/CssBaseline';
+import { DrawerAppBar } from '../component/DrawerAppBar';
+import { Skeleton} from '@mui/material';
 //Course select required functions
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -49,14 +51,16 @@ function getStyles(name, courseName, theme) {
 
 
 
-export function StudentView(props){
+export function StudentDetails(){
+
+  const {id} = useParams();
 
   const theme = useTheme();
   //dispatch from redux
   const dispatch = useDispatch();
 
     //Selected Student
-const student = useSelector(state => state.studentSelected.value);
+const [student, setStudent] = useState({});
 
 //Current User Session
 const user = useSelector(state => JSON.parse(state.user.session));
@@ -81,7 +85,7 @@ const [loginMessage, setMessage ] = useState("Try again");// Default message of 
 
 //props state
 
-const [courses, setCourses] = useState(props.course);
+// const [courses, setCourses] = useState(props.course);
 
 
 //Field states
@@ -95,8 +99,43 @@ const [birthday, setBirthday] = useState(student.birthday);
 
 //Error handlers
 
+const getStudentDetails = async () =>{
+  try{ 
+    const data = new FormData();
+    data.append('StudentID', {id});
+    
+    //online api
+       const sendRequest = await fetch(basedUrl+"/student-details.php",{
+          method: "POST",
+          body: data,
+      });
+      const getResponse = await sendRequest.json();
+      console.log("Student per section "+JSON.stringify(getResponse))
+     
+      if(getResponse.statusCode === 201){
+      
+      }else{
+        //if succesfully retrieve data
+       
+        console.log(getResponse)
+        setStudent((prev) => prev = getResponse);
+      }
+  }catch(e){
+    console.error(e)
+  }
+}
 
+useEffect(() =>{
+let isCancelled = false;
+getStudentDetails();
+return () =>{isCancelled = true}
+},[])
 
+useEffect(() =>{
+let isCancelled = false;
+console.log(student)
+return () =>{isCancelled  = true}
+},[student])
 
 const handleClose = (event, reason) => {
   if (reason === 'clickaway') {
@@ -272,7 +311,7 @@ const OverviewPanel = () =>{
      </Stack> 
     
 
-<Stack direction="row" spacing={2} sx = {{width:'100%', marginBottom: '1.5rem'}}>
+{/* <Stack direction="row" spacing={2} sx = {{width:'100%', marginBottom: '1.5rem'}}>
   <Typography variant ="overline" noWrap sx={{fontSize:'15px', width: '15rem'}}>Course:  </Typography>
   <FormControl fullWidth variant = "standard"    sx={{fontSize:'15px' , width: '50rem'}}>
     <Select
@@ -287,10 +326,10 @@ const OverviewPanel = () =>{
       {courses.map((course) => (<MenuItem value ={course.course_name}>{course.course_name}</MenuItem>))}  
     </Select>
   </FormControl>
-</Stack>
+</Stack> */}
 
 
-<Stack direction="row" spacing={2} sx = {{width:'100%', marginBottom: '1.5rem'}}>
+{/* <Stack direction="row" spacing={2} sx = {{width:'100%', marginBottom: '1.5rem'}}>
   <Typography variant ="overline" noWrap sx={{fontSize:'15px', width: '15rem'}}>Section:  </Typography>
   <FormControl fullWidth variant = "standard"    sx={{fontSize:'15px' , width: '50rem'}}>
     <Select
@@ -306,7 +345,7 @@ const OverviewPanel = () =>{
       {props.section.map((sections) => (<MenuItem value ={sections.section_name}>{sections.section_name}</MenuItem>))}  
     </Select>
   </FormControl>
-</Stack>
+</Stack> */}
 
 <Stack direction="row" spacing={2} sx = {{width:'100%', marginBottom: '1.5rem'}}>
 <Typography variant ="overline" noWrap sx={{fontSize:'15px', width: '15rem'}}>Birthday:  </Typography>
@@ -375,6 +414,19 @@ const handleChangeTab = (event, newValue) =>{
 } 
     return(
         <>
+           {user !== null ?  (
+    <Box sx={{ display: 'flex' }}>
+      <CssBaseline />
+       <DrawerAppBar />
+<Suspense fallback = {
+   <Skeleton variant="rectangular" width="100%">
+   <div style={{ paddingTop: '57%' }} ></div>
+ </Skeleton>
+} >
+<div className="flex flex-col justify-evenly" style={{width:'100%', marginRight:'1.5rem'}}>
+             <h2 className ='font-nunito font-bold'>Subjects</h2>
+             
+             
         <TabContext value = {valueTab}>
         <Paper elevation={1}>
             <Box  style={{ backgroundImage:`url("https://gstatic.com/classroom/themes/img_code.jpg")`,  backgroundRepeat:'no-repeat', backgroundSize: 'cover', }} sx ={{width:'500', paddingTop:'1.5rem'}} className ="rounded-t-lg">
@@ -406,12 +458,25 @@ const handleChangeTab = (event, newValue) =>{
              <TabPanel value  = {2} sx ={{p:0, marginTop:'1.5rem'}}>
                <SchedulePanel />
              </TabPanel>
-      </TabContext>        
+      </TabContext>  
+      </div> 
       <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
              <Alert onClose={handleClose} severity= {loginStatus} sx={{ width: '100%' }}>
                 {loginMessage}
              </Alert>
        </Snackbar>
+</Suspense>
+  {/* </Paper>
+      */}
+   </Box>
+   ) :  
+   (<Skeleton
+    sx={{ bgcolor: 'grey.900' }}
+    variant="rectangular"
+    width={1500}
+    height={690}
+  />
+  )}
        </>
     )
 

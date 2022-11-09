@@ -6,21 +6,25 @@ import PropTypes from 'prop-types';
 import Avatar from "@mui/material/Avatar";
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
-import { Alert, Chip, Dialog, DialogActions, DialogContent, DialogTitle, InputLabel, MenuItem, OutlinedInput, Snackbar, Stack, FormControl } from '@mui/material';
+import { Alert, Chip, Dialog, DialogActions, DialogContent, DialogTitle, OutlinedInput, Snackbar, Stack, FormControl } from '@mui/material';
 import { useEffect, useState, useCallback, useRef } from 'react';
 import Button from '@mui/material/Button';
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
+
 import { useSelector, useDispatch } from 'react-redux';
 import { basedUrl } from '../base-url/based-url'
 
-import {ADDSECTION} from '../slice/AddFormSlice/AddSectionSlice/AddSectionSlice'
 import { useTheme } from '@mui/material/styles';
 
-import { Suspense } from 'react';
-import { PUT_SECTION } from '../slice/FormSelectedRow/SectionSelected';
-import { AddSection } from '../forms/AddSection';
 import { NoRowBackground } from '../component/NoRowBackground';
 import { imageBaseUrl } from '../base-url/based-url';
+import { useNavigate} from 'react-router-dom';
+
+import IconButton from '@mui/material/IconButton';
+import Menu from '@mui/material/Menu';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import EditIcon from '@mui/icons-material/Edit';
+import { PUT_STUDENT } from '../slice/FormSelectedRow/StudentSelected';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -44,6 +48,38 @@ const names = [
 ];
 
 
+function LongMenu() {
+  const navigate = useNavigate();
+
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+    navigate("student/"+123);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  return (
+    <div>
+      <IconButton
+        aria-label="more"
+        id="long-button"
+        aria-controls={open ? 'long-menu' : undefined}
+        aria-expanded={open ? 'true' : undefined}
+        aria-haspopup="true"
+        onClick={handleClick}
+      >
+        <VisibilityIcon />
+         
+      </IconButton>
+    
+         
+       
+    </div>
+  );
+}
 
 function getStyles(name, personName, theme) {
   return {
@@ -388,6 +424,7 @@ const renderEditStatus = (params) => {
       headerName: 'Email',
       width: 259,
       editable: false,
+      
    },
   {
           field: 'studentnumber',
@@ -402,15 +439,14 @@ const renderEditStatus = (params) => {
       editable: true,
 },
       {
-        field: 'status',
-        headerName: 'Status',
-        renderEditCell: renderEditStatus,
+        field: 'id',
+        headerName: 'Actions',
         width: 100,
-        editable: true,
+        editable: false,
         renderCell: (cellValues) => {
           return(
           <>
-        {cellValues.value == "active" ? (<Chip icon={<CheckIcon/>} label=" active  " color ="success" size = "small" variant = "outlined"/>) : (<Chip icon={<CloseIcon/>} label=" inactive" color ="error" size = "small" variant = "outlined"/>)}
+        <LongMenu />
           </>
           );//end of return
         }
@@ -522,13 +558,13 @@ const renderEditStatus = (params) => {
       </Stack>
     ), }} loading = {loading} rows = {rows} columns={columns}  experimentalFeatures={{ newEditingApi: true }} style ={{height:'500px'}}
      processRowUpdate={processRowUpdate}
-    //  onSelectionModelChange={(ids) => {
-    //   const selectedIDs = new Set(ids);
-    //   const selectedRowData = rows.filter((row) =>
-    //     selectedIDs.has(row.id.toString())
-    //   );
-    //   dispatch(PUT_SECTION(selectedRowData[0]))
-    // }}
+     onSelectionModelChange={(ids) => {
+      const selectedIDs = new Set(ids);
+      const selectedRowData = rows.filter((row) =>
+        selectedIDs.has(row.id.toString())
+      );
+      dispatch(PUT_STUDENT(selectedRowData[0]))
+    }}
     /> 
  {!!snackbar && (
         <Snackbar open onClose={handleCloseSnackbar} autoHideDuration={6000}>

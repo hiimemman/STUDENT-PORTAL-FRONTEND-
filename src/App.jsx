@@ -17,6 +17,7 @@ import { Skeleton } from '@mui/material';
 import { Section } from './pages/Section';
 import { Professor } from './pages/Professor';
 import { StudentSignIn } from './student-portal/StudentSignIn';
+import { StudentDetails } from './viewselected/StudentDetails';
 
 
 
@@ -123,6 +124,7 @@ return (
         <Route path = "/employee/course" element ={<><Course/></>} />
         <Route path = "/employee/section" element ={<><Section/></>} />
         <Route path = "/student-portal" element ={<><ParticlesBackground /><StudentSignIn /></>} />
+        <Route path = "/employee/section/student/:id"  element ={<StudentDetails />}/>
       </Routes>
     </Router>
   </ThemeProvider>
