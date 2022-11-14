@@ -1,4 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit'
+import studentInfo from '../slice/StudentSession/studentSession'
 import userInfo from '../slice/UserSession/userSession'
 import menuState from '../slice/MenuSlice/MenuState'
 import formState from '../slice/FormSlice/FormSlice'
@@ -20,15 +21,21 @@ import addProfessor from '../slice/AddFormSlice/AddProfessorSlice/AddProfessorSl
 import professorSelect from '../slice/FormSelectedRow/ProfessorSelected'
 import studentSelect from '../slice/FormSelectedRow/StudentSelected'
 import addStudent from '../slice/AddFormSlice/AddStudentSlice/AddStudentSlice'
+import menuStudentState from '../slice/MenuSlice/MenuState';
+import studentPageState from '../slice/StudentPageSlice/StudentPageSlice';
+import scheduleSelection from '../slice/AddSchedule/AddScheduleSlice';
 
 export const store = configureStore({
   reducer: {
     user: userInfo,
+    student: studentInfo,
     isOpen: menuState,
+    isOpenStudent: menuStudentState,
     isOpenForm: formState,
     formType: formType,
     selectedTheme: themeMode,
     selectedPage: pageState,
+    studentSelectedPage: studentPageState,
     employeeSelected: employeeSelect,
     openSnackEmp: openEmployeeTable,
     snackStatusEmp: statusEmployeeTable,
@@ -44,5 +51,6 @@ export const store = configureStore({
     professorSelected: professorSelect,
     studentSelected: studentSelect,
     addFormStudent: addStudent,
+    scheduleSelection: scheduleSelection,
   },
 })

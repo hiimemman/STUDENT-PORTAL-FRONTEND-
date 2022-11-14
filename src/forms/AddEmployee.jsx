@@ -17,7 +17,7 @@ import { DatePicker } from '@mui/x-date-pickers';
 import {OPENSNACK, CLOSESNACK} from '../slice/Snackbars/EmployeeTableOpen/EmployeeTableOpen';
 import {SUCCESSSNACK, FAILEDSNACK} from '../slice/Snackbars/EmployeeTableStatus/EmployeeTableStatus'
 import {SUCCESSMESSAGESNACK, FAILEDMESSAGESNACK} from '../slice/Snackbars/EmployeeTableMessage/EmployeeTableMessage'
-
+import {basedUrl} from '../base-url/based-url'
 
 
 export function AddEmployee(){
@@ -160,7 +160,7 @@ if(sexChanged === false){
   
 
   try{
-    const sendRequest = await fetch("https://my-aisat-portal.herokuapp.com/admin-panel/controller/user-create-account.php",{
+    const sendRequest = await fetch(basedUrl+"/employee-add.php",{
               method: "POST",
               body: data,
           });

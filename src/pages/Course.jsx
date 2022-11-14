@@ -96,7 +96,7 @@ const handleClose = (event, reason) => {
             </Box>
         <TabPanel value="1"  style={{height: 'auto'}} sx ={{marginLeft:'-24px'}}>
         <Paper elevation={1} sx ={{width:'500 '}} className ="rounded-xl">
-          <CourseTable />
+          <CourseTable /> 
           </Paper>
           </TabPanel>
             <TabPanel value="2" sx ={{marginLeft:'-24px'}}>

@@ -7,16 +7,16 @@ import Typography from '@mui/material/Typography';
 import { styled, useTheme } from '@mui/material/styles';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import {CLOSE, OPEN} from  '../slice/MenuSlice/MenuState'
-import { PageList } from './PageList';
+import {CLOSE, OPEN} from '../../slice/StudentMenuSlice/StudentMenuSlice'
+import { StudentPageList } from './StudentPageList';
 import Grid from '@mui/material/Grid';
-import { ProfileBox } from './ProfileBox';
+import { StudentProfileBox } from './StudentProfileBox';
 import MuiDrawer from '@mui/material/Drawer';
 import MuiAppBar from '@mui/material/AppBar';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import { useSelector, useDispatch } from 'react-redux';
-import { DARK, LIGHT } from '../slice/ThemeMode/ThemeMode';
+import { DARK, LIGHT } from '../../slice/ThemeMode/ThemeMode';
 import Grid2 from '@mui/material/Unstable_Grid2/Grid2';
 import { Stack } from '@mui/material';
 
@@ -89,7 +89,7 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   // necessary for content to be below app bar
   ...theme.mixins.toolbar,
 }));
-export function DrawerAppBar() {
+export function StudentDrawerAppBar() {
 
   const theme = useTheme();
 
@@ -102,7 +102,7 @@ export function DrawerAppBar() {
     const selectedTheme = useSelector(state =>(state.selectedTheme.value))
 
     //page current state
-const currentPage = useSelector(state => (state.selectedPage.value));
+const currentPage = useSelector(state => (state.studentSelectedPage.value));
  
   const handleDrawerOpen = () => {
     dispatch(OPEN())
@@ -153,7 +153,7 @@ const changeTheme = () =>{
               {selectedTheme !== 'darkTheme' ? (<Brightness4Icon />) : (<Brightness7Icon />)}
              </IconButton>
           </div> 
-       <ProfileBox  />
+       <StudentProfileBox  onMouseEnter={handleDrawerOpen}/>
        </Stack>  
 
       </Toolbar>
@@ -167,7 +167,7 @@ const changeTheme = () =>{
       </DrawerHeader>
       <Divider />
       {/* List link */}
-     <PageList />
+     <StudentPageList />
     </Drawer>
     <DrawerHeader />
    
@@ -176,7 +176,7 @@ const changeTheme = () =>{
   
 }
 
-DrawerAppBar.propTypes = {
+StudentDrawerAppBar.propTypes = {
   window: PropTypes.func,
 };
 

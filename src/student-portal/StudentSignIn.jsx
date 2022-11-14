@@ -3,15 +3,15 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import {  Box, Skeleton } from '@mui/material';
 import { useEffect } from 'react';
-import { PUT_USER, REMOVE_USER } from '../slice/UserSession/userSession';
+import {PUT_STUDENT, REMOVE_STUDENT } from '../slice/StudentSession/studentSession';
 import { imageBaseUrl } from '../base-url/based-url';
 import { useState } from 'react';
 import { StudentLogin } from './student-component/StudentLogin';
 
 export function StudentSignIn() {
 
-//get user
-const user = useSelector(state => (state.user.session))
+//get student
+const student = useSelector(state => (state.student.session))
 
 //Navigation
 const navigate = useNavigate();
@@ -21,10 +21,10 @@ const dispatch = useDispatch();
 const [backgroundImage, setBackgroundImage] = useState(imageBaseUrl+"school-sample-background.jpg")
 
 useEffect(() =>{
-  if(sessionStorage.getItem('user') !== null && user === null){
-    dispatch(REMOVE_USER());
-    dispatch(PUT_USER(JSON.stringify(sessionStorage.getItem('user'))))
-   navigate('/Dashboard')
+  if(sessionStorage.getItem('student') !== null && student === null){
+    dispatch(REMOVE_STUDENT());
+    dispatch(PUT_STUDENT(JSON.stringify(sessionStorage.getItem('student'))))
+   navigate('/student-portal/dashboard')
   } 
  },[])
 
@@ -34,7 +34,7 @@ useEffect(() =>{
   return (
     <>
     
-   {user !== null ? (<Skeleton
+   {student !== null ? (<Skeleton
     sx={{ bgcolor: 'grey.900' }}
     variant="rectangular"
     width={1500}

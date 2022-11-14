@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-   session: sessionStorage.getItem('user'),
+   session: sessionStorage.getItem('student'),
 }
 
 export const studentInfo = createSlice({
@@ -9,7 +9,7 @@ export const studentInfo = createSlice({
     initialState,
     reducers:{
         PUT_STUDENT: (state, action) =>{
-        sessionStorage.setItem("student", JSON.stringify(action.payload)); 
+        sessionStorage.setItem('student', JSON.stringify(action.payload)); 
         let x = sessionStorage.getItem('student');// store session in storage
         state.session = x;
      

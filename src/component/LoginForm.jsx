@@ -47,7 +47,7 @@ const dispatch = useDispatch();
    //If email is correct
    const [emailValid, setEmailValid] = useState("");
 
-  const [open, setOpen] = React.useState(false);// for snackbar
+  const [open, setOpen] = useState(false);// for snackbar
 
   //snackbar status
   const [loginStatus, setStatus] = useState("failed");// default is failed for login atttempt alert

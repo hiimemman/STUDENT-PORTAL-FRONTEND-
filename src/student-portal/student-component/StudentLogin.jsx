@@ -20,7 +20,8 @@ import MuiAlert from '@mui/material/Alert';
 import Divider from '@mui/material/Divider';
 import LinearProgress from '@mui/material/LinearProgress';
 import validator from 'validator'
-import { basedUrl,imageBaseUrl } from '../../base-url/based-url';
+import { basedUrl } from '../../base-url/based-url';
+import { imageBaseUrl } from '../../base-url/based-url';
 import HomeIcon from '@mui/icons-material/Home';
 import { IconButton } from '@mui/material';
 
@@ -60,7 +61,7 @@ const dispatch = useDispatch();
       try{
         setisLoading(true);
         //online api
-          const sendRequest = await fetch(basedUrl+"/login.php",{
+          const sendRequest = await fetch(basedUrl+"/student-login.php",{
               method: "POST",
               body: data,
           });
@@ -76,7 +77,7 @@ const dispatch = useDispatch();
           if(getResponse.statusCode === 201){
             setOpen(true);
             setStatus("error");
-            setMessage("Wrong email or password")
+            setMessage("Wrong student number or password")
             setisLoading(false);
           }else{
             setisLoading(false);
@@ -84,7 +85,7 @@ const dispatch = useDispatch();
             setStatus("success");
             dispatch(PUT_STUDENT(getResponse.statusCode));
             setisLoading(false);
-            navigate('/employee/dashboard')
+            navigate('/student-portal/dashboard')
           }
       }catch(e){
         setisLoading(false);
@@ -118,11 +119,11 @@ const dispatch = useDispatch();
 
 
   const emailValidator = (email) =>{
-    if (validator.isEmail(email.target.value)) {
+    if (email.target.value.toString().length === 6) {
       setEmailValid(true);
     } else {
       setEmailValid(false);
-      setMessage('Enter valid Email!');
+      setMessage('Enter valid Student number!');
     }
   }
 
@@ -173,23 +174,23 @@ const dispatch = useDispatch();
                 margin="normal"
                 required
                 fullWidth
-                id="Email"
-                label="Email"
-                name="Email"
-                autoComplete="email"
+                id="StudentNumber"
+                label="Student number"
+                name="StudentNumber"
+                autoComplete="StudentNumber"
                 autoFocus
-                helperText = {emailValid === false ? ("Invalid Email") : ("")}
+                helperText = {emailValid === false ? ("Invalid student number") : ("")}
                 onKeyUp ={emailValidator}
               />) : (<TextField
                 margin="normal"
                 required
                 fullWidth
-                id="Email"
-                label="Email"
-                name="Email"
-                autoComplete="email"
+                id="StudentNumber"
+                label="Student number"
+                name="StudentNumber"
+                autoComplete="StudentNumber"
                 autoFocus
-                helperText = {emailValid === false ? ("Invalid Email") : ("")}
+                helperText = {emailValid === false ? ("Invalid student number") : ("")}
                 onKeyUp ={emailValidator}
               />)}
               <TextField

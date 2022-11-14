@@ -18,6 +18,8 @@ import { Section } from './pages/Section';
 import { Professor } from './pages/Professor';
 import { StudentSignIn } from './student-portal/StudentSignIn';
 import { StudentDetails } from './viewselected/StudentDetails';
+import { StudentDashboard } from './student-portal/pages/StudentDashboard';
+import { PreRegistration } from './student-portal/pages/PreRegistration';
 
 
 
@@ -124,6 +126,8 @@ return (
         <Route path = "/employee/course" element ={<><Course/></>} />
         <Route path = "/employee/section" element ={<><Section/></>} />
         <Route path = "/student-portal" element ={<><ParticlesBackground /><StudentSignIn /></>} />
+        <Route path ="/student-portal/dashboard" element ={<><StudentDashboard /></>} />.
+        <Route path ="/student-portal/pre-registration" element ={<><PreRegistration /></>} />
         <Route path = "/employee/section/student/:id"  element ={<StudentDetails />}/>
       </Routes>
     </Router>

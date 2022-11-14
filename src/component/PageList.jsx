@@ -103,7 +103,7 @@ return(
     <ListItem  disablePadding sx={{ display: 'block' }} className="transition ease-in-out delay-2 hover:bg-slate-300 duration-300">
     <Stack direction="row" justifyContent="center" alignItems="center" spacing={0}>
 <SelectedLine selected ={currentPage === 'dashboard'}  />
-      <ListItemButton onClick ={ ()=> {dispatch(DASHBOARD()); navigate('/employee/dashboard');} } onMouseEnter = {handleDrawerOpen} onMouseLeave ={handleDrawerClose}
+      <ListItemButton onClick ={ ()=> {dispatch(DASHBOARD()); navigate('/employee/dashboard');} } onMouseEnter = {handleDrawerOpen} 
         sx={{
           minHeight: 48,
           justifyContent: isOpen ? 'initial' : 'center',
@@ -142,7 +142,7 @@ return(
     <ListItem  disablePadding sx={{ display: 'block'}} className="transition ease-in-out delay-2 hover:bg-slate-300  duration-300">
     <Stack direction="row" justifyContent="center" alignItems="center" spacing={0}>
 <SelectedLine selected ={currentPage === 'employee'}  />
-      <ListItemButton onClick ={ ()=>{dispatch(EMPLOYEE()); navigate('/employee/employees')}}   onMouseEnter = {handleDrawerOpen} onMouseLeave ={handleDrawerClose}
+      <ListItemButton onClick ={ ()=>{dispatch(EMPLOYEE()); navigate('/employee/employees')}}   onMouseEnter = {handleDrawerOpen} 
         sx={{
           minHeight: 48,
           justifyContent: isOpen ? 'initial' : 'center',
@@ -182,7 +182,7 @@ return(
     <ListItem  disablePadding sx={{ display: 'block' }} className="transition ease-in-out delay-2 hover:bg-slate-300 duration-300">
     <Stack direction="row" justifyContent="center" alignItems="center" spacing={0}>
 <SelectedLine selected ={currentPage === 'professor'}  />
-      <ListItemButton onClick ={ ()=>{dispatch(PROFESSOR()); navigate('/employee/professor')} } onMouseEnter = {handleDrawerOpen} onMouseLeave ={handleDrawerClose}
+      <ListItemButton onClick ={ ()=>{dispatch(PROFESSOR()); navigate('/employee/professor')} } onMouseEnter = {handleDrawerOpen} 
         sx={{
           minHeight: 48,
           justifyContent: isOpen ? 'initial' : 'center',
@@ -222,7 +222,7 @@ return(
     <Stack direction="row" justifyContent="center" alignItems="center" spacing={0}>
 <SelectedLine selected ={currentPage === 'student'}  />
 
-      <ListItemButton onClick ={ ()=>{dispatch(STUDENT()); navigate('/employee/student')}}    onMouseEnter = {handleDrawerOpen} onMouseLeave ={handleDrawerClose}
+      <ListItemButton onClick ={ ()=>{dispatch(STUDENT()); navigate('/employee/student')}}    onMouseEnter = {handleDrawerOpen} 
         sx={{
           minHeight: 48,
           justifyContent: isOpen ? 'initial' : 'center',
@@ -259,7 +259,7 @@ return(
     <ListItem  disablePadding sx={{ display: 'block'}} className="transition ease-in-out delay-2 hover:bg-slate-300  duration-300">
     <Stack direction="row" justifyContent="center" alignItems="center" spacing={0}>
 <SelectedLine selected ={currentPage === 'subject'}  />
-      <ListItemButton onClick ={ ()=>{dispatch(SUBJECT()); ; navigate('/employee/subject')}}   onMouseEnter = {handleDrawerOpen} onMouseLeave ={handleDrawerClose}
+      <ListItemButton onClick ={ ()=>{dispatch(SUBJECT()); ; navigate('/employee/subject')}}   onMouseEnter = {handleDrawerOpen} 
         sx={{
           minHeight: 48,
           justifyContent: isOpen ? 'initial' : 'center',
@@ -297,7 +297,7 @@ return(
     <ListItem  disablePadding sx={{ display: 'block'}} className="transition ease-in-out delay-2 hover:bg-slate-300  duration-300">
     <Stack direction="row" justifyContent="center" alignItems="center" spacing={0}>
 <SelectedLine selected ={currentPage === 'faculty'}  />
-      <ListItemButton onClick ={() => {dispatch(FACULTY()); ; navigate('/employee/faculty')}}  onMouseEnter = {handleDrawerOpen} onMouseLeave ={handleDrawerClose}
+      <ListItemButton onClick ={() => {dispatch(FACULTY()); ; navigate('/employee/faculty')}}  onMouseEnter = {handleDrawerOpen} 
         sx={{
           minHeight: 48,
           justifyContent: isOpen ? 'initial' : 'center',
@@ -336,7 +336,7 @@ return(
 
 <Stack direction="row" justifyContent="center" alignItems="center" spacing={0}>
 <SelectedLine selected ={currentPage === 'course'}  />
-      <ListItemButton onClick ={() => {dispatch(COURSE()); navigate('/employee/course')}}   onMouseEnter = {handleDrawerOpen} onMouseLeave ={handleDrawerClose}
+      <ListItemButton onClick ={() => {dispatch(COURSE()); navigate('/employee/course')}}   onMouseEnter = {handleDrawerOpen} 
       >
         
         {currentPage === 'course' ?  <ListItemIcon
@@ -371,7 +371,7 @@ return(
     <ListItem  disablePadding sx={{ display: 'block'}} className="transition ease-in-out delay-2 hover:bg-slate-300  duration-300">
     <Stack direction="row" justifyContent="center" alignItems="center" spacing={0}>
 <SelectedLine selected ={currentPage === 'section'}  />
-      <ListItemButton onClick ={()=>{dispatch(SECTION());navigate('/employee/section') }} onMouseEnter = {handleDrawerOpen} onMouseLeave ={handleDrawerClose}
+      <ListItemButton onClick ={()=>{dispatch(SECTION());navigate('/employee/section') }} onMouseEnter = {handleDrawerOpen} 
         sx={{
           minHeight: 48,
           justifyContent: isOpen ? 'initial' : 'center',
@@ -407,7 +407,7 @@ return(
   <Tooltip title="Student list" placement="right-start">
     <ListItem  disablePadding sx={{ display: 'block'}} className="transition ease-in-out delay-2 hover:bg-slate-300  duration-300">
   
-      <ListItemButton onClick ={()=>navigate('/employee/employees')}  onMouseEnter = {handleDrawerOpen} onMouseLeave ={handleDrawerClose}
+      <ListItemButton onClick ={()=>navigate('/employee/employees')}  onMouseEnter = {handleDrawerOpen} 
         sx={{
           minHeight: 48,
           justifyContent: isOpen ? 'initial' : 'center',
@@ -444,7 +444,7 @@ return(
   <Tooltip title="Student list" placement="right-start">
     <ListItem  disablePadding sx={{ display: 'block'}} className="transition ease-in-out delay-2 hover:bg-slate-300  duration-300">
   
-      <ListItemButton onClick ={()=>navigate('/employee/employees')}  onMouseEnter = {handleDrawerOpen} onMouseLeave ={handleDrawerClose}
+      <ListItemButton onClick ={()=>navigate('/employee/employees')}  onMouseEnter = {handleDrawerOpen} 
         sx={{
           minHeight: 48,
           justifyContent: isOpen ? 'initial' : 'center',
@@ -470,7 +470,7 @@ return(
   <Tooltip title="Student list" placement="right-start">
     <ListItem  disablePadding sx={{ display: 'block'}} className="transition ease-in-out delay-2 hover:bg-slate-300  duration-300">
   
-      <ListItemButton onClick ={()=>navigate('/employee/employees')}  onMouseEnter = {handleDrawerOpen} onMouseLeave ={handleDrawerClose}
+      <ListItemButton onClick ={()=>navigate('/employee/employees')}  onMouseEnter = {handleDrawerOpen} 
         sx={{
           minHeight: 48,
           justifyContent: isOpen ? 'initial' : 'center',
