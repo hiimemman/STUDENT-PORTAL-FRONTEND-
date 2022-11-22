@@ -157,7 +157,7 @@ if(sexChanged === false){
   data.append('EditorPosition', user.position);
   data.append('EditorEmail', user.email);
   data.append('Category', 'Employee');
-  
+  console.log(birthDay)
 
   try{
     const sendRequest = await fetch(basedUrl+"/employee-add.php",{
@@ -204,17 +204,17 @@ if(sexChanged === false){
       <Box component="form" id ="frmAddEmployee"  onSubmit={handleSubmitForm} noWrap>
         <Grid2 container spacing={3} sx ={{marginLeft:'-10px'}}>
              <Grid2 item xs={12}>
-              {validFname !== false ? (<TextField  fullWidth autoComplete='off' name ="Fname"  required label="First name" variant="outlined" onKeyUp ={handleChangeFname} />) : (<TextField autoComplete='off' error  name ="Fname" required label="First name" variant="outlined" helperText ="Must not be empty"  onKeyUp ={handleChangeFname}/>)}
+              {validFname !== false ? (<TextField  fullWidth autoComplete='off' name ="Fname"  required label="First name" variant="outlined" onKeyUp ={handleChangeFname} />) : (<TextField autoComplete='off' fullWidth error  name ="Fname" required label="First name" variant="outlined" helperText ="Must not be empty"  onKeyUp ={handleChangeFname}/>)}
                
              </Grid2>
              <Grid2 item xs={12}><TextField fullWidth autoComplete='off' name ="Mname" label="Middle name" variant="outlined" /></Grid2>
              <Grid2 item xs={12}>
-             {validLname !== false ? (<TextField  fullWidth autoComplete='off' name ="Lname"  required label="Last name" variant="outlined" onKeyUp ={handleChangeLname} />) : (<TextField autoComplete='off' error  name ="Lsname" required label="Last name" variant="outlined" helperText ="Must not be empty"  onKeyUp ={handleChangeLname}/>)}
+             {validLname !== false ? (<TextField  fullWidth autoComplete='off' name ="Lname"  required label="Last name" variant="outlined" onKeyUp ={handleChangeLname} />) : (<TextField autoComplete='off' fullWidth error  name ="Lsname" required label="Last name" variant="outlined" helperText ="Must not be empty"  onKeyUp ={handleChangeLname}/>)}
              </Grid2>
         </Grid2>
         <Grid2 container spacing={3} sx ={{marginLeft:'-10px'}}>
              <Grid2 item xs={12}>
-             {validEmail !== false ? (<TextField autoComplete='off' name ="Email" fullWidth required label="Email" variant="outlined" onKeyUp ={handleChangeEmail} />) : (<TextField autoComplete='off' error fullWidth  name ="Email" required label="Email" variant="outlined" helperText = {emailHelperText}  onKeyUp ={handleChangeEmail}/>)}
+             {validEmail !== false ? (<TextField autoComplete='off' name ="Email" fullWidth required label="Email" variant="outlined" onKeyUp ={handleChangeEmail} />) : (<TextField autoComplete='off' fullWidth error name ="Email" required label="Email" variant="outlined" helperText = {emailHelperText}  onKeyUp ={handleChangeEmail}/>)}
              </Grid2>
         </Grid2>
         <Grid2 container spacing={3} sx ={{marginLeft:'-10px'}}>
@@ -241,7 +241,7 @@ if(sexChanged === false){
           <DatePicker
           required
           label ="Date of Birth"
-          inputFormat="MM/DD/YYYY"
+          inputFormat="YYYY-MM-DD"
           value={birthDay}
           onChange={handleChangeBday}
           renderInput={(params) => <TextField autoComplete='off' {...params} />}
@@ -277,20 +277,7 @@ if(sexChanged === false){
              </Grid2>
         </Grid2>
       
-        <Divider sx ={{marginTop:2, marginBottom:2}}/>
-       
-        <Grid2 container spacing={3} sx ={{marginLeft:'-10px'}}>
-             <Grid2 item xs={12}><TextField autoComplete='off' defaultValue ="" name ="Twitter" fullWidth label="Twiiter" variant="outlined" /></Grid2>
-        </Grid2>
-        <Grid2 container spacing={3} sx ={{marginLeft:'-10px'}}>
-             <Grid2 item xs={12}><TextField autoComplete='off' defaultValue ="" name ="Facebook" fullWidth label="Facebook" variant="outlined" /></Grid2>
-        </Grid2>
-        <Grid2 container spacing={3} sx ={{marginLeft:'-10px'}}>
-             <Grid2 item xs={12}><TextField autoComplete='off' defaultValue ="" name ="Instagram" fullWidth label="Instagram" variant="outlined" /></Grid2>
-        </Grid2>
-        <Grid2 container spacing={3} sx ={{marginLeft:'-10px'}}>
-             <Grid2 item xs={12}><TextField autoComplete='off' defaultValue ="" name ="LinkedIn" fullWidth label="LinkedIn" variant="outlined" /></Grid2>
-        </Grid2>
+      
         </Box>
         </DialogContent>
         <DialogActions>

@@ -11,12 +11,16 @@ import Button from '@mui/material/Button';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { useSelector, useDispatch } from 'react-redux';
 import { basedUrl } from '../base-url/based-url'
-import { PUT_STUDENT } from '../slice/FormSelectedRow/StudentSelected';
-import { imageBaseUrl } from '../base-url/based-url';
-import {ADDSTUDENT} from '../slice/AddFormSlice/AddStudentSlice/AddStudentSlice'
-import { AddStudent } from '../forms/AddStudent';
+import { AddSubject } from '../forms/AddSubject';
+import { ADDACADEMICYEAR } from '../slice/AddFormSlice/AddAcademicYearSlice/AddAcademicYear';
+import { useTheme } from '@mui/material/styles';
+import { Stack } from '@mui/material';
+import { Suspense } from 'react';
+import { PUT_SUBJECT } from '../slice/FormSelectedRow/SubjectSelected';
+import { NoRowBackground } from '../component/NoRowBackground';
+import { AddFee } from '../forms/AddFee';
+import { AddAcademicYear } from '../forms/AddAcademicYear';
 
- 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -48,19 +52,15 @@ const useFakeMutation = () => {
 };
 
 function computeMutation(newRow, oldRow) {
+ 
   if (newRow.status !== oldRow.status) {
    
     return `Status from '${oldRow.status}' to '${newRow.status}'`;
   }
-
-  if (newRow.contact !== oldRow.contact) {
-   
-    return `Contact from '${oldRow.contact}' to '${newRow.contact}'`;
-  }
   return null;
 }
 
-export function StudentTable() {  
+export function AcademicYearTable() {  
     //dispatch from redux
     const dispatch = useDispatch();
     const [rows, setRows] = useState([]);
@@ -77,59 +77,40 @@ export function StudentTable() {
   const handleCloseSnackbar = () => setSnackbar(null);
 
     //Open add form
-const  formOpenType = useSelector(state => state.addFormStudent.value);
+const  formOpenType = useSelector(state => state.addFormAcademicYear.value);
 
 //Current User Session
 const user = useSelector(state => JSON.parse(state.user.session));
 
-const [faculty, setCourses] = useState(null);
+const [courses, setCourses] = useState(null);
 
 const [updatedCourse, setUpdateCourse] = useState('');
 
-  // Get all student api
-  const getAllData = async () =>{
-    isLoading(true)
-    try{ 
-    
-      //online api
-        const sendRequest = await fetch(basedUrl+"/student-table.php");
-        const getResponse = await sendRequest.json();
-        isLoading(false)
-        if(getResponse.statusCode === 201){
-        
-        }else{
-          //if succesfully retrieve data
-          isLoading(false)
-          setRows((prev) => prev = getResponse);
-        }
-    }catch(e){
-      console.error(e)
-    }
-    try{ 
-      //online api
-        const sendRequest = await fetch(basedUrl+"/course-table.php");
-        const getResponse = await sendRequest.json();
-   
-        if(getResponse.statusCode === 201){
-        
-        }else{
-          //if succesfully retrieve data'
-           setCourses(getResponse);
-           
-        }
-    }catch(e){
-      console.error(e)
-    }
-  }
+  // Get all users api
   useEffect( () => {
-  
-    getAllData();
-
-    return () =>{
-        //exit in memory
+   const getAllData = async () =>{
+      isLoading(true)
+      try{ 
+      
+        //online api
+          const sendRequest = await fetch(basedUrl+"/academic-year-table.php");
+          const getResponse = await sendRequest.json();
+          isLoading(false)
+          if(getResponse.statusCode === 201){
+          
+          }else{
+            //if succesfully retrieve data
+            isLoading(false)
+            setRows(getResponse);
+          }
+      }catch(e){
+        console.error(e)
+      }
     }
+    getAllData();
   }, [formOpenType]);
  
+
 
    //Edit semester via cell
 function EditSemester(props) {
@@ -148,13 +129,14 @@ function EditSemester(props) {
       <Select
       value={value}
       onChange={handleChange}
-      size="small"
+   
       sx={{ height: 1 , width: 260}}
-      native
+   
       autoFocus
     >
-      <option>1st semester</option>
-      <option>2nd semester</option>
+     
+      <MenuItem value ={'1st semester'}>1st semester</MenuItem>
+      <MenuItem value ={'2nd semester'}>2nd semester</MenuItem>
       </Select>
     </>
   
@@ -200,18 +182,15 @@ function EditYear(props) {
       <Select
       value={value}
       onChange={handleChange}
-      size="small"
       sx={{ height: 1 , width: 260}}
-      native
       autoFocus
     >
-      <option>1st year</option>
-      <option>2nd year</option>
-      <option>3rd year</option>
-      <option>4th year</option>
-      <option>5th year</option>
-      <option>6th year</option>
-
+    <MenuItem value ={'1st year'}>1st year</MenuItem>
+    <MenuItem value ={'2nd year'}>2nd year</MenuItem>
+    <MenuItem value ={'3rd year'}>3rd year</MenuItem>
+    <MenuItem value ={'4th year'}>4th year</MenuItem>
+    <MenuItem value ={'5th year'}>5th year</MenuItem>
+    <MenuItem value ={'6th year'}>6th year</MenuItem>
     </Select>
     </>
   
@@ -256,15 +235,12 @@ function EditStatus(props) {
 
   return (
     <>
-     <Select
+      <Select
       value={value}
       onChange={handleChange}
-
       sx={{ height: 1 , width: 260}}
-
       autoFocus
     >
-      
       <MenuItem value ={'active'}><CheckIcon/>active</MenuItem>
       <MenuItem value = {'inactive'}><CloseIcon />inactive</MenuItem>
     </Select>
@@ -298,49 +274,28 @@ const renderEditStatus = (params) => {
  
   const columns = [
     {
-        field: 'profile_url',
-        headerName: 'Avatar',
-        width: 100,
-        renderCell: (params) => {
-          return (
-            <>
-              <Avatar src={imageBaseUrl+params.value} />
-            </>
-          );
-        }
-      },
-      {
-        field: 'fullName',
-        headerName: 'Full name',
-        description: 'This column has a value getter and is not sortable.',
-        sortable: true,
-        width: 240,
-        valueGetter: (params) =>
-          `${params.row.firstname || ''} ${params.row.middlename || ''} ${params.row.lastname || ''}`,
-      },
-      {
-        field: 'email',
-        headerName: 'Email',
-        width: 259,
+        field: 'academicyear',
+        headerName: 'Academic Year',
+        width: 330,
         editable: false,
-     },
-    {
-            field: 'studentnumber',
-            headerName: 'Student Id',
-            width: 260,
-            editable: false,
-    },
-    {
-        field: 'contact',
-        headerName: 'Contact',
-        width: 260,
-        editable: true,
-},
+      },
+      {
+        field: 'start',
+        headerName: 'Year Start',
+        width: 330,
+        editable: false,
+      },
+      {
+        field: 'end',
+        headerName: 'Year End',
+        width: 330,
+        editable: false,
+      },
       {
         field: 'status',
         headerName: 'Status',
         renderEditCell: renderEditStatus,
-        width: 121,
+        width: 250,
         editable: true,
         renderCell: (cellValues) => {
           return(
@@ -377,36 +332,23 @@ const renderEditStatus = (params) => {
   const handleYes = async () => {
     const { newRow, oldRow, reject, resolve } = promiseArguments;
 
+
     try {
       // Make the HTTP request to save in the backend
       const dataUpdate = new FormData();
-      dataUpdate.append('StudentNumber', newRow['studentnumber']);
-      dataUpdate.append('FirstnName', newRow['firstname']);
-      dataUpdate.append('MiddleName', newRow['middlename']);
-      dataUpdate.append('LastName', newRow['lastname']);
-      dataUpdate.append('Email', newRow['email']);
-      dataUpdate.append('Address', newRow['address']);
-      dataUpdate.append('Sex', newRow['sex']);
-      dataUpdate.append('Course', newRow['course']);
-      dataUpdate.append('Section', newRow['section']);
-      dataUpdate.append('Birthday', newRow['birthday']);
-      dataUpdate.append('Contact', newRow['contact']);
-      dataUpdate.append('Guardian', newRow['guardian']);
-      dataUpdate.append('GuardianContact', newRow['guardian_contact']);
-      dataUpdate.append('Faculty', newRow['faculty']);
+      dataUpdate.append('ID', newRow['id']);
       dataUpdate.append('Status', newRow['status']);
       dataUpdate.append('Action', 'Update');
       dataUpdate.append('EditorPosition', user.position);
       dataUpdate.append('EditorEmail', user.email);
-      dataUpdate.append('Category', 'Student');
+      dataUpdate.append('Category', 'Fee');
       const response = await mutateRow(newRow);
-      const sendRequest = await fetch(basedUrl+"/student-update.php",{
+      const sendRequest = await fetch(basedUrl+"/academic-year-update.php",{
         method: "POST",
         body: dataUpdate,
     });
     
     const getResponse = await sendRequest.json();
-
     if(getResponse.statusCode !== 201){
       setSnackbar({ children: 'Update successfully', severity: 'success' });
       resolve(response);
@@ -417,7 +359,6 @@ const renderEditStatus = (params) => {
       setPromiseArguments(null);
     }
     } catch (error) {
-        console.error(error)
       setSnackbar({ children: "Field can't be empty", severity: 'error' });
       reject(oldRow);
       setPromiseArguments(null);
@@ -462,14 +403,18 @@ const renderEditStatus = (params) => {
   return(
     <>
      {renderConfirmDialog()}
-    <DataGrid components={{ Toolbar: CustomToolbarProfessor, LoadingOverlay: LinearProgress, }} loading = {loading} rows = {rows} columns={columns}  experimentalFeatures={{ newEditingApi: true }} style ={{height:'500px'}}
+    <DataGrid components={{ Toolbar: CustomToolbarSubject, LoadingOverlay: LinearProgress,NoResultsOverlay: () => (
+      <Stack height="100%" alignItems="center" justifyContent="center">
+        <NoRowBackground  />
+      </Stack>
+    ), }} loading = {loading} rows = {rows} columns={columns}  experimentalFeatures={{ newEditingApi: true }} style ={{height:'500px'}}
      processRowUpdate={processRowUpdate}
      onSelectionModelChange={(ids) => {
       const selectedIDs = new Set(ids);
       const selectedRowData = rows.filter((row) =>
         selectedIDs.has(row.id.toString())
       );
-      dispatch(PUT_STUDENT(selectedRowData[0]))
+      dispatch(PUT_SUBJECT(selectedRowData[0]))
     }}
     /> 
  {!!snackbar && (
@@ -482,25 +427,20 @@ const renderEditStatus = (params) => {
 }
 
  //Toolbar
- function CustomToolbarProfessor() {
+ function CustomToolbarSubject() {
   //Open add form
-  const  formOpenType = useSelector(state => state.addFormStudent.value);
+  const  formOpenType = useSelector(state => state.addFormAcademicYear.value);
   //dispatch from redux
 const dispatch = useDispatch();
-const [faculty, setFaculty] = useState({data: []});
-const [course, setCourse] = useState({data: []});
-const [section, setSection] = useState({data: []});
-const [fourDigits, setFourDigits] = useState({data: '0000'});
-const [updatedFaculty, setUpdatedFaculty] = useState(false);
-const currentYear = new Date().getFullYear().toString().substr(0, 2);
-
+const [courses, setCourses] = useState({data: []});
+const [updatedCourse, setUpdatedCourse] = useState(false);
 //  Get all users api
-
-useEffect( () => {
+ useEffect( () => {
+  console.log('UseEffect called')
   const getAllData = async () =>{
      try{ 
        //online api
-         const sendRequest = await fetch(basedUrl+"/faculty-active.php");
+         const sendRequest = await fetch(basedUrl+"/course-active.php");
          const getResponse = await sendRequest.json();
     
          if(getResponse.statusCode === 201){
@@ -508,7 +448,7 @@ useEffect( () => {
          }else{
            //if succesfully retrieve data'
           //  console.log(getResponse)
-           setFaculty({data: getResponse});
+           setCourses({data: getResponse});
             
          }
      }catch(e){
@@ -518,167 +458,24 @@ useEffect( () => {
    getAllData();
  }, [formOpenType]);
 
- 
- const generateFourDigit = async () =>{
-  try{ 
-    //online api
-      const sendRequest = await fetch(basedUrl+"/student-number-4digit-generate.php");
-      const getResponse = await sendRequest.json();
-      console.log(getResponse.statusCode)
-      if(getResponse.statusCode === 201){
-      
-      }else{
-        //if succesfully retrieve data'
-       //  console.log(getResponse)
-       if(parseFloat(getResponse.statusCode) < 10){
-       
-        setFourDigits((fourDigits) => fourDigits = {...fourDigits, data: '000'+getResponse.statusCode});  
-        return;
-       }
-       
-       if(parseFloat(getResponse.statusCode) < 100){
-        setFourDigits((fourDigits) => fourDigits = {...fourDigits, data: '00'+getResponse.statusCode});  
-        return;
-       }
-       if(parseFloat(getResponse.statusCode) < 1000){   
-        setFourDigits((fourDigits) => fourDigits = {...fourDigits, data: '0'+getResponse.statusCode});  
-        return;
-       }
-       if(parseFloat(getResponse.statusCode) > 999){
-        setFourDigits((fourDigits) => fourDigits = {...fourDigits, data: getResponse.statusCode});  
-        return;
-       }
-      }
-  }catch(e){
-    console.error(e)
-  }
-}
-
-useEffect(() =>{
-
-  generateFourDigit();
-
-return () =>{
-  //exit in memory
-}
-
-},[formOpenType])
-
-useEffect(() =>{
-let isCancelled = false;
-
-return () =>{
-  isCancelled = true;
-  //exit in memory
-}
-},[fourDigits]);
-
-
  useEffect(() => {
-  if(faculty.data.length > 0){
-    setUpdatedFaculty((faculty) => faculty = true)
+  if(courses.data.length > 0){
+    console.log("Courses data = "+JSON.stringify(courses));
+    setUpdatedCourse(true)
   }
+ }, [formOpenType, courses]);
 
-  return () =>{
-    //exit memory
-  }
- }, [formOpenType, faculty]);
-
-
- const [academicyear, setAcademicYear] = useState({data:[]});
-
- useEffect(() =>{
-
-  return () =>{
-    //exit in memory
-  }
- },[updatedFaculty])
-
- const getAllActiveCourse = async () =>{
-  try{ 
-    //online api
-      const sendRequest = await fetch(basedUrl+"/course-active.php");
-      const getResponse = await sendRequest.json();
- 
-      if(getResponse.statusCode === 201){
-      
-      }else{
-        //if succesfully retrieve data'
-       //  console.log(getResponse)
-        setCourse((course) => course = {...course, data: getResponse});
-      }
-  }catch(e){
-    console.error(e)
-  }
-}
-
-useEffect(() =>{
-let isCancelled = false;
-getAllActiveCourse();
-return () => {isCancelled = true}
-},[formOpenType])
-
-const getAllActiveSection = async () =>{
-  try{ 
-    //online api
-      const sendRequest = await fetch(basedUrl+"/section-active.php");
-      const getResponse = await sendRequest.json();
- 
-      if(getResponse.statusCode === 201){
-      
-      }else{
-        //if succesfully retrieve data'
-       //  console.log(getResponse)
-        setSection((section) => section = {...section, data: getResponse});
-      }
-  }catch(e){
-    console.error(e)
-  }
-}
-
-useEffect(() =>{
-  let isCancelled = false;
-  getAllActiveSection();
-  return () => {isCancelled = true}
-  },[formOpenType])
-
-
-  const getAllAcadYear = async () =>{
-    try{ 
-      //online api
-        const sendRequest = await fetch(basedUrl+"/all-academic-year-active.php");
-        const getResponse = await sendRequest.json();
-   
-        if(getResponse.statusCode === 201){
-        
-        }else{
-          //if succesfully retrieve data'
-         //  console.log(getResponse)
-         setAcademicYear({data: getResponse});
-           
-        }
-    }catch(e){
-      console.error(e)
-    }
-  }
-  
-  useEffect(() =>{
-    getAllAcadYear();
-  return () =>{
-  
-  }
-  },[formOpenType])
 
   return (<>
 
     <GridToolbarContainer>
-      <Button variant="text"  color ="success" startIcon = {<PersonAddIcon />} onClick = {() => dispatch(ADDSTUDENT())}> Add</Button>
+       <Button variant="text" color ="success" startIcon = {<PersonAddIcon />} onClick = {() => dispatch(ADDACADEMICYEAR())}> Add</Button>
       <GridToolbarColumnsButton />
       <GridToolbarFilterButton />
       <GridToolbarDensitySelector />
       <GridToolbarExport />
     </GridToolbarContainer>
-    {updatedFaculty === true ? (<AddStudent open = {formOpenType === 'student'} faculty = {faculty.data} fourDigits ={fourDigits.data} currentYear = {currentYear} courses ={course} sections ={section} academicyear = {academicyear.data}/>) : (<></>)}
+    <AddAcademicYear open = {formOpenType === 'academic year'} />
   </>
   );
 }

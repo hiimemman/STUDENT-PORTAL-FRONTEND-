@@ -7,6 +7,8 @@ import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
 import Box from '@mui/material/Box';
 import { Button } from '@mui/material';
+import { imageBaseUrl } from '../../base-url/based-url'; 
+import { Stack } from '@mui/system';
 
 export function MainFeaturedPost(p) {
 
@@ -24,7 +26,7 @@ export function MainFeaturedPost(p) {
         backgroundSize: 'cover',
         backgroundRepeat: 'no-repeat',
         backgroundPosition: 'center',
-        backgroundImage: `url(https://source.unsplash.com/random)`,
+        backgroundImage: `url(`+imageBaseUrl+`/temporary-background-book.jpg)`,
         borderRadius: '0',
         width:'100vw',
         height:'100%',
@@ -32,7 +34,7 @@ export function MainFeaturedPost(p) {
 
     >
       {/* Increase the priority of the hero background image */}
-      {<img style={{ display: 'none' }} src={'https://source.unsplash.com/random'} alt={'Image failed to load'} />}
+      {<img style={{ display: 'none' }} src={imageBaseUrl+'/homepage-banner-background.jpg'} alt={'Image failed to load'} />}
       <Box
         sx={{
           position: 'absolute',
@@ -43,6 +45,7 @@ export function MainFeaturedPost(p) {
           backgroundColor: 'rgba(0,0,0,.3)',
         }}
       />
+
       <Grid container >
         <Grid item md={6}>
           <Box
@@ -75,6 +78,10 @@ export function MainFeaturedPost(p) {
         </Box>
         </Grid>
       </Grid>
+    
+     
+   
+    
     </Paper>
   );
 }

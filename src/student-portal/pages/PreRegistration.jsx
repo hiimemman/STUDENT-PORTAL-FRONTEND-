@@ -5,7 +5,7 @@ import Skeleton from '@mui/material/Skeleton';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { StudentDrawerAppBar } from '../component/StudentDrawerAppBar';
-import { CssBaseline, FormControl, InputLabel, MenuItem, Paper, Select, Stack, Input,FormHelperText } from '@mui/material';
+import { CssBaseline, FormControl, InputLabel, MenuItem, Paper,Alert, Select,Snackbar, Stack, Input,FormHelperText } from '@mui/material';
 import { Suspense } from 'react';
 import { basedUrl } from '../../base-url/based-url';
 import Stepper from '@mui/material/Stepper';
@@ -20,6 +20,7 @@ import LinearProgress from '@mui/material/LinearProgress';
 import Divider from '@mui/material/Divider';
 import SchedulesChoicesTable from '../component/SchedulesChoicesTable';
 import { ScheduleSelectionTable } from '../component/ScheduleSelectionTable';
+import { FeeTable } from '../component/FeeTable';
 
 
 export function PreRegistration(){
@@ -30,7 +31,11 @@ const dispatch = useDispatch();
      
      const studentCurrentPage = useSelector(state => (state.studentSelectedPage.value));
      const studentSession = useSelector(state => JSON.parse(state.student.session))
+     const studentFee  = useSelector(state => (state.feeSelection.value));
+       //Selected schedule
+const schedule = useSelector(state => state.scheduleSelection.value);
 
+     
      const [activeSection, setActiveSectionD] = useState({data:{}});
      const [hasChanged, setHasChanged] = useState(false);
      //page current state
@@ -48,7 +53,8 @@ const dispatch = useDispatch();
       const [right, setRight] = useState([]);
     
 
-      
+  const [snackbar, setSnackbar] = useState(null);
+  const handleCloseSnackbar = () => setSnackbar(null);
       
 const handleNext = () => {
   setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -203,17 +209,46 @@ const getAllScheduleOfSection = async () =>{
      {/* < ScheduleTransferList /> */}
 {hasChangedSection === true ?  <SchedulesChoicesTable rows = {left.data} /> : null}
     </Stack>
-       
-         
+        
             </>
         )
       }
-      
 
-      
+      function CustomFooterStatusComponent (){
+        return(<></>)
+    }
 
+    const handleSubmit = async () =>{
+      const data = new FormData();
+      data.append('Schedule', JSON.stringify(schedule));
+      data.append('Fee', JSON.stringify(studentFee));
+      data.append('StudentNumber', studentSession['studentnumber']);
 
-    return(
+      for (var pair of data.entries()) {
+        console.log(pair[0]+ ' - ' + pair[1]); 
+    }
+      try{
+        const sendRequest = await fetch(basedUrl+"/add-student-registration.php",{
+                  method: "POST",
+                  body: data,
+              });
+    
+              const getResponse = await sendRequest.json();
+             console.log(JSON.stringify(getResponse.statusCode))
+              if(getResponse.statusCode === 200){
+                setSnackbar({ children: 'Submitted successfully', severity: 'success' });
+                // dispatch(CLOSESUBFORM())
+                handleReset();
+              }else{
+                setSnackbar({ children: "Registration Failed", severity: 'error' });
+              }
+      }catch(e){
+        setSnackbar({ children: "There was an error to your connection to the server", severity: 'error' });
+        // setSnackbar({ children: "Field can't be empty", severity: 'error' });
+      }
+    }
+
+      return(
         <>
         {studentSession !== null ?  (
         <Box sx={{ display: 'flex' }}>
@@ -245,28 +280,69 @@ const getAllScheduleOfSection = async () =>{
               
               <Typography sx ={{mb:2}} variant ='subtitle1'>{step.description}</Typography>
             
-        
               <Box sx={{ mb: 2 }}>
                 <div>
                 {hasChanged === true ? (activeStep === 0 ? (<>
                 <Stack spacing ={2}>
-                <Typography variant ={'h6'}>Choices</Typography><SetSchedules activeSection = {activeSection} />
+                <Typography variant ={'h5'}>Choices</Typography><SetSchedules activeSection = {activeSection} />
                 <Divider style ={{marginTop:'1.5rem'}}/>
-                <Typography variant ={'h6'}>Your selected schedule</Typography> 
+                <Typography variant ={'h5'}>Your selected schedule</Typography> 
                 <div style={{ height: 400, width: '100%' }}> 
-              
                 <ScheduleSelectionTable />
                 </div>
                 </Stack></>) : null) : null}
-            
-                  <Button
+                
+                {activeStep === 1 ? (<>
+                  <Stack spacing ={2}>
+                  <Typography variant ={'h5'}>Account</Typography>
+                  <FeeTable />
+                  </Stack>
+                </>) : null}
+
+                {activeStep === 2 ? (<>
+                  <Stack spacing ={2}>
+                  <Typography variant ={'h5'}>Account Summary</Typography>
+                  <Box sx ={{p:0}}>
+                  <DataGrid
+        components={{  LoadingOverlay: LinearProgress,}} rows={schedule} columns={schedColumns} autoHeight pageSize={5} 
+      />
+                  </Box>
+                  <Box sx ={{p:0}}>
+        <Box sx={{ width: '100%' }}>
+      <DataGrid
+components={{ LoadingOverlay: LinearProgress, Footer: CustomFooterStatusComponent}}
+        rows={studentFee[0]}
+        columns={feeColumns}
+       autoHeight
+      />
+    </Box>
+    <Box sx={{  width: '50%' }}>
+    <DataGrid
+components={{ LoadingOverlay: LinearProgress, Footer: CustomFooterStatusComponent}}
+        rows={studentFee[1]}
+        columns={totalColumns}
+       autoHeight
+      />
+    </Box>
+    </Box>
+                  </Stack>
+                </>) : null}
+                {index === steps.length - 1 ?  <Button
+                  disabled ={!hasChanged}
+                    variant="contained"
+                    onClick={handleSubmit}
+                    sx={{ mt: 1, mr: 1 }}
+                  >
+                    Finish
+                  </Button> :   <Button
                   disabled ={!hasChanged}
                     variant="contained"
                     onClick={handleNext}
                     sx={{ mt: 1, mr: 1 }}
                   >
-                    {index === steps.length - 1 ? 'Finish' : 'Continue'}
-                  </Button>
+                    {index === steps.length - 1 ? null : 'Continue'}
+                  </Button>}
+                
                   <Button
                     disabled={index === 0}
                     onClick={handleBack}
@@ -293,6 +369,11 @@ const getAllScheduleOfSection = async () =>{
     </Paper>
 
 </div> 
+{!!snackbar && (
+        <Snackbar open onClose={handleCloseSnackbar} autoHideDuration={6000}>
+          <Alert {...snackbar} onClose={handleCloseSnackbar} />
+        </Snackbar>
+      )}
       </Box>) :  (<Skeleton
         sx={{ bgcolor: 'grey.900' }}
         variant="rectangular"
@@ -304,7 +385,20 @@ const getAllScheduleOfSection = async () =>{
     )
 }
 
-
+const totalColumns = [
+  {
+    field: 'description',
+    headerName: 'Description',
+    width: 390,
+    editable: false,
+  },
+  {
+      field: 'amount',
+      headerName: 'Amount',
+      width: 384,
+      editable: false,
+  },
+];
 
 
 const steps = [
@@ -313,18 +407,46 @@ const steps = [
     description: `Make sure you double check your schedule before pressing continue`,
   },
   {
-    label: 'Create an ad group',
+    label: 'Assessment of Fees',
     description:
-      'An ad group contains one or more ads which target a shared set of keywords.',
+      'Make sure to double-check your remaining balance.',
   },
   {
-    label: 'Create an ad',
-    description: `Try out different ad text to see what brings in the most customers,
-              and learn how to enhance your ads using features like ad extensions.
-              If you run into any problems with your ads, find out how to tell if
-              they're running and how to resolve approval issues.`,
+    label: 'Finalize',
+    description: `Double-check the information before clicking "Finish."`,
+  },
+];
+
+
+const feeColumns = [
+  {
+    field: 'name',
+    headerName: 'Fee name',
+    width: 390,
+    editable: false,
+  },
+  {
+      field: 'amount',
+      headerName: 'Amount',
+      width: 384,
+      editable: false,
+  },
+  {
+      field: 'subtotal',
+      headerName: 'Subtotal',
+      width: 390,
+      editable: false,
   },
 ];
 
 
 
+const schedColumns = [
+  { field: 'sched_code', headerName: 'Sched Code', width: 100 },
+  { field: 'subject_name', headerName: 'Subject Name', width: 130 },
+  { field: 'units', headerName: 'Units', width: 50 },
+  { field: 'schedule_day', headerName: 'Days', width: 150 },
+  { field: 'schedule_time', headerName: 'Time', width: 350 },
+  { field: 'semester', headerName: 'Semester', width: 180 },
+  { field: 'professor_initial', headerName: 'Professor', width: 150 },
+];

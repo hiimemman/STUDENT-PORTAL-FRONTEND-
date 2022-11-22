@@ -97,7 +97,7 @@ const [data, setData] = useState({
 useEffect(() =>{
 let isCancelled = false;
 
-dispatch(DASHBOARD())
+dispatch(DASHBOARD());
 return () => {isCancelled = true}
 },[])
 

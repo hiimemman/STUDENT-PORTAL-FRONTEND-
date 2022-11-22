@@ -224,141 +224,126 @@ useEffect(() =>{
 },[valueTab])
 
 
-const OverviewPanel = () =>{
-  return(
-    <Paper elevation={1} sx ={{width:'500 ', padding:'1.5rem',marginTop:'1.5rem'}} className ="rounded-xl">
-    <Box component="form" onSubmit={handleSubmit}  sx={{ mt: 1 }}>
-    <Grid2 container sx ={{paddingRight: 10,}} >
-    <Stack direction="row" spacing={2} sx = {{width:'100%', marginBottom: '1.5rem'}}>
-        <Typography variant ="overline" noWrap sx={{fontSize:'15px', width: '15rem'}}>Student id:  </Typography>
-      <FormControl >
-         <TextField disabled   defaultValue = {student.studentnumber} name ="StudentNumber" id="StudentNumber" sx={{fontSize:'15px' , width: '50rem'}} variant="standard" inputProps={{ 'aria-label': 'description' }} />
-      </FormControl>
-     </Stack>
+const OverviewPanel = () =>(
+  <Paper elevation={1} sx={{ width: '500 ', padding: '1.5rem', marginTop: '1.5rem' }} className="rounded-xl">
+    <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
+      <Grid2 container sx={{ paddingRight: 10, }}>
+        <Stack direction="row" spacing={2} sx={{ width: '100%', marginBottom: '1.5rem' }}>
+          <Typography variant="overline" noWrap sx={{ fontSize: '15px', width: '15rem' }}>Student id:  </Typography>
+          <FormControl>
+            <TextField disabled defaultValue={student.studentnumber} name="StudentNumber" id="StudentNumber" sx={{ fontSize: '15px', width: '50rem' }} variant="standard" inputProps={{ 'aria-label': 'description' }} />
+          </FormControl>
+        </Stack>
 
-      <Stack direction="row" spacing={2} sx = {{width:'100%', marginBottom: '1.5rem'}}>
-        <Typography variant ="overline" noWrap sx={{fontSize:'15px', width: '15rem'}}>Firstname:  </Typography>
-      <FormControl >
-         <TextField defaultValue = {student.firstname} name ="FirstName" id="FirstName" sx={{fontSize:'15px' , width: '50rem'}} variant="standard" inputProps={{ 'aria-label': 'description' }} />
-      </FormControl>
-      
-     </Stack>   
+        <Stack direction="row" spacing={2} sx={{ width: '100%', marginBottom: '1.5rem' }}>
+          <Typography variant="overline" noWrap sx={{ fontSize: '15px', width: '15rem' }}>Firstname:  </Typography>
+          <FormControl>
+            <TextField defaultValue={student.firstname} name="FirstName" id="FirstName" sx={{ fontSize: '15px', width: '50rem' }} variant="standard" inputProps={{ 'aria-label': 'description' }} />
+          </FormControl>
 
-     <Stack direction="row" spacing={2} sx = {{width:'100%', marginBottom: '1.5rem'}}>
-        <Typography variant ="overline" noWrap sx={{fontSize:'15px', width: '15rem'}}>Middlename:  </Typography>
-      <FormControl >
-         <TextField defaultValue = {student.middlename} name ="MiddleName" id="MiddleName" sx={{fontSize:'15px' , width: '50rem'}} variant="standard" inputProps={{ 'aria-label': 'description' }} />
-      </FormControl>
-     </Stack>    
+        </Stack>
 
-     <Stack direction="row" spacing={2} sx = {{width:'100%', marginBottom: '1.5rem'}}>
-        <Typography variant ="overline" noWrap sx={{fontSize:'15px', width: '15rem'}}>Lastname:  </Typography>
-      <FormControl >
-         <TextField defaultValue = {student.lastname} name ="LastName" id="LastName" sx={{fontSize:'15px' , width: '50rem'}} variant="standard" inputProps={{ 'aria-label': 'description' }} />
-      </FormControl>
-     </Stack>   
+        <Stack direction="row" spacing={2} sx={{ width: '100%', marginBottom: '1.5rem' }}>
+          <Typography variant="overline" noWrap sx={{ fontSize: '15px', width: '15rem' }}>Middlename:  </Typography>
+          <FormControl>
+            <TextField defaultValue={student.middlename} name="MiddleName" id="MiddleName" sx={{ fontSize: '15px', width: '50rem' }} variant="standard" inputProps={{ 'aria-label': 'description' }} />
+          </FormControl>
+        </Stack>
 
-     <Stack direction="row" spacing={2} sx = {{width:'100%', marginBottom: '1.5rem'}}>
-        <Typography variant ="overline" noWrap sx={{fontSize:'15px', width: '15rem'}}>Email:  </Typography>
-      <FormControl >
-         <TextField disabled defaultValue = {student.email} name ="Email" id="Email" sx={{fontSize:'15px' , width: '50rem'}} variant="standard" inputProps={{ 'aria-label': 'description' }} />
-      </FormControl>
-     </Stack>  
-     <Stack direction="row" spacing={2} sx = {{width:'100%', marginBottom: '1.5rem'}}>
-        <Typography variant ="overline" noWrap sx={{fontSize:'15px', width: '15rem'}}>Address:  </Typography>
-      <FormControl >
-         <TextField  defaultValue = {student.address} name ="Address" id="Address" sx={{fontSize:'15px' , width: '50rem'}} variant="standard" inputProps={{ 'aria-label': 'description' }} />
-      </FormControl>
-     </Stack> 
-    
+        <Stack direction="row" spacing={2} sx={{ width: '100%', marginBottom: '1.5rem' }}>
+          <Typography variant="overline" noWrap sx={{ fontSize: '15px', width: '15rem' }}>Lastname:  </Typography>
+          <FormControl>
+            <TextField defaultValue={student.lastname} name="LastName" id="LastName" sx={{ fontSize: '15px', width: '50rem' }} variant="standard" inputProps={{ 'aria-label': 'description' }} />
+          </FormControl>
+        </Stack>
 
-<Stack direction="row" spacing={2} sx = {{width:'100%', marginBottom: '1.5rem'}}>
-  <Typography variant ="overline" noWrap sx={{fontSize:'15px', width: '15rem'}}>Course:  </Typography>
-  <FormControl fullWidth variant = "standard"    sx={{fontSize:'15px' , width: '50rem'}}>
-    <Select
-     required
-      id="Course"
-      name ="Course"
-     value={course}
-      onChange={
-        (event) => {setCourse((prev) => prev = event.target.value)}
-     }  
-    >
-      {courses.map((course) => (<MenuItem value ={course.course_name}>{course.course_name}</MenuItem>))}  
-    </Select>
-  </FormControl>
-</Stack>
+        <Stack direction="row" spacing={2} sx={{ width: '100%', marginBottom: '1.5rem' }}>
+          <Typography variant="overline" noWrap sx={{ fontSize: '15px', width: '15rem' }}>Email:  </Typography>
+          <FormControl>
+            <TextField disabled defaultValue={student.email} name="Email" id="Email" sx={{ fontSize: '15px', width: '50rem' }} variant="standard" inputProps={{ 'aria-label': 'description' }} />
+          </FormControl>
+        </Stack>
+        <Stack direction="row" spacing={2} sx={{ width: '100%', marginBottom: '1.5rem' }}>
+          <Typography variant="overline" noWrap sx={{ fontSize: '15px', width: '15rem' }}>Address:  </Typography>
+          <FormControl>
+            <TextField defaultValue={student.address} name="Address" id="Address" sx={{ fontSize: '15px', width: '50rem' }} variant="standard" inputProps={{ 'aria-label': 'description' }} />
+          </FormControl>
+        </Stack>
 
 
-<Stack direction="row" spacing={2} sx = {{width:'100%', marginBottom: '1.5rem'}}>
-  <Typography variant ="overline" noWrap sx={{fontSize:'15px', width: '15rem'}}>Section:  </Typography>
-  <FormControl fullWidth variant = "standard"    sx={{fontSize:'15px' , width: '50rem'}}>
-    <Select
-     required
-      id="Section"
-      name ="Section"
-     value={section}
-      onChange={
-        (event) => {setSection((prev) => prev = event.target.value)}
-     }  
-    >
-        {console.log("Sections+ "+JSON.stringify(props.section))}
-      {props.section.map((sections) => (<MenuItem value ={sections.section_name}>{sections.section_name}</MenuItem>))}  
-    </Select>
-  </FormControl>
-</Stack>
+        <Stack direction="row" spacing={2} sx={{ width: '100%', marginBottom: '1.5rem' }}>
+          <Typography variant="overline" noWrap sx={{ fontSize: '15px', width: '15rem' }}>Course:  </Typography>
+          <FormControl fullWidth variant="standard" sx={{ fontSize: '15px', width: '50rem' }}>
+            <Select
+              required
+              id="Course"
+              name="Course"
+              value={course}
+              onChange={(event) => { setCourse((prev) => prev = event.target.value); } }
+            >
+              {courses.map((course) => (<MenuItem value={course.course_name}>{course.course_name}</MenuItem>))}
+            </Select>
+          </FormControl>
+        </Stack>
 
-<Stack direction="row" spacing={2} sx = {{width:'100%', marginBottom: '1.5rem'}}>
-<Typography variant ="overline" noWrap sx={{fontSize:'15px', width: '15rem'}}>Birthday:  </Typography>
-<FormControl sx={{fontSize:'15px' , width: '50rem'}} required>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-           <DatePicker
-            required
-            name = "Birthday"
-            id = "Birthday"
-            value={birthday}
-            onChange = {(event) =>{setBirthday(event); return () => {}} }
-           // onChange={handleChangeYear}
-           renderInput={(params) => <TextField variant ="standard" autoComplete='off' {...params} />}
-            />
-          </LocalizationProvider>
-        </FormControl>
-</Stack>
-<Stack direction="row" spacing={2} sx = {{width:'100%', marginBottom: '1.5rem'}}>
-        <Typography variant ="overline" noWrap sx={{fontSize:'15px', width: '15rem'}}>Contact:  </Typography>
-      <FormControl >
-         <TextField  defaultValue = {student.contact}  type ="number" name ="Contact" id="Contact" sx={{fontSize:'15px' , width: '50rem'}} variant="standard" inputProps={{ 'aria-label': 'description' }} />
-      </FormControl>
-     </Stack>
-</Grid2>
-<Stack direction="row" spacing={2} sx = {{width:'100%', marginBottom: '1.5rem'}}>
-        <Typography variant ="overline" noWrap sx={{fontSize:'15px', width: '15rem'}}>Guardian:  </Typography>
-      <FormControl >
-         <TextField  defaultValue = {student.guardian} name ="Guardian" id="Guardian" sx={{fontSize:'15px' , width: '50rem'}} variant="standard" inputProps={{ 'aria-label': 'description' }} />
-      </FormControl>
-     </Stack>
-     <Stack direction="row" spacing={2} sx = {{width:'100%', marginBottom: '1.5rem'}}>
-        <Typography variant ="overline" noWrap sx={{fontSize:'15px', width: '15rem'}}>Guardian Contact:  </Typography>
-      <FormControl >
-         <TextField  defaultValue = {student.guardian_contact} name ="GuardianContact" id="GuardianContact" sx={{fontSize:'15px' , width: '50rem'}} variant="standard" inputProps={{ 'aria-label': 'description' }} />
-      </FormControl>
-     </Stack>
-    <Divider sx={{marginTop: '1.5rem'}} />
-    <Container sx ={{m:'1rem',display:'flex', justifyContent:'center'}}>
-    {isLoading === true ?( <LoadingButton
-      color="secondary"
-      loading={isLoading}
-      loadingPosition="start"
-      startIcon={<SaveIcon />}
-      variant="contained"
-    >
-      Sending
-    </LoadingButton>) : (<Button type="submit" variant="contained" color="success">Save Changes</Button>)}
-    </Container>
-         </Box>
-    </Paper>    
-  )
-}
+        {/* section removed temporarirly */}
+        {/* <Stack direction="row" spacing={2} sx = {{width:'100%', marginBottom: '1.5rem'}}>
+          <Typography variant ="overline" noWrap sx={{fontSize:'15px', width: '15rem'}}>Section:  </Typography>
+          <FormControl fullWidth variant = "standard"    sx={{fontSize:'15px' , width: '50rem'}}>
+            <Select
+             required
+              id="Section"
+              name ="Section"
+             value={section}
+              onChange={
+                (event) => {setSection((prev) => prev = event.target.value)}
+             }
+            >
+                {console.log("Sections+ "+JSON.stringify(props.section))}
+              {props.section.map((sections) => (<MenuItem value ={sections.section_name}>{sections.section_name}</MenuItem>))}
+            </Select>
+          </FormControl>
+        </Stack> */}
+
+        <Stack direction="row" spacing={2} sx={{ width: '100%', marginBottom: '1.5rem' }}>
+          <Typography variant="overline" noWrap sx={{ fontSize: '15px', width: '15rem' }}>Birthday:  </Typography>
+          <FormControl sx={{ fontSize: '15px', width: '50rem' }} required>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker
+                required
+                name="Birthday"
+                id="Birthday"
+                value={birthday}
+                onChange={(event) => { setBirthday(event); return () => { }; } }
+                // onChange={handleChangeYear}
+                renderInput={(params) => <TextField variant="standard" autoComplete='off' {...params} />} />
+            </LocalizationProvider>
+          </FormControl>
+        </Stack>
+        <Stack direction="row" spacing={2} sx={{ width: '100%', marginBottom: '1.5rem' }}>
+          <Typography variant="overline" noWrap sx={{ fontSize: '15px', width: '15rem' }}>Contact:  </Typography>
+          <FormControl>
+            <TextField defaultValue={student.contact} type="number" name="Contact" id="Contact" sx={{ fontSize: '15px', width: '50rem' }} variant="standard" inputProps={{ 'aria-label': 'description' }} />
+          </FormControl>
+        </Stack>
+      </Grid2>
+
+
+      <Divider sx={{ marginTop: '1.5rem' }} />
+      <Container sx={{ m: '1rem', display: 'flex', justifyContent: 'center' }}>
+        {isLoading === true ? (<LoadingButton
+          color="secondary"
+          loading={isLoading}
+          loadingPosition="start"
+          startIcon={<SaveIcon />}
+          variant="contained"
+        >
+          Sending
+        </LoadingButton>) : (<Button type="submit" variant="contained" color="success">Save Changes</Button>)}
+      </Container>
+    </Box>
+  </Paper>
+)
 
 const SchedulePanel = () =>{
   return (

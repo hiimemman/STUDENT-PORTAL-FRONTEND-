@@ -394,6 +394,7 @@ const renderEditStatus = (params) => {
   //dispatch from redux
 const dispatch = useDispatch();
 const [courses, setCourses] = useState({data: []});
+const [academicyear, setAcademicYear] = useState({data:[]});
 const [updatedCourse, setUpdatedCourse] = useState(false);
 //  Get all users api
  useEffect( () => {
@@ -419,9 +420,38 @@ const [updatedCourse, setUpdatedCourse] = useState(false);
    getAllData();
  }, [formOpenType]);
 
+ const getAllAcadYear = async () =>{
+  try{ 
+    //online api
+      const sendRequest = await fetch(basedUrl+"/all-academic-year-active.php");
+      const getResponse = await sendRequest.json();
+ 
+      if(getResponse.statusCode === 201){
+      
+      }else{
+        //if succesfully retrieve data'
+       //  console.log(getResponse)
+       setAcademicYear({data: getResponse});
+         
+      }
+  }catch(e){
+    console.error(e)
+  }
+}
+
+useEffect(() =>{
+  getAllAcadYear();
+return () =>{
+
+}
+},[formOpenType])
+
+useEffect(() =>{
+return () => {}
+},[academicyear])
+
  useEffect(() => {
   if(courses.data.length > 0){
-    console.log("Courses data = "+JSON.stringify(courses));
     setUpdatedCourse(true)
   }
  }, [formOpenType, courses]);
@@ -436,7 +466,7 @@ const [updatedCourse, setUpdatedCourse] = useState(false);
       <GridToolbarDensitySelector />
       <GridToolbarExport />
     </GridToolbarContainer>
-    {updatedCourse === true ? (<AddSection open = {formOpenType === 'section'}  courses ={courses}/>) : (<></>)}
+    {updatedCourse === true ? (<AddSection open = {formOpenType === 'section'}  courses ={courses} academicyear = {academicyear.data} />) : (<></>)}
   </>
   );
 }

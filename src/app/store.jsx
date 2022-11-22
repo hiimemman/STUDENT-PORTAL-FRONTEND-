@@ -24,6 +24,10 @@ import addStudent from '../slice/AddFormSlice/AddStudentSlice/AddStudentSlice'
 import menuStudentState from '../slice/MenuSlice/MenuState';
 import studentPageState from '../slice/StudentPageSlice/StudentPageSlice';
 import scheduleSelection from '../slice/AddSchedule/AddScheduleSlice';
+import  addFormFees  from '../slice/AddFormSlice/AddFeeSlice/AddFeeSlice';
+import  feeSelection  from '../slice/AddFeeSlice/AddFeeSlice'
+import addFormAcadYear from '../slice/AddFormSlice/AddAcademicYearSlice/AddAcademicYear';
+import  addFormAnnouncement  from '../slice/AddFormSlice/AddAnnouncementSlice/AddAnnouncementSlice'
 
 export const store = configureStore({
   reducer: {
@@ -44,13 +48,17 @@ export const store = configureStore({
     subjectSelected: subjectSelect,
     addFormSub: addFormSub,
     addFormFaculty: addFaculty,
+    addFormFee: addFormFees,
     addFormCourse: addCourse,
     addFormSection: addSection,
+    addFormAcademicYear: addFormAcadYear,
     sectionSelected: sectionSelect,
     addFormProfessor: addProfessor,
     professorSelected: professorSelect,
     studentSelected: studentSelect,
     addFormStudent: addStudent,
     scheduleSelection: scheduleSelection,
+    feeSelection: feeSelection,
+    addFormAnnouncement: addFormAnnouncement,
   },
 })

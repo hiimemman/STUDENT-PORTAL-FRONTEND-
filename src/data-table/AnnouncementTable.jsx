@@ -13,8 +13,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import { basedUrl } from '../base-url/based-url'
 import { PUT_STUDENT } from '../slice/FormSelectedRow/StudentSelected';
 import { imageBaseUrl } from '../base-url/based-url';
-import {ADDSTUDENT} from '../slice/AddFormSlice/AddStudentSlice/AddStudentSlice'
+import { ADDANNOUNCEMENT } from '../slice/AddFormSlice/AddAnnouncementSlice/AddAnnouncementSlice';
 import { AddStudent } from '../forms/AddStudent';
+import { AddAnnouncement } from '../forms/AddAnnouncement';
 
  
 const ITEM_HEIGHT = 48;
@@ -60,7 +61,7 @@ function computeMutation(newRow, oldRow) {
   return null;
 }
 
-export function StudentTable() {  
+export function AnnouncementTable() {  
     //dispatch from redux
     const dispatch = useDispatch();
     const [rows, setRows] = useState([]);
@@ -77,7 +78,7 @@ export function StudentTable() {
   const handleCloseSnackbar = () => setSnackbar(null);
 
     //Open add form
-const  formOpenType = useSelector(state => state.addFormStudent.value);
+const  formOpenType = useSelector(state => state.addFormAnnouncement.value);
 
 //Current User Session
 const user = useSelector(state => JSON.parse(state.user.session));
@@ -92,7 +93,7 @@ const [updatedCourse, setUpdateCourse] = useState('');
     try{ 
     
       //online api
-        const sendRequest = await fetch(basedUrl+"/student-table.php");
+        const sendRequest = await fetch(basedUrl+"/announcement-table.php");
         const getResponse = await sendRequest.json();
         isLoading(false)
         if(getResponse.statusCode === 201){
@@ -101,21 +102,6 @@ const [updatedCourse, setUpdateCourse] = useState('');
           //if succesfully retrieve data
           isLoading(false)
           setRows((prev) => prev = getResponse);
-        }
-    }catch(e){
-      console.error(e)
-    }
-    try{ 
-      //online api
-        const sendRequest = await fetch(basedUrl+"/course-table.php");
-        const getResponse = await sendRequest.json();
-   
-        if(getResponse.statusCode === 201){
-        
-        }else{
-          //if succesfully retrieve data'
-           setCourses(getResponse);
-           
         }
     }catch(e){
       console.error(e)
@@ -294,48 +280,103 @@ const renderEditStatus = (params) => {
 };
 //End of edit status via cell
 
+
+//Edit status via cell
+function EditCategory(props) {
+    const { id, value, field } = props;
+    const apiRef = useGridApiContext();
+    
+    const handleChange = async(event) =>{
+      
+      await apiRef.current.setEditCellValue({ id, field, value: event.target.value });
+        apiRef.current.stopCellEditMode({ id, field });
+    
+  }
   
+    return (
+      <>
+       <Select
+        value={value}
+        onChange={handleChange}
+  
+        sx={{ height: 1 , width: 260}}
+  
+        autoFocus
+      >
+        
+        <MenuItem value ={'Announcement'}>Announcement</MenuItem>
+        <MenuItem value = {'News and Updates'}>News and Updates</MenuItem>
+      </Select>
+      </>
+    
+    );
+  }
+  
+  EditCategory.propTypes = {
+    /**
+     * The column field of the cell that triggered the event.
+     */
+    field: PropTypes.string.isRequired,
+    /**
+     * The grid row id.
+     */
+    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    /**
+     * The cell value.
+     * If the column has `valueGetter`, use `params.row` to directly access the fields.
+     */
+    value: PropTypes.any,
+  };
+  
+  const renderEditCategory = (params) => {
+    return <EditCategory {...params} />;
+  };
+  //End of edit category via cell
  
-  const columns = [
+const columns = [
     {
-        field: 'profile_url',
-        headerName: 'Avatar',
+        field: 'image_url',
+        headerName: 'Image',
         width: 100,
         renderCell: (params) => {
           return (
             <>
-              <Avatar src={imageBaseUrl+params.value} />
+             
+              <img
+            src={`${imageBaseUrl+params.value}?w=164&h=164&fit=crop&auto=format`}
+            srcSet={`${imageBaseUrl+params.value}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
+            alt={"Image failed to render"}
+            loading="lazy"
+          />
             </>
           );
         }
       },
-      {
-        field: 'fullName',
-        headerName: 'Full name',
-        description: 'This column has a value getter and is not sortable.',
-        sortable: true,
-        width: 240,
-        valueGetter: (params) =>
-          `${params.row.firstname || ''} ${params.row.middlename || ''} ${params.row.lastname || ''}`,
-      },
-      {
-        field: 'email',
-        headerName: 'Email',
-        width: 259,
-        editable: false,
-     },
     {
-            field: 'studentnumber',
-            headerName: 'Student Id',
-            width: 260,
-            editable: false,
-    },
-    {
-        field: 'contact',
-        headerName: 'Contact',
+        field: 'title',
+        headerName: 'Title',
         width: 260,
         editable: true,
-},
+    },
+    {
+        field: 'message',
+        headerName: 'Message',
+        width: 360,
+        editable: true,
+    },
+    {
+        field: 'editor',
+        headerName: 'Author',
+        width: 260,
+        editable: false,
+    },
+    {
+        field: 'category',
+        headerName: 'Category',
+        renderEditCell: renderEditCategory,
+        width: 121,
+        editable: true,
+      },
       {
         field: 'status',
         headerName: 'Status',
@@ -484,7 +525,7 @@ const renderEditStatus = (params) => {
  //Toolbar
  function CustomToolbarProfessor() {
   //Open add form
-  const  formOpenType = useSelector(state => state.addFormStudent.value);
+  const  formOpenType = useSelector(state => state.addFormAnnouncement.value);
   //dispatch from redux
 const dispatch = useDispatch();
 const [faculty, setFaculty] = useState({data: []});
@@ -672,13 +713,13 @@ useEffect(() =>{
   return (<>
 
     <GridToolbarContainer>
-      <Button variant="text"  color ="success" startIcon = {<PersonAddIcon />} onClick = {() => dispatch(ADDSTUDENT())}> Add</Button>
+      <Button variant="text"  color ="success" startIcon = {<PersonAddIcon />} onClick = {() => dispatch(ADDANNOUNCEMENT())}> Add</Button>
       <GridToolbarColumnsButton />
       <GridToolbarFilterButton />
       <GridToolbarDensitySelector />
       <GridToolbarExport />
     </GridToolbarContainer>
-    {updatedFaculty === true ? (<AddStudent open = {formOpenType === 'student'} faculty = {faculty.data} fourDigits ={fourDigits.data} currentYear = {currentYear} courses ={course} sections ={section} academicyear = {academicyear.data}/>) : (<></>)}
+    <AddAnnouncement open = {formOpenType === 'announcement'} />
   </>
   );
 }

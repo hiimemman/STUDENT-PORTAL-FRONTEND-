@@ -36,6 +36,8 @@ const user = useSelector(state => JSON.parse(state.user.session));
   const [errorCourse, setErrorCourse] = useState('');
   const [errorSection, setErrorSection] = useState('');
   const [errorContact, setErrorContact] = useState('');
+  const [errorAcadYear, setErrorAcadYear] = useState('');
+  const [errorSemester, setErrorSemester] = useState('');
   //error message
   const [emailHelpertext, setEmailHelperText] = useState('');
   const [usernameHelpertext, setUsernameHelpertext] = useState('');
@@ -58,6 +60,12 @@ const [studentNumber, setStudentNumber] = useState(props.currentYear +""+props.f
 //calendar default value
 const [birthDay, setbirthDay] = useState(null);
 
+//academic year
+
+const [academicYear, setAcademicYear] = useState(null);
+const [sectionAndAcademicYear, setSectionAndAcademicYear] = useState(null);
+const [semester, setSelectedSemester] = useState(null);
+
 //Snackbar
   const [snackbar, setSnackbar] = useState(null);
 
@@ -65,11 +73,23 @@ const [birthDay, setbirthDay] = useState(null);
 
   const handleChangeSection = (event) =>{
     if((event.target.value).toString().length >0){
+   
         setErrorSection(false)
       }else{
         setErrorSection(true)
       }
 }
+
+const handleChangeAcademicYear = (event) =>{
+  if((event.target.value).toString().length >0){
+    setAcademicYear(academicYear => academicYear = event.target.value)
+      setErrorAcadYear(false)
+    }else{
+      setErrorAcadYear(true)
+    }
+}
+
+
 
 useEffect(() =>{
 let isCancelled = false;
@@ -111,6 +131,15 @@ let isCancelled = false
 return () =>{isCancelled = true}
 },[birthDay])
 
+useEffect(() =>{
+  console.log(sectionAndAcademicYear)
+    return () => {}
+  },[sectionAndAcademicYear]);
+
+useEffect(() =>{
+console.log(academicYear)
+  return () => {}
+},[academicYear]);
 
  
   const handleClose = () => {
@@ -279,10 +308,11 @@ const handleSubmitForm = async (event) =>{
  
   //`action`,`category`,`editor_position`,`editor_email`,`edited_email`
     event.preventDefault();
-    if(!errorFirstName && !errorLastName && !errorEmail && !errorProfessorUsername && !errorFaculty){
+    if(!errorFirstName && !errorLastName && !errorEmail && !errorProfessorUsername && !errorFaculty  && academicYear !== null){
     const randomPassword =
     Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2);
     const data = new FormData(event.currentTarget);
+    data.append('AcademicYear', academicYear);
     data.append('Password', randomPassword);
     data.append('Birthday', birthDay);
     data.append('Action', 'Create');
@@ -317,6 +347,14 @@ const handleSubmitForm = async (event) =>{
     }
   }
 
+  const handleChangeSemester = (event) =>{
+    if((event.target.value).toString().length >0){
+      setSelectedSemester((semester) => semester = event.target.value)
+      setErrorSemester((errorSemester) => errorSemester =false)
+    }else{
+      setErrorSemester((errorSemester) => errorSemester = false)
+    }
+  }
  
   return(
     <>
@@ -440,8 +478,47 @@ const handleSubmitForm = async (event) =>{
   </Grid2>
 
   <Grid2 item xs={12}>
-    <FormControl fullWidth error ={errorSection}>
+    <FormControl fullWidth error ={errorAcadYear}>
   
+      <InputLabel id="demo-simple-select-label">AcademicYear*</InputLabel>
+          <Select
+          required
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          name = "AcademicYear"
+          label="AcademicYear"
+          onChange={handleChangeAcademicYear}
+        >
+         
+       {props.academicyear.map((acadyear) =><MenuItem key = {acadyear.id} value = {acadyear.academicyear} >{acadyear.academicyear}</MenuItem>)}
+        
+        </Select>
+   </FormControl>
+  </Grid2>
+
+  <Grid2 item xs={12}>
+    <FormControl fullWidth error ={errorSemester}>
+  
+      <InputLabel id="demo-simple-select-label">Semester*</InputLabel>
+          <Select
+          required
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          name = "Semester"
+          label="Semester"
+          onChange={handleChangeSemester}
+        >
+         <MenuItem value ={'1st semester'} >1st semester</MenuItem>
+         <MenuItem value ={'2nd semester'} >2nd semester</MenuItem>
+        </Select>
+   </FormControl>
+  </Grid2>
+
+{/* temporary disabled section */}
+{/* 
+  <Grid2 item xs={12}>
+    <FormControl fullWidth error ={errorSection}>
+    {console.log(academicYear)}
       <InputLabel id="demo-simple-select-label">Section*</InputLabel>
           <Select
           required
@@ -451,14 +528,16 @@ const handleSubmitForm = async (event) =>{
           label="Section"
           onChange={handleChangeSection}
         >
-         
+       
        {activeSection.filter(section => {
+          return section.academic_year === academicYear;
+        }).filter(section => {
           return section.course === selectedCourse;
-        }).map((section) =><MenuItem key = {section.id} value = {section.sectionandacademicyear} >{section.section_name}</MenuItem>)}
+        }).map((section) =><MenuItem key = {section.id} value = {section.sectionandacademicyear} >{section.sectionandacademicyear}</MenuItem>)}
         
         </Select>
    </FormControl>
-  </Grid2>
+  </Grid2> */}
   
  
         </Grid2>

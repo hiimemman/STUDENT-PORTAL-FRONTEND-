@@ -14,6 +14,12 @@ export const studentPageState = createSlice({
         PRE_REGISTRATION: (state) =>{    
             state.value = 'pre_registration'
         },
+        CURRICULUM: (state) =>{    
+            state.value = 'curriculum'
+        },
+        SCHEDULE: (state) =>{    
+            state.value = 'schedule'
+        },
         NULL: (state) =>{
             state.value = initialState;
         }
@@ -22,7 +28,7 @@ export const studentPageState = createSlice({
 
 
 // Action creators are generated for each case reducer function
-export const { DASHBOARD, PRE_REGISTRATION, NULL } = studentPageState.actions
+export const { DASHBOARD, PRE_REGISTRATION, CURRICULUM, SCHEDULE, NULL } = studentPageState.actions
 
 export default studentPageState.reducer
 

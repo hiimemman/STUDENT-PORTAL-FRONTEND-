@@ -25,9 +25,9 @@ const columns = [
 
 export default function SchedulesChoicesTable(props) {
   return (
-    <div style={{ height: 400, width: '100%' }}>
+    <div style={{  width: '100%' }}>
       <DataGrid
-       
+       autoHeight
         rows={props.rows}
         columns={columns}
         pageSize={5}

@@ -20,10 +20,8 @@ const dispatch = useDispatch();
 const [backgroundImage, setBackgroundImage] = useState(imageBaseUrl+"school-sample-background.jpg")
 
 useEffect(() =>{
-  if(sessionStorage.getItem('user') !== null && user === null){
-    dispatch(REMOVE_USER());
-    dispatch(PUT_USER(JSON.stringify(sessionStorage.getItem('user'))))
-   navigate('/dashboard')
+  if(sessionStorage.getItem('user') !== null){
+   navigate('/employee/dashboard')
   } 
  },[])
 

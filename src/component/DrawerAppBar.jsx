@@ -19,7 +19,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { DARK, LIGHT } from '../slice/ThemeMode/ThemeMode';
 import Grid2 from '@mui/material/Unstable_Grid2/Grid2';
 import { Stack } from '@mui/material';
-
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const drawerWidth = 240;
 const openedMixin = (theme) => ({
@@ -93,6 +94,9 @@ export function DrawerAppBar() {
 
   const theme = useTheme();
 
+  //Navigation
+const navigate = useNavigate();
+
  //dispatch from redux
  const dispatch = useDispatch();
     //check menu state
@@ -120,6 +124,13 @@ const changeTheme = () =>{
     dispatch(DARK())
   }
 }
+
+
+  useEffect(() =>{
+    if(sessionStorage.getItem('user') === null){
+     navigate('/LoginEmployee')
+    } 
+   },[])
 
   return (
     <>

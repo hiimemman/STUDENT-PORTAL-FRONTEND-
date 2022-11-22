@@ -108,32 +108,35 @@ return () =>{
 //Generate section name
 const getSectionName =  async () => {
   console.log("Pumasok dito")
-  const data = new FormData();
+  if(selectedCourse !== null && academicYear !== null && selectedYear !== null){
+    const data = new FormData();
 
-  //specific
-  data.append('Course', selectedCourse);
-  data.append('AcademicYear', academicYear);
-  data.append('Year', selectedYear);
-  //const
-
-  for (var pair of data.entries()) {
-    console.log(pair[0]+ ' - ' + pair[1]); 
-}
-  try{
-    const sendRequest = await fetch(basedUrl+"/section-name-generate.php",{
-              method: "POST",
-              body: data,
-          });
-    const getResponse = await sendRequest.json();
-    console.log("Response:")
-    console.log(getResponse.statusCode);
-    if(getResponse.statusCode !== 200){
-      setSectionName((prev) => prev = selectedCourse+" "+selectedYear.charAt(0)+"-"+(parseFloat(getResponse.statusCode)+1));
+    //specific
+    data.append('Course', selectedCourse);
+    data.append('AcademicYear', academicYear);
+    data.append('Year', selectedYear);
+    //const
+  
+    for (var pair of data.entries()) {
+      console.log(pair[0]+ ' - ' + pair[1]); 
+  }
+    try{
+      const sendRequest = await fetch(basedUrl+"/section-name-generate.php",{
+                method: "POST",
+                body: data,
+            });
+      const getResponse = await sendRequest.json();
+      console.log("Response:")
+      console.log(getResponse.statusCode);
+      if(getResponse.statusCode !== 200){
+        setSectionName((prev) => prev = selectedCourse+" "+selectedYear.charAt(0)+"-"+(parseFloat(getResponse.statusCode)+1));
+   
+      }
+    }catch(e){
+      console.log(e);
+    }      
+  }
  
-    }
-  }catch(e){
-    console.log(e);
-  }      
 }
 
 useEffect(() => {
@@ -165,8 +168,8 @@ const handleSubmitForm = async (event) =>{
     //specific
     data.append('SectionName', sectionName);
     data.append('AcademicYear', academicYear);
-    data.append('StartYear', startYear.toString().substr(12, 4));
-    data.append('EndYear', endYear.toString().substr(12, 4));
+    // data.append('StartYear', startYear.toString().substr(12, 4));
+    // data.append('EndYear', endYear.toString().substr(12, 4));
     data.append('SectionAndYear', sectionName+" "+academicYear);
     //const
     data.append('Action', 'Create');
@@ -253,7 +256,7 @@ const handleSubmitForm = async (event) =>{
                 id="demo-simple-select"
                 name = "Year"
                 label="Year"
-                onChange={(event) => {setSelectedYear(event.target.value); return () =>{}}}
+                onChange={(event) => {setSelectedYear(event.target.value)}}
                 
                 >
                 <MenuItem value ={'1st year'}>1st year</MenuItem>
@@ -282,42 +285,22 @@ const handleSubmitForm = async (event) =>{
             </FormControl>
             </Grid2>
 
-      <Grid2 item xs={12}>
-        <FormControl fullWidth required>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-           <DatePicker
-            required
-            views={['year']}
-            label ="Start of school year"
-            id =  "StartYear"
-            name = "StartYear"
-            onChange = {(event) =>{setStartYear(event); return () =>{}} }
-            value={startYear}
-           // onChange={handleChangeYear}
-           renderInput={(params) => <TextField autoComplete='off' {...params} />}
-            />
-          </LocalizationProvider>
-          </FormControl>
-    </Grid2>
-
-
-    <Grid2 item xs={12}>
-        <FormControl fullWidth required>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-           <DatePicker
-            required
-            views={['year']}
-            label ="End of school year"
-            name = "EndYear"
-            id = "EndYear"
-            value={endYear}
-            onChange = {(event) =>{setEndYear(event); return () => {}} }
-           // onChange={handleChangeYear}
-           renderInput={(params) => <TextField autoComplete='off' {...params} />}
-            />
-          </LocalizationProvider>
-        </FormControl>
-    </Grid2>   
+            <Grid2 item xs={12}>
+             <FormControl fullWidth  required>
+              <InputLabel id="demo-simple-select-label">AcademicYear</InputLabel>
+                <Select
+                required
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                name = "AcademicYear"
+                label="AcademicYear"
+                onChange={(event) => {setAcademicYear((academicYear) => academicYear = event.target.value)}}
+                >
+                  {console.log(props.academicyear)}
+                  {props.academicyear.map((acadyear) => <MenuItem value ={acadyear.academicyear}>{acadyear.academicyear}</MenuItem> )}
+              </Select>
+            </FormControl>
+            </Grid2>
 
         </Grid2>
         </Box>

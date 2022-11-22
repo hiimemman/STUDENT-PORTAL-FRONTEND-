@@ -20,6 +20,11 @@ import { StudentSignIn } from './student-portal/StudentSignIn';
 import { StudentDetails } from './viewselected/StudentDetails';
 import { StudentDashboard } from './student-portal/pages/StudentDashboard';
 import { PreRegistration } from './student-portal/pages/PreRegistration';
+import { Fee } from './pages/Fee';
+import { Checklist } from './student-portal/pages/Checklist';
+import { StudentSchedule } from './student-portal/pages/StudentSchedule';
+import { AcademicYear } from './pages/AcademicYear';
+import { Announcement } from './pages/Announcement';
 
 
 
@@ -125,9 +130,14 @@ return (
         <Route path = "/employee/faculty" element ={<><Faculty/></>} />
         <Route path = "/employee/course" element ={<><Course/></>} />
         <Route path = "/employee/section" element ={<><Section/></>} />
+        <Route path ="/employee/fee" element = {<><Fee /></>}></Route>
+        <Route path ="/employee/academicyear" element = {<><AcademicYear /></>}></Route>
+        <Route path ="/employee/announcement" element = {<><Announcement /></>}></Route>
         <Route path = "/student-portal" element ={<><ParticlesBackground /><StudentSignIn /></>} />
         <Route path ="/student-portal/dashboard" element ={<><StudentDashboard /></>} />.
         <Route path ="/student-portal/pre-registration" element ={<><PreRegistration /></>} />
+        <Route path ="/student-portal/curriculum" element ={<><Checklist /></>} />
+        <Route path ="/student-portal/schedule" element ={<><StudentSchedule /></>} />
         <Route path = "/employee/section/student/:id"  element ={<StudentDetails />}/>
       </Routes>
     </Router>

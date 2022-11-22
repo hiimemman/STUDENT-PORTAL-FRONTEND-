@@ -15,7 +15,10 @@ import { basedUrl } from '../../base-url/based-url';
 import { DashboardCard } from '../../component/DashboardCard/DashboardCard';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import { DASHBOARD } from '../../slice/StudentPageSlice/StudentPageSlice';
-
+import { StudentDashboardCard } from '../component/StudentDashboardCard';
+import HowToRegIcon from '@mui/icons-material/HowToReg';
+import FormatListNumberedRtlIcon from '@mui/icons-material/FormatListNumberedRtl';
+import SchoolIcon from '@mui/icons-material/School';
 export function StudentDashboard(){
 
      //UseNavigate
@@ -25,6 +28,19 @@ export function StudentDashboard(){
      //get student
      const studentSession = useSelector(state => JSON.parse(state.student.session))
 
+      const [status, setStatus ] = useState('Unenrolled');
+      
+      useEffect(() =>{
+        if(studentSession.section === null){
+          setStatus(status => status = 'Enrolled');
+        }else{
+          setStatus(status => status = 'Unenrolled');
+        }
+
+        return () =>{
+
+        }
+      },[studentSession])
      useEffect(()=>{
       let isCancelled = false;
       dispatch(DASHBOARD());
@@ -50,9 +66,22 @@ export function StudentDashboard(){
 
 <div className="flex flex-col justify-evenly" style={{width:'100%'}}>
              <h2 className ='font-nunito font-bold'>Dashboard</h2>
-             <DashboardCard  title ={'Academic year'} content ={studentSession.firstname} icon ={<Avatar style ={{background: "rgba(0, 200, 152, 0.8)"}}>
+  <Stack direction ="row" spacing = {2} >
+    
+  <StudentDashboardCard title ={'Academic year'} content ={studentSession.academicyear} icon ={<Avatar style ={{background: "rgba(0, 200, 152, 0.8)"}}>
                   <CalendarMonthIcon />
-          </Avatar>}/>
+  </Avatar>} />
+  <StudentDashboardCard title ={'Semester'} content ={studentSession.semester} icon ={<Avatar style ={{background: "rgba(0, 200, 152, 0.8)"}}>
+                  <FormatListNumberedRtlIcon />
+  </Avatar>} />
+  <StudentDashboardCard title ={'Status'} content ={status} icon ={<Avatar style ={{background: "rgba(0, 200, 152, 0.8)"}}>
+                  <HowToRegIcon />
+  </Avatar>} />
+  <StudentDashboardCard title ={'Section and year'} content ={studentSession.section} icon ={<Avatar style ={{background: "rgba(0, 200, 152, 0.8)"}}>
+                  <SchoolIcon />
+  </Avatar>} />
+  </Stack>
+        
 </div> 
       </Box>) :  (<Skeleton
         sx={{ bgcolor: 'grey.900' }}

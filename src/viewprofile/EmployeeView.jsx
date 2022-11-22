@@ -325,7 +325,7 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
             </Grid2>
             <Grid2 item xs={5}> 
             
-            <TextField variant ="standard" defaultValue = {employee.birthday} name ="Birthday" type = "date"   id="Birthday" fullWidth sx={{fontSize:'15px'}}   />
+            <TextField variant ="standard" defaultValue = {employee.birthday} name ="Birthday" type = "date" format ="YYYY-MM-DD"  id="Birthday" fullWidth sx={{fontSize:'15px'}}   />
             </Grid2>
          </Grid2>
 
@@ -371,44 +371,7 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
             </Grid2>
          </Grid2>
 
-         <Divider />
-
-
-    <Typography variant ="h4" sx= {{p:1}} >Optional Url</Typography>
-    <Grid2 container spacing={2} sx ={{marginLeft:'0px', marginTop: '10px'}}>
-            <Grid2 item xs={5}> 
-            <Typography variant ="overline"  noWrap sx={{fontSize:'15px'}}>Twitter:  </Typography>
-            </Grid2>
-            <Grid2 item xs={5}> 
-            <TextField variant ="standard" defaultValue = {employee.twitterprofile} name ="Twitter" id ="Twitter"  sx={{fontSize:'15px'}} fullWidth inputProps={{ 'aria-label': 'description' }} />
-            </Grid2>
-         </Grid2>
-    <Grid2 container spacing={2} sx ={{marginLeft:'0px', marginTop: '10px'}}>
-            <Grid2 item xs={5}> 
-            <Typography variant ="overline" noWrap sx={{fontSize:'15px'}}>Facebook:  </Typography>
-            </Grid2>
-            <Grid2 item xs={5}> 
-            <TextField variant ="standard" defaultValue = {employee.facebookprofile} name ="Facebook" id ="Facebook" sx={{fontSize:'15px'}} fullWidth inputProps={{ 'aria-label': 'description' }} />
-            </Grid2>
-         </Grid2>
-
-         <Grid2 container spacing={2} sx ={{marginLeft:'0px', marginTop: '10px'}}>
-            <Grid2 item xs={5}> 
-            <Typography variant ="overline" noWrap sx={{fontSize:'15px'}}>Instagram:  </Typography>
-            </Grid2>
-            <Grid2 item xs={5}> 
-            <TextField variant = "standard" defaultValue = {employee.instagramprofile} name = "Instagram" id ="Instagram"  sx={{fontSize:'15px'}} fullWidth inputProps={{ 'aria-label': 'description' }} />
-            </Grid2>
-         </Grid2>
-         <Grid2 container spacing={2} sx ={{marginLeft:'0px', marginTop: '10px'}}>
-            <Grid2 item xs={5}> 
-            <Typography variant ="overline" noWrap sx={{fontSize:'15px'}}>LinkedIn:  </Typography>
-            </Grid2>
-            <Grid2 item xs={5}> 
-            <TextField variant ="standard" defaultValue = {employee.linkedinprofile} name ="LinkedIn" id ="LinkedIn"  sx={{fontSize:'15px'}} fullWidth inputProps={{ 'aria-label': 'description' }} />
-            </Grid2>
-         </Grid2>
-        <Divider />
+     
         <Container sx ={{m:'1rem',display:'flex', justifyContent:'center'}}>
         {isLoading === true ?( <LoadingButton
           color="secondary"

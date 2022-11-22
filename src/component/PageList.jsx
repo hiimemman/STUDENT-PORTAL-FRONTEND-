@@ -9,20 +9,20 @@ import GridViewIcon from '@mui/icons-material/GridView';
 import { Stack, Tooltip, Typography } from '@mui/material';
 import {CLOSE, OPEN} from  '../slice/MenuSlice/MenuState'
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
-import Person3Icon from '@mui/icons-material/Person3';
 import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
 import GroupsIcon from '@mui/icons-material/Groups';
 import AnnouncementIcon from '@mui/icons-material/Announcement';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import HandymanIcon from '@mui/icons-material/Handyman';
-import {DASHBOARD, EMPLOYEE,PROFESSOR, STUDENT, SUBJECT, COURSE, FACULTY, SECTION, NULL} from '../slice/PageSlice/PageSlice';
+import {DASHBOARD, EMPLOYEE,PROFESSOR, STUDENT, SUBJECT, COURSE, FACULTY, SECTION, FEE,ACADEMICYEAR, ANNOUNCEMENT,NULL} from '../slice/PageSlice/PageSlice';
 import SchoolIcon from '@mui/icons-material/School';
 import BiotechIcon from '@mui/icons-material/Biotech';
 import { useEffect } from 'react';
 import Diversity3Icon from '@mui/icons-material/Diversity3';
 import { SelectedLine } from './SelectedLine';
 import HailIcon from '@mui/icons-material/Hail';
-
+import PointOfSaleIcon from '@mui/icons-material/PointOfSale';
+import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 export function PageList(){
 
  //check current theme
@@ -75,6 +75,9 @@ if(currentPage === 'course'){
 }
 if(currentPage === 'section'){
   // navigate('/employee/section')
+}
+if(currentPage === 'fee'){
+  // navigate('/employee/fee')
 }
 if(currentPage === null){
   return () => {}
@@ -404,18 +407,92 @@ return(
     </Stack>
     </ListItem>
   </Tooltip>
-  <Tooltip title="Student list" placement="right-start">
+
+  <Tooltip title="Fees" placement="right-start">
     <ListItem  disablePadding sx={{ display: 'block'}} className="transition ease-in-out delay-2 hover:bg-slate-300  duration-300">
-  
-      <ListItemButton onClick ={()=>navigate('/employee/employees')}  onMouseEnter = {handleDrawerOpen} 
+    <SelectedLine selected ={currentPage === 'fee'}  />
+      <ListItemButton onClick ={()=>{dispatch(FEE()); navigate('/employee/fee')}}  onMouseEnter = {handleDrawerOpen} 
         sx={{
           minHeight: 48,
           justifyContent: isOpen ? 'initial' : 'center',
           px: 2.5,
         }}
       >
+          {currentPage === 'fee' ?  <ListItemIcon
+          sx={{
+            minWidth: 0,
+            mr: isOpen ? 3 : 'auto',
+            justifyContent: 'center',
+            
+          }}
+         style = {{color: selectTheme}}
+        >   <PointOfSaleIcon />
+        </ListItemIcon> :  
+      <ListItemIcon
+        sx={{
+          minWidth: 0,
+          mr: isOpen ? 3 : 'auto',
+          justifyContent: 'center',
+          
+        }}
+      >   <PointOfSaleIcon />
+      </ListItemIcon>}
 
-{currentPage === 'announcement' ?  <ListItemIcon
+        {/* <AttachMoneyIcon /> */}
+        { isOpen ?  <Typography className ='font-nunito text-lg' >Fee</Typography> : <p></p> }  
+      </ListItemButton>
+    
+    </ListItem>
+  </Tooltip>
+
+  <Tooltip title="Academic Year" placement="right-start">
+    <ListItem  disablePadding sx={{ display: 'block'}} className="transition ease-in-out delay-2 hover:bg-slate-300  duration-300">
+    <SelectedLine selected ={currentPage === 'academic year'}  />
+      <ListItemButton onClick ={()=>{dispatch(ACADEMICYEAR()); navigate('/employee/academicyear')}}  onMouseEnter = {handleDrawerOpen} 
+        sx={{
+          minHeight: 48,
+          justifyContent: isOpen ? 'initial' : 'center',
+          px: 2.5,
+        }}
+      >
+          {currentPage === 'academic year' ?  <ListItemIcon
+          sx={{
+            minWidth: 0,
+            mr: isOpen ? 3 : 'auto',
+            justifyContent: 'center',
+            
+          }}
+         style = {{color: selectTheme}}
+        >   <EventAvailableIcon />
+        </ListItemIcon> :  
+      <ListItemIcon
+        sx={{
+          minWidth: 0,
+          mr: isOpen ? 3 : 'auto',
+          justifyContent: 'center',
+          
+        }}
+      >   <EventAvailableIcon />
+      </ListItemIcon>}
+
+        {/* <AttachMoneyIcon /> */}
+        { isOpen ?  <Typography className ='font-nunito text-lg' >Academic Year</Typography> : <p></p> }  
+      </ListItemButton>
+    
+    </ListItem>
+  </Tooltip>
+
+  <Tooltip title="Announcement" placement="right-start">
+    <ListItem  disablePadding sx={{ display: 'block'}} className="transition ease-in-out delay-2 hover:bg-slate-300  duration-300">
+    <SelectedLine selected ={currentPage === 'announcement'}  />
+      <ListItemButton onClick ={()=>{dispatch(ANNOUNCEMENT()); navigate('/employee/announcement')}}  onMouseEnter = {handleDrawerOpen} 
+        sx={{
+          minHeight: 48,
+          justifyContent: isOpen ? 'initial' : 'center',
+          px: 2.5,
+        }}
+      >
+          {currentPage === 'announcement' ?  <ListItemIcon
           sx={{
             minWidth: 0,
             mr: isOpen ? 3 : 'auto',
@@ -432,75 +509,17 @@ return(
           justifyContent: 'center',
           
         }}
-      >  <AnnouncementIcon />
+      >   <AnnouncementIcon />
       </ListItemIcon>}
-        
-        
+
+        {/* <AttachMoneyIcon /> */}
         { isOpen ?  <Typography className ='font-nunito text-lg' >Announcement</Typography> : <p></p> }  
       </ListItemButton>
     
     </ListItem>
   </Tooltip>
-  <Tooltip title="Student list" placement="right-start">
-    <ListItem  disablePadding sx={{ display: 'block'}} className="transition ease-in-out delay-2 hover:bg-slate-300  duration-300">
   
-      <ListItemButton onClick ={()=>navigate('/employee/employees')}  onMouseEnter = {handleDrawerOpen} 
-        sx={{
-          minHeight: 48,
-          justifyContent: isOpen ? 'initial' : 'center',
-          px: 2.5,
-        }}
-      >
-        
-        <ListItemIcon
-          sx={{
-            minWidth: 0,
-            mr: isOpen ? 3 : 'auto',
-            justifyContent: 'center',
-          }}
-          
-        >
-        <AttachMoneyIcon />
-        </ListItemIcon>
-        { isOpen ?  <Typography className ='font-nunito text-lg' >Course</Typography> : <p></p> }  
-      </ListItemButton>
-    
-    </ListItem>
-  </Tooltip>
-  <Tooltip title="Student list" placement="right-start">
-    <ListItem  disablePadding sx={{ display: 'block'}} className="transition ease-in-out delay-2 hover:bg-slate-300  duration-300">
   
-      <ListItemButton onClick ={()=>navigate('/employee/employees')}  onMouseEnter = {handleDrawerOpen} 
-        sx={{
-          minHeight: 48,
-          justifyContent: isOpen ? 'initial' : 'center',
-          px: 2.5,
-        }}
-      >
-        {currentPage === 'notdefined' ?  <ListItemIcon
-          sx={{
-            minWidth: 0,
-            mr: isOpen ? 3 : 'auto',
-            justifyContent: 'center',
-            
-          }}
-         style = {{color: selectTheme}}
-        > <HandymanIcon />
-        </ListItemIcon>:  <ListItemIcon
-        sx={{
-          minWidth: 0,
-          mr: isOpen ? 3 : 'auto',
-          justifyContent: 'center',
-          
-        }}
-      ><HandymanIcon />
-      </ListItemIcon>}
-        
-        { isOpen ?  <Typography className ='font-nunito text-lg' >Course</Typography> : <p></p> }  
-      </ListItemButton>
-    
-    </ListItem>
-  </Tooltip>
  
 </List>
   </>
