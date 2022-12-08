@@ -102,12 +102,12 @@ console.log(value)
              <TabContext value={value}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' } }>
             <TabList onChange={handleChange} aria-label="lab API tabs example" >
-                <Tab label="DATA TABLE" value="1" />
+                <Tab label="SECTION TABLE" value="1" />
                 <Tab label="HISTORY" value="2" />
                 {console.log(section)}
                 {section !== null ? (<Tab value="3" label={
                 <Stack direction="row" spacing={2}>
-                <Typography>{section.section_name+" - A.Y ("+section.year_start+"-"+section.year_end+")"}</Typography>
+                <Typography>{section.section_name}</Typography>
                 </Stack>
                 } />) : (<></>)}
              </TabList>

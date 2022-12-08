@@ -18,7 +18,7 @@ import {OPENSNACK, CLOSESNACK} from '../slice/Snackbars/EmployeeTableOpen/Employ
 import {SUCCESSSNACK, FAILEDSNACK} from '../slice/Snackbars/EmployeeTableStatus/EmployeeTableStatus'
 import {SUCCESSMESSAGESNACK, FAILEDMESSAGESNACK} from '../slice/Snackbars/EmployeeTableMessage/EmployeeTableMessage'
 import {basedUrl} from '../base-url/based-url'
-
+import moment from 'moment'
 
 export function AddEmployee(){
   const [scroll, setScroll] = useState('paper');
@@ -46,7 +46,7 @@ const user = useSelector(state => JSON.parse(state.user.session));
 
   
   const [sexChanged, setSexChanged] = useState(false);
-
+  const [dateHired, setDateHired] = useState(null);
   const handleChangeFname = (event) =>{
     if((event.target.value).toString().length <= 0){
       setValidFname(false);
@@ -149,9 +149,14 @@ if(sexChanged === false){
 
 //`action`,`category`,`editor_position`,`editor_email`,`edited_email`
   event.preventDefault();
-  if(randomPassword !== '' && birthDay !== '' && birthDay !== null && sexChanged === true && validFname === true && validLname === true && validEmail === true && validContact === true && validAddress === true ){
+  console.log("Pumasok dito")
+  if(randomPassword !== '' && birthDay !== '' && birthDay !== null && validFname === true && validLname === true && validEmail === true && validContact === true && validAddress === true ){
   const data = new FormData(event.currentTarget);
-  data.append('Birthday', birthDay);
+  console.log("Pumasok dito")
+  let convertDate = moment(birthDay).format("YYYY-MM-DD");
+  console.log(convertDate)
+  data.append('DateHired',moment(dateHired).format("YYYY-MM-DD"));
+    data.append('Birthday', convertDate);
   data.append('Password', randomPassword);
   data.append('Action', 'Create');
   data.append('EditorPosition', user.position);
@@ -178,13 +183,19 @@ if(sexChanged === false){
             dispatch(FAILEDMESSAGESNACK());
           }
   }catch(e){
-
+    console.log(e)
   }
   }else{
 
   }
 }
  
+
+
+const changeDateHired = (event) =>{
+  setDateHired(dateHired => dateHired = event)
+}
+
   return(
     <>
     
@@ -235,39 +246,37 @@ if(sexChanged === false){
         </FormControl>
           </Grid2>
         </Grid2>
+
         <Grid2 container spacing={3} sx ={{marginLeft:'-10px', marginTop: '10px'}}>
-        <Grid2 item xs={6}>
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <Grid2 item xs={12}>
+        <LocalizationProvider  dateAdapter={AdapterDayjs}>
           <DatePicker
           required
           label ="Date of Birth"
           inputFormat="YYYY-MM-DD"
           value={birthDay}
           onChange={handleChangeBday}
-          renderInput={(params) => <TextField autoComplete='off' {...params} />}
+          renderInput={(params) => <TextField fullWidth autoComplete='off' {...params} />}
         />
         </LocalizationProvider>
         </Grid2>
            
-              
-          <Grid2 item xs={5}> 
-         
-          <FormControl error={validSex}>
-  <FormLabel id="demo-controlled-radio-buttons-group">Gender</FormLabel>
-           <RadioGroup
-           row
-           aria-labelledby="demo-row-radio-buttons-group-label"
-           name="Sex"
-           id="Sex"
-           required
-           onChange = {handleChangeSex}
-              >
-           <FormControlLabel value="Female" control={<Radio />} label="Female" />
-          <FormControlLabel value="Male" control={<Radio />}  label="Male"  />
-         </RadioGroup>
-         </FormControl>
-         </Grid2>
         </Grid2>
+
+      <Grid2 container spacing={3} sx ={{marginLeft:'-10px', marginTop: '10px'}}>
+        <Grid2 item xs={12}>
+        <LocalizationProvider  dateAdapter={AdapterDayjs}>
+          <DatePicker
+          required
+          label ="Date hired"
+          inputFormat="YYYY-MM-DD"
+          value={dateHired}
+          onChange={changeDateHired}
+          renderInput={(params) => <TextField fullWidth autoComplete='off' {...params} />}
+        />
+        </LocalizationProvider>
+        </Grid2>  
+     </Grid2>
 
         <Grid2 container spacing={3} sx ={{marginLeft:'-10px'}}>
              <Grid2 item xs={12}>{validContact !== false ? (<TextField autoComplete='off' name ="Contact" fullWidth required label="Contact" variant="outlined" onKeyUp ={handleChangeContact} />) : (<TextField autoComplete='off' error fullWidth  name ="Contact" required label="Contact" variant="outlined" helperText = "Must be 11 numbers"  onKeyUp ={handleChangeContact}/>)}</Grid2>

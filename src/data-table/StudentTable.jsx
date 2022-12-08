@@ -300,7 +300,8 @@ const renderEditStatus = (params) => {
     {
         field: 'profile_url',
         headerName: 'Avatar',
-        width: 100,
+        flex: 1,
+        maxWidth: 100,
         renderCell: (params) => {
           return (
             <>
@@ -314,33 +315,44 @@ const renderEditStatus = (params) => {
         headerName: 'Full name',
         description: 'This column has a value getter and is not sortable.',
         sortable: true,
-        width: 240,
+        flex: 1,
+        minWidth: 0,
         valueGetter: (params) =>
           `${params.row.firstname || ''} ${params.row.middlename || ''} ${params.row.lastname || ''}`,
       },
       {
         field: 'email',
         headerName: 'Email',
-        width: 259,
+        flex: 1,
+        minWidth: 0,
         editable: false,
      },
     {
             field: 'studentnumber',
             headerName: 'Student Id',
-            width: 260,
+            flex: 1,
+            minWidth: 0,
             editable: false,
+    },
+    {
+      field: 'course',
+      headerName: 'Course',
+      flex: 1,
+      minWidth: 0,
     },
     {
         field: 'contact',
         headerName: 'Contact',
-        width: 260,
+        flex: 1,
+        minWidth: 0,
         editable: true,
 },
       {
         field: 'status',
         headerName: 'Status',
         renderEditCell: renderEditStatus,
-        width: 121,
+        flex: 1,
+        minWidth: 0,
         editable: true,
         renderCell: (cellValues) => {
           return(
@@ -381,7 +393,7 @@ const renderEditStatus = (params) => {
       // Make the HTTP request to save in the backend
       const dataUpdate = new FormData();
       dataUpdate.append('StudentNumber', newRow['studentnumber']);
-      dataUpdate.append('FirstnName', newRow['firstname']);
+      dataUpdate.append('FirstName', newRow['firstname']);
       dataUpdate.append('MiddleName', newRow['middlename']);
       dataUpdate.append('LastName', newRow['lastname']);
       dataUpdate.append('Email', newRow['email']);
@@ -406,7 +418,7 @@ const renderEditStatus = (params) => {
     });
     
     const getResponse = await sendRequest.json();
-
+    console.log(getResponse)
     if(getResponse.statusCode !== 201){
       setSnackbar({ children: 'Update successfully', severity: 'success' });
       resolve(response);

@@ -54,6 +54,10 @@ function computeMutation(newRow, oldRow) {
    
     return `Status from '${oldRow.status}' to '${newRow.status}'`;
   }
+  if (newRow.maxstudent !== oldRow.maxstudent) {
+   
+    return `Max student from '${oldRow.maxstudent}' to '${newRow.maxstudent}'`;
+  }
   return null;
 }
 
@@ -223,19 +227,22 @@ const renderEditStatus = (params) => {
     {
       field: 'section_name',
       headerName: 'Section',
-      width: 250,
+      flex: 1,
+      minWidth: 0,
      editable: false,
     },
     {
         field: 'course',
         headerName: 'Course',
-        width: 250,
+        flex: 1,
+        minWidth: 0,
        editable: false,
     },
     {
         field: 'section_year',
         headerName: 'Year',
-        width: 250,
+        flex: 1,
+        minWidth: 0,
         editable: false,
       },
       // {
@@ -247,14 +254,38 @@ const renderEditStatus = (params) => {
       {
         field: 'academic_year',
         headerName: 'Academic Year',
-        width: 300,
+        flex: 1,
+        minWidth: 0,
         editable: false,
       },
+      {
+        field: 'semester',
+        headerName: 'Semester',
+        flex: 1,
+        minWidth: 0,
+       editable: false,
+    },
+    {
+      field: 'totalstudent',
+      headerName: 'Total Student',
+      flex: 1,
+      minWidth: 0,
+     editable: false,
+  },
+  {
+    field: 'maxstudent',
+    headerName: 'Max Student',
+    flex: 1,
+    minWidth: 0,
+    type: "number",
+   editable: true,
+},
       {
         field: 'status',
         headerName: 'Status',
         renderEditCell: renderEditStatus,
-        width: 150,
+        flex: 1,
+        minWidth: 0,
         editable: true,
         renderCell: (cellValues) => {
           return(
@@ -298,6 +329,7 @@ const renderEditStatus = (params) => {
       dataUpdate.append('SectionAndYear', newRow['sectionandacademicyear']);
       dataUpdate.append('Semester', newRow['semester']);
       dataUpdate.append('SectionName', newRow['section_name']);
+      dataUpdate.append('MaxStudent', newRow['maxstudent']);
       dataUpdate.append('Status', newRow['status']);
       dataUpdate.append('Action', 'Update');
       dataUpdate.append('EditorPosition', user.position);
@@ -339,6 +371,9 @@ const renderEditStatus = (params) => {
     }
     const { newRow, oldRow } = promiseArguments;
     const mutation = computeMutation(newRow, oldRow);
+
+
+
 
     return (
       <Dialog
@@ -456,6 +491,8 @@ return () => {}
   }
  }, [formOpenType, courses]);
 
+
+ 
 
   return (<>
 

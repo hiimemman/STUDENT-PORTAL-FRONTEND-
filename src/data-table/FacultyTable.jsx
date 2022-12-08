@@ -151,21 +151,33 @@ const renderEditStatus = (params) => {
   const columns = [
     {
       field: 'faculty_name',
-      headerName: 'Faculty',
-      width: 250,
+      headerName: 'Department',
+      flex: 1,
+      minWidth: 0,
      editable: false,
     },
     {
         field: 'description',
         headerName: 'Description',
-        width: 440,
+        flex: 1,
+        minWidth: 0,
         editable: true,
+      },
+     
+      {
+        field: 'added_at',
+        headerName: 'Date Created',
+        flex: 1,
+        minWidth: 0,
+        editable: false,
+        type: 'datetime'
       },
       {
         field: 'status',
         headerName: 'Status',
         renderEditCell: renderEditStatus,
-        width: 200,
+        flex: 1,
+        minWidth: 0,
         editable: true,
         renderCell: (cellValues) => {
           return(
@@ -176,13 +188,6 @@ const renderEditStatus = (params) => {
           );//end of return
         }
       },
-      {
-        field: 'added_at',
-        headerName: 'Date Created',
-        width: 200,
-        editable: false,
-        type: 'datetime'
-      }
   ];
 
   const processRowUpdate = useCallback(

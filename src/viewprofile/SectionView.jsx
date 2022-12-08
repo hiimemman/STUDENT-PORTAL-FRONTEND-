@@ -284,6 +284,7 @@ const OverviewPanel = () =>{
      <FormControl fullWidth variant = "standard"    sx={{fontSize:'15px' , width: '50rem'}}>
 
     <Select
+    disabled
      required
       id="Semester"
       name ="Semester"

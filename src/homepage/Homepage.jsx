@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
@@ -24,10 +24,24 @@ import Brightness7Icon from '@mui/icons-material/Brightness7';
 import { styled } from '@mui/material/styles';
 import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import Fade from 'react-reveal/Fade';
+import CardFeatured from './homepage-components/CardFeatured';
+import { Paper, Grid, CssBaseline } from '@mui/material';
+import Masonry from '@mui/lab/Masonry';
+import { useEffect } from 'react';
+import { HOMEPAGE } from '../slice/PageSlice/PageSlice';
+import { basedUrl } from '../base-url/based-url';
+import { ClientLocation } from '../component/ClientLocation';
+import { SwiperCarousel } from './homepage-components/SwiperCarousel';
+
 const drawerWidth = 240;
 export function Homepage(props) {
   const { window } = props;
   const [mobileOpen, setMobileOpen] = useState(false);
+//page current state
+const currentPage = useSelector(state => (state.selectedPage.value));
+
+  const [announcement, setAnnouncement] = useState([{id:'1'}]);
 
   //dispatch from redux
 const dispatch = useDispatch();
@@ -44,7 +58,35 @@ const changeTheme = () =>{
     dispatch(DARK())
   }
 }
+
+useEffect(() =>{
+  dispatch(HOMEPAGE());
+return() =>{}
+},[])
   
+// Get all student api
+const getAllData = async () =>{
+
+  try{ 
+  
+    //online api
+      const sendRequest = await fetch(basedUrl+"/all-announcement-active.php");
+      const getResponse = await sendRequest.json();
+  
+      if(getResponse.statusCode === 201){
+      
+      }else{
+        //if succesfully retrieve data
+        setAnnouncement((announcement => announcement = getResponse))
+      }
+  }catch(e){
+    console.error(e)
+  }
+}
+  useEffect(() =>{
+    getAllData();
+    return () => {}
+  },[currentPage])
 
 
 
@@ -137,6 +179,7 @@ const navigate = useNavigate();
       height={118}></Skeleton>
     } >
          <Box sx={{ display: 'flex' }}  >
+         <CssBaseline />
       <AppBar component="nav" >
         <Toolbar>
           <IconButton
@@ -156,11 +199,14 @@ const navigate = useNavigate();
               <Button sx={{ color: '#fff' }} onClick = {() => {navigate('/Loginemployee')}}>
                 Employee Portal
               </Button>
+              <Button sx={{ color: '#fff' }} onClick = {() => {navigate('/professor-portal')}}>
+                Professor Portal
+              </Button>
               <Button sx={{ color: '#fff' }} onClick = {() => {navigate('/student-portal')}}>
                 Student Portal
               </Button>
               <IconButton sx={{ ml: 1 }}  color="inherit" onClick={changeTheme}>
-              {selectedTheme !== 'darkTheme' ? (<Brightness4Icon />) : (<Brightness7Icon />)}
+              {selectedTheme === 'lightTheme' ? (<Brightness4Icon />) : (<Brightness7Icon />)}
              </IconButton>
           </Box>
         </Toolbar>
@@ -183,14 +229,107 @@ const navigate = useNavigate();
           {drawer}
         </Drawer>
       </Box>
-      <Box component="main" style ={{padding:'0px'}}>
+      <Box component="main" style ={{padding:'0px', m:0}} >
+    
         <Toolbar />
        {/** Main content goes here */}
-          <MainFeaturedPost   />
 
+         
+   <Grid  container
+  spacing={0}
+  marginTop = '0px'
+  direction="column"
+  alignItems="center"
+  justifyContent="center"  
+  paddingBottom = "1.5rem"
+  marginBottom={'1.5rem'}>
+
+<Grid  style ={{width:'100%', height:'auto', marginBottom:'3.5rem'}} >
+    <SwiperCarousel height ={'40vw'} slides ={banner} /> 
+  </Grid>  
+
+  <Fade bottom duration={1500}  >
+  <Typography variant ={'h3'} className ="font-semibold" marginTop ="8rem">Mission</Typography>
+    <Typography variant ={'h4'} marginTop ="1.5rem" marginBottom={"5rem"} marginLeft =  {'3rem'} marginRight =  {'3rem'} className ="font-semibold"><center>The <i className ="text-blue-900">ASIAN INSTITUTE OF SCIENCE AND TECHNOLOGY</i> commits itself in pursuit of leadership and excellence in the fields of science and technology, to contribute to the sustainable development and improvement of Philippine society.</center></Typography>
+  </Fade>
+
+  <Fade bottom duration={1500}  >
+  <Typography variant ={'h3'} className ="font-semibold" marginTop ="8rem">Vision</Typography>
+    <Typography variant ={'h4'} marginTop ="1.5rem" marginBottom={"5rem"} marginLeft =  {'3rem'} marginRight =  {'3rem'} className ="font-semibold"><center>The <i className ="text-blue-900">ASIAN INSTITUTE OF SCIENCE AND TECHNOLOGY </i> envisions itself as a globally competitive center of leadership and excellence in various program leader institution of higher learning in science and technology education</center></Typography>
+  </Fade>
+
+<Fade bottom duration={1500}  >
+    <Typography variant ={'h3'} className ="font-semibold" marginTop ="3rem">Facilities</Typography>
+    <Typography variant ={'body'} marginTop ="1.5rem" marginBottom={"5rem"}>a place, amenity, or piece of equipment provided for a particular purpose:</Typography>
+    
+ </Fade>
+  <Grid  style ={{width:'100%',maxWidth:'1200px', height: '30vw', margin:'3.5rem'}}>
+    <SwiperCarousel   height = {'30vw'} slides ={slides}/> 
+  </Grid>  
+    
+    
+    <Fade bottom duration={1500}>
+    <Typography variant ={'h3'} className ="font-semibold" marginTop ="3rem">News and Updates</Typography>
+    <Typography variant ={'body'} marginTop ="1.5rem" marginBottom={"5rem"}>information not previously known to someone:</Typography>
+    </Fade> 
+    
+   
+    <Masonry columns={{xs: 1, sm: 3, md:4}} spacing={3} style={{ marginTop:'3.5rem'}}>
+      {announcement.map((announce) =>
+       <CardFeatured date ={announce.added_at}image = {announce.image_url} title ={announce.title} message ={announce.message} id = {announce.id}/>
+      )}
+ </Masonry>    
+ <Fade bottom duration={1500}>
+    <Typography variant ={'h3'} className ="font-semibold" marginTop ="3rem" >Location</Typography>
+    <Typography variant ={'body'} marginTop ="1.5rem" marginBottom={"5rem"} >an actual place or natural setting in which a film or broadcast is made, as distinct from a simulation in a studio</Typography>
+   <Box  style={{ marginTop:'3.5rem'}}>
+   <ClientLocation />
+   </Box>
+    
+    </Fade> 
+   
+
+
+    </Grid>
+         
       </Box>
     </Box>
     </Suspense>
     </>
   );
 }
+
+const banner =[{
+  id: 1,
+  name:'Emman',
+  description:'Randomator',
+  image:"https://res.cloudinary.com/dm1ztuuvo/image/upload/v1669554412/banner-1_gkl6m9.jpg"
+},
+{
+  id: 2,
+  name:'Dave',
+  description:'Randomators',
+  image:"https://res.cloudinary.com/dm1ztuuvo/image/upload/v1669554562/banner-2_wkng5d.jpg"
+},
+{
+  id: 3,
+  name:'Ken',
+  description:'LmAO',
+  image:"https://res.cloudinary.com/dm1ztuuvo/image/upload/v1669554604/banner-3_kbu55z.jpg"
+},
+];
+
+const slides =[{
+  id: 1,
+  name:'Emman',
+  description:'Randomator',
+  image:"https://res.cloudinary.com/dm1ztuuvo/image/upload/v1669798566/317045452_860784958400250_2201995659751592710_n_a4hefv.jpg"
+},
+
+{
+  id: 4,
+  name:'Ken',
+  description:'LmAO',
+  image:"https://res.cloudinary.com/dm1ztuuvo/image/upload/v1669554715/banner-4_uepmv2.jpg"
+},
+];

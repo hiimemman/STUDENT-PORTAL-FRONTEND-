@@ -6,13 +6,13 @@ import { useState, useEffect, useRef } from 'react';
 import Button from '@mui/material/Button';
 import { useSelector, useDispatch } from 'react-redux';
 import Grid2 from '@mui/material/Unstable_Grid2'; // Grid2 version 2
-import { Alert, Container, Divider, FormControl, FormControlLabel, FormHelperText, FormLabel, InputLabel, MenuItem, Radio, RadioGroup, Select, Snackbar, TextField, Typography } from '@mui/material';
+import { Alert, Container, Divider, FormControl, FormControlLabel, FormHelperText, FormLabel, InputLabel, MenuItem, Radio, RadioGroup, Select, Snackbar, TextField, Typography, Stack } from '@mui/material';
 import { Box } from '@mui/system';
 import { CLOSEANNOUNCEMENTFORM } from '../slice/AddFormSlice/AddAnnouncementSlice/AddAnnouncementSlice';
 import { basedUrl } from '../base-url/based-url';
 import { useTheme } from '@mui/material/styles';
 import UploadWidget from '../component/UploadWidget';
-
+import FileUpload from "react-mui-fileuploader"
 
 
 const ITEM_HEIGHT = 48;
@@ -36,6 +36,7 @@ function getStyles(name, courseName, theme) {
 }
 
 
+
 export function AddAnnouncement(props){
   const [scroll, setScroll] = useState('paper');
  //dispatch from redux
@@ -51,13 +52,13 @@ const user = useSelector(state => JSON.parse(state.user.session));
 
 
 
-  const [errorSubjectCode, setErrorSubjectCode] = useState('');
   const [errorSubName, setErrorSubName] = useState('');
   const [errorUnits, setErrorUnits] = useState('');
   const [errorCourse, setErrorCourse] = useState('');
   const [errorYear, setErrorYear] =  useState('');
   const [errorSemester, setErrorSemester] = useState('');
-  const [errorType, setErrorType] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [errorTitle, setErrorTitle] = useState('');
 
   const [errorAcademicYear, setErrorAcademicYear] = useState('')
 
@@ -65,6 +66,7 @@ const user = useSelector(state => JSON.parse(state.user.session));
   const [endYear, setEndYear] = useState(null);
   const [academicYear, setAcademicYear] = useState(null);
 
+  const [announcementImageUrl, setAnnouncementImageurl] = useState('No image selected');
 
   //Open add form
 const  formOpenType = useSelector(state => state.addFormAnnouncement.value);
@@ -155,25 +157,23 @@ useEffect(() => {
 }, [formOpenType]);
  
 const handleSubmitForm = async (event) =>{
- 
+ console.log("nagcall dito")
 //`action`,`category`,`editor_position`,`editor_email`,`edited_email`
   event.preventDefault();
-  if(!errorAcademicYear && academicYear !== null && endYear !== null && startYear !== null){
-    const data = new FormData();
-    data.append('AcademicYear', academicYear);
-    data.append('StartYear', startYear.toString().substr(12, 4));
-    data.append('EndYear', endYear.toString().substr(12, 4));
+  if(errorTitle !== null && errorMessage !== null){
+    const data = new FormData(event.currentTarget);
+  data.append('ImageUrl', announcementImageUrl);
   data.append('Action', 'Create');
   data.append('EditorPosition', user.position);
   data.append('EditorEmail', user.email);
-  data.append('Category', 'AcademicYear');
+  data.append('Category', 'Announcement');
   console.log("Formdata values:")
 
   for (var pair of data.entries()) {
     console.log(pair[0]+ ' - ' + pair[1]); 
 }
   try{
-    const sendRequest = await fetch(basedUrl+"/academic-year-add.php",{
+    const sendRequest = await fetch(basedUrl+"/announcement-add.php",{
               method: "POST",
               body: data,
           });
@@ -191,7 +191,7 @@ const handleSubmitForm = async (event) =>{
     setSnackbar({ children: "Field can't be empty", severity: 'error' });
   }
   }else{
-    setSnackbar({ children: "Field can't be empty", severity: 'error' });
+    // setSnackbar({ children: "Field can't be empty", severity: 'error' });
   }
 }
  
@@ -255,6 +255,78 @@ return () => {}
 },[errorAcademicYear])
 
 
+
+
+const handleFileUploadError = (error) => {
+
+  // Do something...
+}
+
+const handleFilesChange = async (files) => {
+  // Do something...
+
+  try{
+    const data = new FormData();
+    // data.append('AcademicYear', academicYear);
+    data.append('Image', files[0])
+    
+    for (var pair of data.entries()) {
+      console.log(pair[0]+ ', ' + pair[1]); 
+  }
+    const sendRequest = await fetch("https://my-aisat-portal.herokuapp.com/quickstart.php",{
+      method: "POST",
+      body: data,
+  });
+
+  const getResponse = await sendRequest.json();
+  console.log(getResponse.statusCode)
+  if(getResponse.statusCode === 200){
+ 
+   
+  }else{
+  
+  }
+  }catch(e){
+  
+   
+}
+}
+
+const handleImageLoad = (event) =>{
+setAnnouncementImageurl(announcementImageUrl => announcementImageUrl = event.target.currentSrc)
+}
+
+useEffect(() =>{
+ 
+  return () =>{}
+},[announcementImageUrl])
+
+
+const handleChangeTitle = (event) =>{
+  if(event.target.value.toString().length  > 0){
+    setErrorTitle(errorTitle => errorTitle = false)
+  }else{
+    setErrorTitle(errorTitle => errorTitle = true)
+  }
+}
+
+const handleChangeMessage = (event) =>{
+  if(event.target.value.toString().length  > 0){
+    setErrorMessage(errorMessage => errorMessage = false)
+  }else{
+    setErrorMessage(errorMessage => errorMessage = true)
+  }
+}
+
+useEffect(() =>{
+
+  return () =>{}
+},[errorMessage])
+
+useEffect(() =>{
+
+  return () =>{}
+},[errorTitle])
   return(
     <>
       <Dialog
@@ -272,10 +344,55 @@ return () => {}
         <DialogContent dividers={scroll === 'paper'}>
       <Box component="form" id ="frmAddSubject"  onSubmit={handleSubmitForm} nowrap>
       <Grid2 container spacing={3} sx ={{marginLeft:'-10px'}}> 
-    <UploadWidget />
+     
+      
+      <Grid2 item xs={12}>
+        <Stack direction ="column" spacing ={2}>
+        <Typography variant ="body">Message image</Typography>
+    <img id="uploadedimage" src="" onLoad={handleImageLoad} style ={{maxWidth:'1000px', maxHeight:'300px'}} ></img>
+        </Stack>
+    <Stack direction ="row" spacing = {2} > 
+   <UploadWidget  />
+   <Typography variant ="body" id = 'ImageFileNameXD' body ="asd"  ></Typography>
+    </Stack>
+    </Grid2>
 
+   
+    <Grid2 item xs={12} fullWidth>
+              <FormControl fullWidth error ={errorTitle}>
+               <TextField error = {errorTitle} name ="Title" fullWidth required label="Title" variant="outlined" onKeyUp =  {handleChangeTitle} />
+        {errorTitle === true ? (<FormHelperText id="component-helper-text">Title must not be empty
+        </FormHelperText>): (<></>)}
+               </FormControl>
+    </Grid2>
 
+    <Grid2 item xs={12} fullWidth>
+             <FormControl fullWidth  required>
+              <InputLabel required id="demo-simple-select-label">Category</InputLabel>
+                <Select
+                required
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                name = "Category"
+                label="Category"
+                >
+                <MenuItem value ={'Announcement'}>Announcement</MenuItem>
+                <MenuItem value ={'News and Updates'}>News and Updates</MenuItem>
+              </Select>
+            </FormControl>
+           
       </Grid2>
+
+      <Grid2 item xs={12} fullWidth>
+              <FormControl fullWidth error ={errorMessage}>
+               <TextField error = {errorMessage} name ="Message" fullWidth required label="Message" variant="outlined" onKeyUp =  {handleChangeMessage} />
+        {errorMessage === true ? (<FormHelperText id="component-helper-text">Message must not be empty
+        </FormHelperText>): (<></>)}
+               </FormControl>
+    </Grid2>
+
+    
+    </Grid2>
         </Box>
         </DialogContent>
         <DialogActions>
@@ -291,3 +408,4 @@ return () => {}
     </>
   )
 }
+

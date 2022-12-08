@@ -222,27 +222,31 @@ const renderEditStatus = (params) => {
     {
       field: 'course_name',
       headerName: 'Course',
-      width: 170,
+      flex: 1,
+      minWidth: 0,
      editable: false,
     },
     {
         field: 'description',
         headerName: 'Description',
-        width: 430,
+        flex: 1,
+        minWidth: 0,
         editable: true,
       },
       {
         field: 'course_faculty',
-        headerName: 'Faculty',
+        headerName: 'Department',
         renderEditCell: renderEditFaculty,
-        width: 250,
+        flex: 1,
+        minWidth: 0,
        editable: true,
       },
       {
         field: 'status',
         headerName: 'Status',
         renderEditCell: renderEditStatus,
-        width: 260,
+        flex: 1,
+        minWidth: 0,
         editable: true,
         renderCell: (cellValues) => {
           return(

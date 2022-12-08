@@ -18,6 +18,7 @@ import { imageBaseUrl } from '../base-url/based-url';
 import { StudentView } from '../viewprofile/StudentView';
 import { ProfessorHistory } from '../viewhistory/ProfessorHistory';
 import { STUDENT } from '../slice/PageSlice/PageSlice';
+import { StudentRegistrationTable } from '../data-table/StudentRegistrationTable';
 
 export  function Student() {
 //Selected Student
@@ -205,7 +206,7 @@ getAllActiveCourse();
              <TabContext value={value}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' } }>
             <TabList onChange={handleChange} aria-label="lab API tabs example" >
-                <Tab label="DATA TABLE" value="1" />
+                <Tab label="STUDENT TABLE" value="1" />
                 <Tab label="HISTORY" value="2" />
                 {student !== null ? (<Tab value="3" label={
                 <Stack direction="row" spacing={2}>
@@ -221,6 +222,7 @@ getAllActiveCourse();
           
           </Paper>
           </TabPanel>
+         
             <TabPanel value="2" sx ={{marginLeft:'-24px'}}>
             <Paper elevation={1} sx ={{width:'500 '}} className ="rounded-xl">
               <ProfessorHistory />

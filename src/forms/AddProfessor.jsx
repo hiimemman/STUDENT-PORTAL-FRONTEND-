@@ -11,6 +11,11 @@ import { Box } from '@mui/system';
 import { CLOSEFORM } from '../slice/AddFormSlice/AddProfessorSlice/AddProfessorSlice';
 import { basedUrl } from '../base-url/based-url';
 import validator from 'validator'
+import moment from 'moment'
+
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from '@mui/x-date-pickers';
 
 export function AddProfessor(props){
   const [scroll, setScroll] = useState('paper');
@@ -34,7 +39,7 @@ const user = useSelector(state => JSON.parse(state.user.session));
 
   //states
   const [activeFaculty, setActiveFaculty] = useState(props.faculty);
-  
+  const [dateHired, setDateHired] = useState(null);
  
  //Open add form
 const  formOpenType = useSelector(state => state.addFormProfessor.value);
@@ -172,8 +177,9 @@ const handleSubmitForm = async (event) =>{
   Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2);
   //`action`,`category`,`editor_position`,`editor_email`,`edited_email`
     event.preventDefault();
-    if(!errorFirstName && !errorLastName && !errorEmail && !errorProfessorUsername && !errorFaculty){
+    if(!errorFirstName && !errorLastName && !errorEmail && !errorProfessorUsername && !errorFaculty && dateHired !== null){
     const data = new FormData(event.currentTarget);
+    data.append('DateHired',moment(dateHired).format("YYYY-MM-DD"));
     data.append('Password', randomPassword);
     data.append('Action', 'Create');
     data.append('EditorPosition', user.position);
@@ -206,6 +212,12 @@ const handleSubmitForm = async (event) =>{
       setSnackbar({ children: "Field can't be empty", severity: 'error' });
     }
   }
+
+  
+const changeDateHired = (event) =>{
+  setDateHired(dateHired => dateHired = event)
+}
+
   return(
     <>
       <Dialog
@@ -280,6 +292,22 @@ const handleSubmitForm = async (event) =>{
    </FormControl>
         </Grid2>
              
+      
+        <Grid2 item xs={12}>
+        <LocalizationProvider  dateAdapter={AdapterDayjs}>
+          <DatePicker
+
+          required
+          label ="Date hired"
+          inputFormat="YYYY-MM-DD"
+          value={dateHired}
+          onChange={changeDateHired}
+          renderInput={(params) => <TextField fullWidth autoComplete='off' {...params} />}
+        />
+        </LocalizationProvider>
+        </Grid2>  
+  
+
         </Grid2>
         </Box>
         </DialogContent>

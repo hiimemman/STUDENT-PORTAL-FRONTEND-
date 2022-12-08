@@ -21,7 +21,8 @@ import Grid2 from '@mui/material/Unstable_Grid2/Grid2';
 import { Stack } from '@mui/material';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import { Box } from '@mui/material';
+import { imageBaseUrl } from '../base-url/based-url';
 const drawerWidth = 240;
 const openedMixin = (theme) => ({
   width: drawerWidth,
@@ -148,11 +149,13 @@ const changeTheme = () =>{
         >
           <MenuIcon />
         </IconButton>
-        <Typography variant="h6"  className ='font-nunito'sx={{ flexGrow: 1 }}component="div">
-          {/* LOGO HERE */}
-        </Typography>
+        
+   
+          <img src= {imageBaseUrl+"homepage-logo.svg"} alt="SVG as an image" style ={{maxWidth:"100px"}}  />
+    
+      
           <Grid container justifyContent="center" display ='flex'>
-          <Typography variant = "h5" className ='font-nunito'>
+          <Typography variant = "h5" className ='font-nunito font-extrabold'>
             {currentPage !== null ?  (currentPage.charAt(0).toUpperCase() + currentPage.slice(1)) : ('')}
           </Typography>
           </Grid>

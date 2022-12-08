@@ -228,7 +228,7 @@ function EditStatus(props) {
   
   const handleChange = async(event) =>{
     
-    await apiRef.current.setEditCellValue({ id, field, value: event.target.value });
+    await apiRef.current.setEditCellValue({ id, field, value: 'active' });
       apiRef.current.stopCellEditMode({ id, field });
   
 }
@@ -270,33 +270,44 @@ const renderEditStatus = (params) => {
 };
 //End of edit status via cell
 
-  
+const checkStatus = (values) =>{
+  console.log(values)
+  if(values === 'inactive'){
+    return false;
+  }else{
+    return true;
+  }
+}
  
   const columns = [
     {
         field: 'academicyear',
         headerName: 'Academic Year',
-        width: 330,
+        flex: 1,
+        minWidth: 0,
         editable: false,
       },
       {
         field: 'start',
         headerName: 'Year Start',
-        width: 330,
+        flex: 1,
+        minWidth: 0,
         editable: false,
       },
       {
         field: 'end',
         headerName: 'Year End',
-        width: 330,
+        flex: 1,
+        minWidth: 0,
         editable: false,
       },
       {
         field: 'status',
         headerName: 'Status',
         renderEditCell: renderEditStatus,
-        width: 250,
-        editable: true,
+        flex: 1,
+        minWidth: 0,
+        editable: checkStatus,
         renderCell: (cellValues) => {
           return(
           <>
@@ -307,6 +318,8 @@ const renderEditStatus = (params) => {
         }
       },
   ];
+
+  
 
   const processRowUpdate = useCallback(
     (newRow, oldRow) =>
@@ -341,7 +354,7 @@ const renderEditStatus = (params) => {
       dataUpdate.append('Action', 'Update');
       dataUpdate.append('EditorPosition', user.position);
       dataUpdate.append('EditorEmail', user.email);
-      dataUpdate.append('Category', 'Fee');
+      dataUpdate.append('Category', 'AcademicYear');
       const response = await mutateRow(newRow);
       const sendRequest = await fetch(basedUrl+"/academic-year-update.php",{
         method: "POST",
@@ -350,6 +363,8 @@ const renderEditStatus = (params) => {
     
     const getResponse = await sendRequest.json();
     if(getResponse.statusCode !== 201){
+      console.log(getResponse.statusCode)
+      setRows((rows) => rows = getResponse.statusCode)
       setSnackbar({ children: 'Update successfully', severity: 'success' });
       resolve(response);
       setPromiseArguments(null);
@@ -364,6 +379,8 @@ const renderEditStatus = (params) => {
       setPromiseArguments(null);
     }
   };
+
+ 
 
   const handleEntered = () => {
     // The `autoFocus` is not used because, if used, the same Enter that saves

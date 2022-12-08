@@ -1,5 +1,8 @@
 import React, { Component } from "react";
 
+import ImageIcon from '@mui/icons-material/Image';
+import { Announcement } from "@mui/icons-material";
+
 class UploadWidget extends Component {
   componentDidMount() {
     const cloudName = "dm1ztuuvo"; // replace with your own cloud name
@@ -12,7 +15,7 @@ class UploadWidget extends Component {
     // can add see:
     //   https://cloudinary.com/documentation/upload_widget_reference
 
-    var myWidget = window.cloudinary.createUploadWidget(
+    let myWidget = window.cloudinary.createUploadWidget(
       {
         cloudName: cloudName,
         uploadPreset: uploadPreset,
@@ -32,8 +35,9 @@ class UploadWidget extends Component {
         if (!error && result && result.event === "success") {
           console.log("Done! Here is the image info: ", result.info);
           document
-            .getElementById("uploadedimage")
-            .setAttribute("src", result.info.secure_url);
+          .getElementById("uploadedimage")
+          .setAttribute("src", result.info.secure_url);
+          
         }
       }
     );
@@ -47,8 +51,9 @@ class UploadWidget extends Component {
   }
 
   render() {
+ 
     return (
-      <button id="upload_widget" className="cloudinary-button">
+      <button id="upload_widget"  className="cloudinary-button">
         Upload
       </button>
     );

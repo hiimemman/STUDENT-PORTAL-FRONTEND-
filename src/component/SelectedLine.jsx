@@ -9,7 +9,7 @@ const [selectTheme, setTheme] = useState('');
 
 useEffect(() =>{
     if(selectedTheme === 'lightTheme'){
-        setTheme('#01579b')
+        setTheme('#112444')
        }else{
       setTheme('#00b0ff')
        } 

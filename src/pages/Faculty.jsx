@@ -88,7 +88,7 @@ const handleClose = (event, reason) => {
              <TabContext value={value}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' } }>
             <TabList onChange={handleChange} aria-label="lab API tabs example" >
-                <Tab label="DATA TABLE" value="1" />
+                <Tab label="FACULTY TABLE" value="1" />
                 <Tab label="HISTORY" value="2" />
              </TabList>
             </Box>

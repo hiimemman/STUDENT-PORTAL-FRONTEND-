@@ -307,6 +307,13 @@ const OverviewPanel = () =>{
     </Select>
   </FormControl>
 </Stack> 
+
+<Stack direction="row" spacing={2} sx = {{width:'100%', marginBottom: '1.5rem'}}>
+        <Typography variant ="overline" noWrap sx={{fontSize:'15px', width: '15rem'}}>Date Hired:  </Typography>
+      <FormControl >
+         <TextField disabled defaultValue = {professor.date_hired} name ="DateHired" id="DateHired" sx={{fontSize:'15px' , width: '50rem'}} variant="standard" inputProps={{ 'aria-label': 'description' }} />
+      </FormControl>
+     </Stack>  
     
   </Grid2>
          

@@ -28,11 +28,15 @@ import  addFormFees  from '../slice/AddFormSlice/AddFeeSlice/AddFeeSlice';
 import  feeSelection  from '../slice/AddFeeSlice/AddFeeSlice'
 import addFormAcadYear from '../slice/AddFormSlice/AddAcademicYearSlice/AddAcademicYear';
 import  addFormAnnouncement  from '../slice/AddFormSlice/AddAnnouncementSlice/AddAnnouncementSlice'
-
+import  addFormAnnouncementImageUrl  from '../slice/ImageUrlSlice/AnnouncementImageUrlSlice'
+import  registrationSelect  from '../slice/FormSelectedRow/RegistrationSelected'
+import professorInfo from '../slice/ProfessorSession/professorSession';
+import professorPageState from '../slice/ProfessorPageSlice/ProfessorPageSlice'
 export const store = configureStore({
   reducer: {
     user: userInfo,
     student: studentInfo,
+    professor: professorInfo,
     isOpen: menuState,
     isOpenStudent: menuStudentState,
     isOpenForm: formState,
@@ -40,6 +44,7 @@ export const store = configureStore({
     selectedTheme: themeMode,
     selectedPage: pageState,
     studentSelectedPage: studentPageState,
+    professorSelectedPage: professorPageState,
     employeeSelected: employeeSelect,
     openSnackEmp: openEmployeeTable,
     snackStatusEmp: statusEmployeeTable,
@@ -60,5 +65,7 @@ export const store = configureStore({
     scheduleSelection: scheduleSelection,
     feeSelection: feeSelection,
     addFormAnnouncement: addFormAnnouncement,
+    addFormAnnouncementImageUrl: addFormAnnouncementImageUrl,
+    registrationSelect: registrationSelect,
   },
 })

@@ -14,6 +14,7 @@ import validator from 'validator'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers';
+import moment from 'moment'
 
 export function AddStudent(props){
   const [scroll, setScroll] = useState('paper');
@@ -308,13 +309,14 @@ const handleSubmitForm = async (event) =>{
  
   //`action`,`category`,`editor_position`,`editor_email`,`edited_email`
     event.preventDefault();
-    if(!errorFirstName && !errorLastName && !errorEmail && !errorProfessorUsername && !errorFaculty  && academicYear !== null){
+    if(!errorFirstName && !errorLastName && !errorEmail && !errorProfessorUsername && !errorFaculty){
     const randomPassword =
     Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2);
     const data = new FormData(event.currentTarget);
-    data.append('AcademicYear', academicYear);
+    let convertDate = moment(birthDay).format("YYYY-MM-DD");
+
     data.append('Password', randomPassword);
-    data.append('Birthday', birthDay);
+    data.append('Birthday', convertDate);
     data.append('Action', 'Create');
     data.append('EditorPosition', user.position);
     data.append('EditorEmail', user.email);
@@ -477,7 +479,7 @@ const handleSubmitForm = async (event) =>{
    </FormControl>
   </Grid2>
 
-  <Grid2 item xs={12}>
+  {/* <Grid2 item xs={12}>
     <FormControl fullWidth error ={errorAcadYear}>
   
       <InputLabel id="demo-simple-select-label">AcademicYear*</InputLabel>
@@ -494,8 +496,8 @@ const handleSubmitForm = async (event) =>{
         
         </Select>
    </FormControl>
-  </Grid2>
-
+  </Grid2> */}
+{/* 
   <Grid2 item xs={12}>
     <FormControl fullWidth error ={errorSemester}>
   
@@ -512,7 +514,7 @@ const handleSubmitForm = async (event) =>{
          <MenuItem value ={'2nd semester'} >2nd semester</MenuItem>
         </Select>
    </FormControl>
-  </Grid2>
+  </Grid2> */}
 
 {/* temporary disabled section */}
 {/* 

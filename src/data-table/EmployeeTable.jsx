@@ -229,7 +229,8 @@ function EditPosition(props) {
     {
       field: 'profile_url',
       headerName: 'Avatar',
-      width: 100,
+      flex: 1,
+      minWidth: 0,
       renderCell: (params) => {
       
         return (
@@ -244,28 +245,32 @@ function EditPosition(props) {
       headerName: 'Full name',
       description: 'This column has a value getter and is not sortable.',
       sortable: true,
-      width: 240,
+      flex: 1,
+      minWidth: 0,
       valueGetter: (params) =>
         `${params.row.firstname || ''} ${params.row.middlename || ''} ${params.row.lastname || ''}`,
     },
     {
       field: 'email',
       headerName: 'Email',
-      width: 259,
+      flex: 1,
+        minWidth: 0,
       editable: false,
       },
       {
         field: 'position',
         headerName: 'Position',
         renderEditCell: renderEditPosition,
-        width: 150,
+        flex: 1,
+        minWidth: 0,
         editable: true,
       },
       {
         field: 'status',
         headerName: 'Status',
         renderEditCell: renderEditStatus,
-        width: 160,
+        flex: 1,
+        minWidth: 0,
         editable: true,
         renderCell: (cellValues) => {
           
@@ -280,9 +285,10 @@ function EditPosition(props) {
       },
 
       {
-        field: 'added_at',
-        headerName: 'Date Created',
-        width: 190,
+        field: 'datehired',
+        headerName: 'Date Hired',
+        flex: 1,
+        minWidth: 0,
         type: 'date',
         editable: false,
       },

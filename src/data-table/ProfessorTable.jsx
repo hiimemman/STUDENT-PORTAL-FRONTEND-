@@ -312,7 +312,9 @@ const renderEditStatus = (params) => {
     {
         field: 'profile_url',
         headerName: 'Avatar',
-        width: 100,
+        flex: 1,
+        minWidth: 0,
+        maxWidth: 100,
         renderCell: (params) => {
         
           return (
@@ -327,33 +329,45 @@ const renderEditStatus = (params) => {
         headerName: 'Full name',
         description: 'This column has a value getter and is not sortable.',
         sortable: true,
-        width: 240,
+        flex: 1,
+        minWidth: 120,
         valueGetter: (params) =>
           `${params.row.firstname || ''} ${params.row.middlename || ''} ${params.row.lastname || ''}`,
       },
       {
         field: 'email',
         headerName: 'Email',
-        width: 259,
+        flex: 1,
+        minWidth: 250,
         editable: false,
      },
      {
         field: 'professor_username',
         headerName: 'Username',
-        width: 259,
+        flex: 1,
+        minWidth: 0,
         editable: false,
      },
     {
             field: 'faculty',
-            headerName: 'Faculty',
-            width: 260,
+            headerName: 'Department',
+            flex: 1,
+        minWidth: 0,
             editable: false,
     },
+    {
+      field: 'date_hired',
+      headerName: 'Date Hired',
+      flex: 1,
+  minWidth: 0,
+      editable: false,
+},
       {
         field: 'status',
         headerName: 'Status',
         renderEditCell: renderEditStatus,
-        width: 121,
+        flex: 1,
+        minWidth: 0,
         editable: true,
         renderCell: (cellValues) => {
           return(
@@ -364,6 +378,7 @@ const renderEditStatus = (params) => {
           );//end of return
         }
       },
+      
   ];
 
   const processRowUpdate = useCallback(

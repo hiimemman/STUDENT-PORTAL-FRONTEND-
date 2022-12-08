@@ -25,7 +25,19 @@ import { Checklist } from './student-portal/pages/Checklist';
 import { StudentSchedule } from './student-portal/pages/StudentSchedule';
 import { AcademicYear } from './pages/AcademicYear';
 import { Announcement } from './pages/Announcement';
-
+import { Profile } from './pages/Profile';
+import { StudentRegistration } from './pages/StudentRegistration';
+import { Grades } from './student-portal/pages/Grades';
+import { GradesPerSection } from './student-portal/pages/GradesPerSection';
+import { Balance } from './student-portal/pages/Balance';
+import { HomepageAnnouncement } from './homepage/HomepageAnnouncement';
+import { ProfessorSignIn } from './professor-portal/ProfessorSignin';
+import { ProfessorDashboard } from './professor-portal/pages/ProfessorDashboard';
+import { ProfessorSchedule } from './professor-portal/pages/ProfessorSchedule';
+import { Grading } from './professor-portal/pages/Grading';
+import { UpdateGradesPerSection } from './professor-portal/pages/UpdateGradesPerSection';
+import { Semester } from './pages/Semester';
+import { StudentProfile } from './student-portal/pages/StudentProfile';
 
 
 
@@ -34,12 +46,35 @@ function App() {
   const initialStateTheme = createTheme({
     palette: {
       mode: 'light',
+    }, 
+    palette: {
+      primary: {
+        light: '#757ce8',
+        main: '#112444',
+        dark: '#002884',
+        contrastText: '#fff',
+      }
     },
     typography: {
       fontFamily: [
         "Open Sans",
-      ].join(",")
-    }
+      ].join(","),
+      
+      h3: {
+        color: "#112444"
+      },
+    },
+     components: {
+      MuiCssBaseline: {
+        styleOverrides: `
+          @font-face {
+            font-style: normal;
+            font-display: swap;
+            font-weight: 800;
+             }
+        `,
+      },
+    },
   })
  
  //check current theme
@@ -57,36 +92,33 @@ const lightTheme = createTheme({
   palette: {
     primary: {
       light: '#757ce8',
-      main: '#01579b',
+      main: '#112444',
       dark: '#002884',
       contrastText: '#fff',
-      
-    },
-    secondary: {
-      light: '#ff7961',
-      main: '#f44336',
-      dark: '#ba000d',
-      contrastText: '#000',
-    },
+    }
   },
   typography: {
-    fontFamily: [
-      "Open Sans",
-    ].join(",")
+    h3: {
+      color: "#112444",
+    },
+      body1: {
+        fontWeight: 600 // or 'bold'
+    },
+    body2: {
+      fontSize: [16, "!important"]
   },
-  components: {
+  },
+   components: {
     MuiCssBaseline: {
-      styleOverrides: {
-        body: {
-          color: "darkred",
-          backgroundColor: 'rgb(248 250 252)',
-          "& h1": {
-            color: "black"
-          }
-        }
-      }
-    }
-  }
+      styleOverrides: `
+        @font-face {
+          font-style: normal;
+          font-display: swap;
+          font-weight: 800;
+           }
+      `,
+    },
+  },
 })
  const darkTheme = createTheme(
  {
@@ -94,18 +126,32 @@ const lightTheme = createTheme({
     mode: 'dark',
   },
   typography: {
-    fontFamily: [
-      "Open Sans",
-    ].join(",")
+    body1: {
+      fontWeight: 600 // or 'bold'
+  },
+  body2: {
+    fontSize: [16, "!important"]
+}
+  },
+  components: {
+    MuiCssBaseline: {
+      styleOverrides: `
+        @font-face {
+          font-style: normal;
+          font-display: swap;
+          font-weight: 800;
+        }
+      `,
+    },
   },
 })
 
 
  useEffect(() =>{
- if(selectedTheme === 'lightTheme'){
-   setTheme((prev) => prev = lightTheme)
+ if(selectedTheme === 'darkTheme'){
+  setTheme((prev) => prev = darkTheme)
   }else{
- setTheme((prev) => prev = darkTheme)
+    setTheme((prev) => prev = lightTheme)
   } 
   return () =>{
 
@@ -126,6 +172,7 @@ return (
         <Route path = "/employee/employees" element ={<><Employees/></>} /> 
         <Route path = "/employee/professor" element ={<><Professor /></>} />
         <Route path = "/employee/student" element ={<><Student/></>} />
+        <Route path = "/employee/student-registration" element ={<><StudentRegistration /></>} />
         <Route path = "/employee/subject" element ={<><Subject/></>} /> 
         <Route path = "/employee/faculty" element ={<><Faculty/></>} />
         <Route path = "/employee/course" element ={<><Course/></>} />
@@ -133,13 +180,29 @@ return (
         <Route path ="/employee/fee" element = {<><Fee /></>}></Route>
         <Route path ="/employee/academicyear" element = {<><AcademicYear /></>}></Route>
         <Route path ="/employee/announcement" element = {<><Announcement /></>}></Route>
+        <Route path ="/employee/semester" element = {<><Semester /></>}></Route>
+        <Route path ="/employee/profile" element = {<><Profile /></>}></Route>
         <Route path = "/student-portal" element ={<><ParticlesBackground /><StudentSignIn /></>} />
+
         <Route path ="/student-portal/dashboard" element ={<><StudentDashboard /></>} />.
         <Route path ="/student-portal/pre-registration" element ={<><PreRegistration /></>} />
         <Route path ="/student-portal/curriculum" element ={<><Checklist /></>} />
         <Route path ="/student-portal/schedule" element ={<><StudentSchedule /></>} />
+        <Route path ="/student-portal/grades" element ={<><Grades /></>}/>
+        <Route path ="/student-portal/balance" element ={<><Balance /></>}/>
+        <Route path ="/announcement/:id" element ={<><HomepageAnnouncement /></>}/>
+        <Route path ="/student-portal/grades/:studentnumber/:sectionandsemester" element ={<><GradesPerSection /></>}/>
+        <Route path ="/student-portal/profile" element ={<><StudentProfile /></>}/>
         <Route path = "/employee/section/student/:id"  element ={<StudentDetails />}/>
+        <Route path = "/professor-portal" element ={<><ParticlesBackground /><ProfessorSignIn /></>} /> 
+        <Route path ="/professor-portal/dashboard" element ={<><ProfessorDashboard /></>} />
+        <Route path ="/professor-portal/schedule" element ={<><ProfessorSchedule /></>} />
+        <Route path ="/professor-portal/grading" element ={<><Grading /></>} />
+        
+        <Route path ="/professor-portal/grading/:initial/:sectionandacademicyear" element ={<><UpdateGradesPerSection /></>} />
+
       </Routes>
+      
     </Router>
   </ThemeProvider>
  </StyledEngineProvider>    

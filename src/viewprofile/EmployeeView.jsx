@@ -329,23 +329,7 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
             </Grid2>
          </Grid2>
 
-         <Grid2 container spacing={2} sx ={{marginLeft:'0px', marginTop: '10px'}}>
-            <Grid2 item xs={5}> 
-              <Typography variant ="overline" noWrap sx={{fontSize:'15px'}}>SEX:  </Typography>
-          </Grid2>
-          <Grid2 item xs={5}> 
-           <RadioGroup
-           row
-           aria-labelledby="demo-row-radio-buttons-group-label"
-           name="Sex"
-           id="Sex"
-           defaultValue ={employee.sex}
-              >
-           <FormControlLabel value="Female" control={<Radio />} label="Female" />
-          <FormControlLabel value="Male" control={<Radio />}  label="Male"  />
-         </RadioGroup>
-         </Grid2>
-        </Grid2>
+      
 
 
         <Grid2 container spacing={2} sx ={{marginLeft:'0px', marginTop: '10px'}}>
@@ -361,15 +345,7 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
             </Grid2>
          </Grid2>
          
-         <Grid2 container spacing={2} sx ={{marginLeft:'0px', marginTop: '10px'}}>
-            <Grid2 item xs={5}> 
-            <Typography variant ="overline" noWrap sx={{fontSize:'15px'}}>Date Created:  </Typography>
-            </Grid2>
-            <Grid2 item xs={5}> 
-            
-            <TextField variant ="standard" defaultValue = {employee.added_at} fullWidth disabled sx={{fontSize:'15px'}} />
-            </Grid2>
-         </Grid2>
+        
 
      
         <Container sx ={{m:'1rem',display:'flex', justifyContent:'center'}}>

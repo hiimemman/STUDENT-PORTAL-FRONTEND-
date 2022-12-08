@@ -46,13 +46,15 @@ function CustomToolbar() {
     {
       field: 'action',
       headerName: 'Actions',
-      width: 100,
+      flex: 1,
+        minWidth: 0,
       editable: false,
     },
     {
       field: 'editor_email',
       headerName: 'Editor',
-      width: 220,
+      flex: 1,
+      minWidth: 0,
       editable: false,
       },
       {
@@ -64,19 +66,22 @@ function CustomToolbar() {
       {
         field: 'edited_email',
         headerName: 'Subject Code',
-        width: 220,
+        flex: 1,
+        minWidth: 0,
         editable: false,
       },
       {
         field: 'date_edited',
         headerName: 'Date Edited',
-        width: 150,
+        flex: 1,
+        minWidth: 0,
       },
 
       {
         field: 'after_edit',
         headerName: 'File Saved',
-        width: 300,
+        flex: 1,
+        minWidth: 0,
         editable: false,
        
       },

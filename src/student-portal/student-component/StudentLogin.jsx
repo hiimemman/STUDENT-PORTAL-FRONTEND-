@@ -164,7 +164,7 @@ const dispatch = useDispatch();
             <Typography component="h1" variant="h5">
               Sign in
             </Typography> */}
-           {selectedTheme !== 'lightTheme' ? (<img  src= {imageBaseUrl+"Aisat-Student-Dark.svg"} alt="SVG as an image" />) : 
+           {selectedTheme === 'darkTheme' ? (<img  src= {imageBaseUrl+"Aisat-Student-Dark.svg"} alt="SVG as an image" />) : 
             (<img src= {imageBaseUrl+"Aisat-Student-Light.svg"}  alt="SVG as an image" />)}
            
             <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
@@ -222,9 +222,9 @@ const dispatch = useDispatch();
               <Grid container>
                 <Grid item xs>
 
-                  {/* <Link href="#" variant="body2">
+                  <Link href="#" variant="body2">
                     Forgot password?
-                  </Link> */}
+                  </Link>
                 </Grid>
                 {/* <Grid item>
                   <Link href="#" variant="body2">

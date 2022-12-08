@@ -49,14 +49,25 @@ const useFakeMutation = () => {
 };
 
 function computeMutation(newRow, oldRow) {
+  if (newRow.image_url !== oldRow.image_url) {
+   
+    return `Image url from '${oldRow.image_url}' to '${newRow.image_url}'`;
+  }
+  if (newRow.title !== oldRow.title) {
+   
+    return `Title from '${oldRow.title}' to '${newRow.title}'`;
+  }
+  if (newRow.category !== oldRow.category) {
+   
+    return `Category from '${oldRow.category}' to '${newRow.category}'`;
+  }
+  if (newRow.message !== oldRow.message) {
+   
+    return `Message from '${oldRow.message}' to '${newRow.message}'`;
+  }
   if (newRow.status !== oldRow.status) {
    
     return `Status from '${oldRow.status}' to '${newRow.status}'`;
-  }
-
-  if (newRow.contact !== oldRow.contact) {
-   
-    return `Contact from '${oldRow.contact}' to '${newRow.contact}'`;
   }
   return null;
 }
@@ -337,17 +348,13 @@ const columns = [
     {
         field: 'image_url',
         headerName: 'Image',
-        width: 100,
+        flex: 1,
+        minWidth: 0,
         renderCell: (params) => {
           return (
             <>
-             
-              <img
-            src={`${imageBaseUrl+params.value}?w=164&h=164&fit=crop&auto=format`}
-            srcSet={`${imageBaseUrl+params.value}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
-            alt={"Image failed to render"}
-            loading="lazy"
-          />
+            
+           <Avatar src={params.value} variant="rounded" />
             </>
           );
         }
@@ -355,33 +362,38 @@ const columns = [
     {
         field: 'title',
         headerName: 'Title',
-        width: 260,
+        flex: 1,
+        minWidth: 0,
         editable: true,
     },
     {
         field: 'message',
         headerName: 'Message',
-        width: 360,
+        flex: 1,
+        minWidth: 0,
         editable: true,
     },
     {
         field: 'editor',
         headerName: 'Author',
-        width: 260,
+        flex: 1,
+        minWidth: 0,
         editable: false,
     },
     {
         field: 'category',
         headerName: 'Category',
         renderEditCell: renderEditCategory,
-        width: 121,
+        flex: 1,
+        minWidth: 0,
         editable: true,
       },
       {
         field: 'status',
         headerName: 'Status',
         renderEditCell: renderEditStatus,
-        width: 121,
+        flex: 1,
+        minWidth: 0,
         editable: true,
         renderCell: (cellValues) => {
           return(
@@ -421,33 +433,24 @@ const columns = [
     try {
       // Make the HTTP request to save in the backend
       const dataUpdate = new FormData();
-      dataUpdate.append('StudentNumber', newRow['studentnumber']);
-      dataUpdate.append('FirstnName', newRow['firstname']);
-      dataUpdate.append('MiddleName', newRow['middlename']);
-      dataUpdate.append('LastName', newRow['lastname']);
-      dataUpdate.append('Email', newRow['email']);
-      dataUpdate.append('Address', newRow['address']);
-      dataUpdate.append('Sex', newRow['sex']);
-      dataUpdate.append('Course', newRow['course']);
-      dataUpdate.append('Section', newRow['section']);
-      dataUpdate.append('Birthday', newRow['birthday']);
-      dataUpdate.append('Contact', newRow['contact']);
-      dataUpdate.append('Guardian', newRow['guardian']);
-      dataUpdate.append('GuardianContact', newRow['guardian_contact']);
-      dataUpdate.append('Faculty', newRow['faculty']);
+      dataUpdate.append('ID', newRow['id']);
+      dataUpdate.append('ImageUrl', newRow['image_url']);
+      dataUpdate.append('Title', newRow['title']);
+      dataUpdate.append('Category', newRow['category']);
+      dataUpdate.append('Message', newRow['message']);
       dataUpdate.append('Status', newRow['status']);
       dataUpdate.append('Action', 'Update');
       dataUpdate.append('EditorPosition', user.position);
       dataUpdate.append('EditorEmail', user.email);
-      dataUpdate.append('Category', 'Student');
+      dataUpdate.append('Category', 'Announcement');
       const response = await mutateRow(newRow);
-      const sendRequest = await fetch(basedUrl+"/student-update.php",{
+      const sendRequest = await fetch(basedUrl+"/announcement-update.php",{
         method: "POST",
         body: dataUpdate,
     });
     
     const getResponse = await sendRequest.json();
-
+    console.log(getResponse)
     if(getResponse.statusCode !== 201){
       setSnackbar({ children: 'Update successfully', severity: 'success' });
       resolve(response);

@@ -17,9 +17,7 @@ const student = useSelector(state => (state.student.session))
 const navigate = useNavigate();
 //dispatch from redux
 const dispatch = useDispatch();
-
-const [backgroundImage, setBackgroundImage] = useState(imageBaseUrl+"school-sample-background.jpg")
-
+const [backgroundImage, setBackgroundImage] = useState("https://res.cloudinary.com/dm1ztuuvo/image/upload/v1670145573/loginbackground_djesid.png")
 useEffect(() =>{
   if(sessionStorage.getItem('student') !== null && student === null){
     dispatch(REMOVE_STUDENT());

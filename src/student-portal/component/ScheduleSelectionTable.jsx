@@ -72,7 +72,8 @@ function LongMenu(props) {
     {
       field: 'id',
       headerName: '',
-      width: 50,
+      flex: 1,
+        minWidth: 0,
       editable: false,
       renderCell: (cellValues) => {
         return(
@@ -82,13 +83,20 @@ function LongMenu(props) {
         );//end of return
       }
     },
-    { field: 'sched_code', headerName: 'Sched Code', width: 100 },
-    { field: 'subject_name', headerName: 'Subject Name', width: 130 },
-    { field: 'units', headerName: 'Units', width: 50 },
-    { field: 'schedule_day', headerName: 'Days', width: 150 },
-    { field: 'schedule_time', headerName: 'Time', width: 350 },
-    { field: 'semester', headerName: 'Semester', width: 180 },
-    { field: 'professor_initial', headerName: 'Professor', width: 150 },
+    { field: 'sched_code', headerName: 'Sched Code',  flex: 1,
+    minWidth: 0, },
+    { field: 'subject_name', headerName: 'Subject Name',  flex: 1,
+    minWidth: 0, },
+    { field: 'units', headerName: 'Units',  flex: 1,
+    minWidth: 0, },
+    { field: 'schedule_day', headerName: 'Days',  flex: 1,
+    minWidth: 0, },
+    { field: 'schedule_time', headerName: 'Time',  flex: 1,
+    minWidth: 0,},
+    { field: 'semester', headerName: 'Semester',  flex: 1,
+    minWidth: 0, },
+    { field: 'professor_initial', headerName: 'Professor',  flex: 1,
+    minWidth: 0,},
   ];
 
   

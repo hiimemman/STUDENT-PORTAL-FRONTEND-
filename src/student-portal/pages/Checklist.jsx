@@ -33,6 +33,8 @@ export function Checklist(){
 
      const [rows, setRows] = useState({});
 
+     const currentPage = useSelector(state =>  (state.studentSelectedPage.value));
+
      useEffect(()=>{
       let isCancelled = false;
       dispatch(CURRICULUM());
@@ -48,12 +50,76 @@ export function Checklist(){
        const [year, setYear] = useState('1st year');
 
 
+       
+
+       const [currentAcademicYear, setCurrentAcademicYear] = useState(null);
+       const [currentSemester, setCurrentSemester] = useState(null);
+
+       const getAcadYear = async () =>{
+        try{ 
+       
+          //online api
+            const sendRequest = await fetch(basedUrl+"/get-active-academicyear.php");
+            const getResponse = await sendRequest.json();
+
+            if(getResponse.statusCode === 201){
+              console.log(getResponse.error)
+            }else{
+              //if succesfully retrieve data
+           console.log(getResponse)
+              setCurrentAcademicYear((currentAcademicYear) => currentAcademicYear = getResponse[0].academicyear);
+            }
+        }catch(e){
+          console.error(e)
+        }
+       }
+
+       const getSemester = async () =>{
+        try{ 
+       
+          //online api
+            const sendRequest = await fetch(basedUrl+"/get-active-semester.php");
+            const getResponse = await sendRequest.json();
+
+            if(getResponse.statusCode === 201){
+              console.log(getResponse.error)
+            }else{
+              //if succesfully retrieve data
+              console.log(getResponse)
+              setCurrentSemester((currentSemester) => currentSemester = getResponse[0].description);
+            }
+        }catch(e){
+          console.error(e)
+        }
+       }
+
+       useEffect(() =>{
+        getSemester();
+        getAcadYear();
+        return () =>{
+          
+        }
+       },[currentPage])
+       useEffect(() =>{
+console.log(currentSemester)
+          return () =>{
+
+          }
+       },[currentSemester])
+console.log(currentAcademicYear)
+       useEffect(() =>{
+        return () =>{}
+       },[currentAcademicYear])
+
+
        const getAllData = async () =>{
         isLoading(true)
+        console.log(year)
         try{ 
           const data = new FormData();
           data.append('Course', studentSession.course);
           data.append('Year', year);
+          data.append('Semester', currentSemester)
       
           //online api
              const sendRequest = await fetch(basedUrl+"/curriculum-per-year.php",{
@@ -85,6 +151,15 @@ export function Checklist(){
     return () =>{}
   },[year]);
 
+  useEffect(() =>{
+    getAllData();
+return () => {}
+  },[currentPage, currentSemester])
+
+  useEffect(() =>{
+    console.log(rows)
+return () => {}
+  },[rows])
 
   function CustomFooterStatusComponent (){
     return(<></>)
@@ -103,9 +178,9 @@ export function Checklist(){
 
 <div className="flex flex-col justify-evenly" style={{width:'100%'}}>
              <h2 className ='font-nunito font-bold'>Checklist</h2>
-             <Paper elevation={1} sx ={{width:'500 ', p: '1.5rem'}} className ="rounded-xl">
+             <Paper elevation={1} sx ={{width:'500 ', p: '1.5rem' , m:'1rem'}} className ="rounded-xl">
               <Stack direction ="row" spacing = {2}>
-                <Typography variant ={'h6'}>{studentSession.course}</Typography>
+                <Typography variant ={'h3'}>{studentSession.course}</Typography>
                 <FormControl sx={{ m: 1, minWidth: 120 }}>
         <InputLabel id="demo-simple-select-helper-label">Year</InputLabel>
         <Select
@@ -142,44 +217,44 @@ const columns = [
   {
     field: 'subject_code',
     headerName: 'Subject code',
-    width: 200,
+    flex: 1,
+    minWidth: 0,
    editable: false,
   },
   {
       field: 'subject_name',
       headerName: 'Subject name',
-      width: 250,
+      flex: 1,
+  minWidth: 350,
       editable: false,
     },
     {
       field: 'units',
       headerName: 'Units',
-      width: 50,
+      flex: 1,
+  minWidth: 0,
       type: 'number',
       editable: false,
     },
     {
       field: 'type',
       headerName: 'Subject Type',
-      width: 150,
-      editable: false,
-    },
-    {
-      field: 'course_available',
-      headerName: 'Course(s)',
-      width: 180,
+      flex: 1,
+      minWidth: 0,
       editable: false,
     },
     {
       field: 'year_available',
       headerName: 'Year',
-      width: 150,
+      flex: 1,
+      minWidth: 0,
       editable: false,
     },
     {
       field: 'semester_available',
       headerName: 'Semester',
-      width: 150,
+      flex: 1,
+      minWidth: 0,
       editable: false,
     },
 ];

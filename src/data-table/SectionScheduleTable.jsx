@@ -118,8 +118,8 @@ const getAllData = async () =>{
   isLoading(true)
   try{ 
     const data = new FormData();
-    data.append('SectionName', section.section_name);
-    data.append('AcademicYear', section.academic_year);
+    data.append('SectionName', section.sectionandsemester);
+   
 
     //online api
        const sendRequest = await fetch(basedUrl+"/section-schedule-table.php",{
@@ -363,40 +363,48 @@ const renderEditStatus = (params) => {
     {
       field: 'subject_name',
       headerName: 'Subject',
-      width: 150,
+      flex: 1,
+      minWidth: 0,
+      maxWidth: 100,
      editable: false,
     },
     {
         field: 'description',
         headerName: 'Description',
-        width: 200,
+        flex: 1,
+        minWidth: 0,
+        minWidth: 290,
        editable: false,
     },
       {
         field: 'schedule_day',
         headerName: 'Schedule Day',
         renderEditCell: renderEditDay,
-        width: 200,
+        flex: 1,
+        minWidth: 200,
         editable: true,
       },
       {
         field: 'schedule_time',
         headerName: 'Time',
-        width: 430,
+        flex: 1,
+        minWidth: 270,
         editable: true,
       },
       {
         field: 'professor_initial',
         headerName: 'Professor',
         renderEditCell: renderEditProfessor,
-        width: 150,
+        flex: 1,
+        minWidth: 0,
         editable: true,
       },
       {
         field: 'status',
         headerName: 'Status',
         renderEditCell: renderEditStatus,
-        width: 100,
+        flex: 1,
+        minWidth: 0,
         editable: true,
         renderCell: (cellValues) => {
           return(

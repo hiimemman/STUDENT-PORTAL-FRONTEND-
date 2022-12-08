@@ -20,6 +20,7 @@ import { SubjectView } from '../viewprofile/SubjectView';
 import { FEE } from '../slice/PageSlice/PageSlice';
 import { FeeTable } from '../data-table/FeeTable';
 import { FeeHistory } from '../viewhistory/FeeHistory';
+import { StudentFeeTable } from '../data-table/StudentFeeTable';
 export  function Fee() {
 //Selected Subject
 const subject = useSelector(state => state.subjectSelected.value)
@@ -89,10 +90,11 @@ return () =>{
              <TabContext value={value}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' } }>
             <TabList onChange={handleChange} aria-label="lab API tabs example" >
-                <Tab label="DATA TABLE" value="1" />
-                <Tab label="HISTORY" value="2" />
+                <Tab label="FEE TABLE" value="1" />
+                <Tab label="STUDENT FEE" value="2" />
+                <Tab label="HISTORY" value="3" />
                 {console.log("thisissub" + JSON.stringify(subject))}
-                {subject !== null ? (<Tab value="3" label={
+                {subject !== null ? (<Tab value="4" label={
                 <Stack direction="row" spacing={2}>
                 <Typography>{subject.subject_code}</Typography>
                 </Stack>
@@ -104,12 +106,17 @@ return () =>{
           <FeeTable />
           </Paper>
           </TabPanel>
-            <TabPanel value="2" sx ={{marginLeft:'-24px'}}>
+          <TabPanel value="2" sx ={{marginLeft:'-24px'}}>
+            <Paper elevation={1} sx ={{width:'500 '}} className ="rounded-xl">
+              <StudentFeeTable />
+            </Paper>
+            </TabPanel>
+            <TabPanel value="3" sx ={{marginLeft:'-24px'}}>
             <Paper elevation={1} sx ={{width:'500 '}} className ="rounded-xl">
               <FeeHistory />
             </Paper>
             </TabPanel>
-            <TabPanel value="3" sx ={{marginLeft:'-24px'}}>
+            <TabPanel value="4" sx ={{marginLeft:'-24px'}}>
               <SubjectView />
             </TabPanel>
           </TabContext>

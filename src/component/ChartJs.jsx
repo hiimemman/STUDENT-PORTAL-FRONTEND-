@@ -39,7 +39,7 @@ export function ChartJs(props){
 
     return(
         <>
-       <Bar data ={props.dataChart} option ={{ maintainAspectRatio: false }} options = {options}/>
+       <Bar data ={props.dataChart} option ={{ maintainAspectRatio: false }} options = {options} />
         </>
     )
 }

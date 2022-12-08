@@ -5,7 +5,7 @@ import Skeleton from '@mui/material/Skeleton';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { DrawerAppBar } from '../component/DrawerAppBar';
-import { CssBaseline, Paper, Stack } from '@mui/material';
+import { CssBaseline, Paper, Stack, Grid } from '@mui/material';
 import { DashboardCard } from '../component/DashboardCard/DashboardCard';
 import { Suspense } from 'react';;
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
@@ -19,6 +19,10 @@ import GroupsIcon from '@mui/icons-material/Groups';
 import { basedUrl } from '../base-url/based-url';
 import { ChartJs } from '../component/ChartJs';
 import { DASHBOARD } from '../slice/PageSlice/PageSlice';
+import AnnouncementList from '../component/AnnouncementList';
+
+import { experimentalStyled as styled } from '@mui/material/styles';
+import Masonry from '@mui/lab/Masonry';
 
 
 // import myLogo from './aisat-logo.svg'
@@ -32,7 +36,6 @@ const dispatch = useDispatch();
     //page current state
     const currentPage = useSelector(state => (state.selectedPage.value));
 
-//employees
 const [employee, setEmployee] = useState('');
 
 //professors
@@ -93,6 +96,14 @@ const [data, setData] = useState({
       }
   ]
 })
+
+const Item = styled(Paper)(({ theme }) => ({
+  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+  ...theme.typography.body2,
+  padding: theme.spacing(2),
+  textAlign: 'center',
+  color: theme.palette.text.secondary,
+}));
 
 useEffect(() =>{
 let isCancelled = false;
@@ -444,46 +455,52 @@ return () =>{
 
 <div className="flex flex-col justify-evenly" style={{width:'100%'}}>
              <h2 className ='font-nunito font-bold'>Dashboard</h2>
-               <Stack direction={{ xs: 'column', sm: 'row' }}
-  spacing={{ xs: 1, sm: 2, md: 4 }} >
-  
+               
+            
+             {/* <section class="container px-6 py-4 mx-auto">
+  <div class="grid gap-4 mb-4 md:grid-cols-2 lg:grid-cols-5"> */}
+
+<Masonry columns={{ xs: 1, sm: 1, md: 4, lg: 4 }} spacing={2}>
+
                   <DashboardCard  title ={'EMPLOYEE'} content ={employee} icon ={<Avatar style ={{background: "rgba(0, 200, 152, 0.8)"}}>
                   <PeopleAltIcon />
-          </Avatar>}/>
-
+                  </Avatar>}/>
+         
+          
                   <DashboardCard  title ={'PROFESSOR'} content ={professor}icon ={<Avatar style ={{background: "rgba(0, 200, 152, 0.8)"}}>
                   <HailIcon />
           </Avatar>} />
-             
+          
+     
                   <DashboardCard  title ={'STUDENT'} content ={student} icon ={<Avatar style ={{background: "rgba(0, 200, 152, 0.8)"}}>
                   <SchoolIcon />
           </Avatar>}
           />
 
-                  <DashboardCard  title ={'FACULTY'} content ={faculty} icon ={<Avatar style ={{background: "rgba(0, 200, 152, 0.8)"}}>
-                  <Diversity3Icon />
-          </Avatar>}/>
+                
+        
           <DashboardCard  title ={'COURSE'} content ={course} icon ={<Avatar style ={{background: "rgba(0, 200, 152, 0.8)"}}>
             <LibraryBooksIcon />
           </Avatar>} />
-                  
-              </Stack>
-              <Stack direction={{ xs: 'column', sm: 'row' }}
-  spacing={{ xs: 1, sm: 2, md: 4 }} style ={{marginTop: '1.5rem'}} >
-            
-           
-<DashboardCard  title ={'SUBJECT'} content ={subject} icon ={<Avatar style ={{background: "rgba(0, 200, 152, 0.8)"}}>
-<BiotechIcon />
-          </Avatar>} />
 
-<DashboardCard  title ={'SECTION'} content ={section} icon ={<Avatar style ={{background: "rgba(0, 200, 152, 0.8)"}}>
-<GroupsIcon />
-          </Avatar>} />
-              </Stack>
-          <Paper  elevation={1} sx ={{m:3,marginLeft:.5, width: '100vh'}} >
+
+    </Masonry>
+          {/* </div>
+</section> */}
+
+
+          <Paper  elevation={1}  className="w-2/3" >
      
-           <ChartJs dataChart = {data} />
+           <ChartJs dataChart = {data}  />
+        
           </Paper>
+         
+       
+         
+      <Stack direction ="column" spacing ={2} className ="w-fit">
+            <Typography variant ="h6">News and Updates</Typography>
+          <AnnouncementList  />
+          </Stack>
 </div> 
       </Box>) :  (<Skeleton
         sx={{ bgcolor: 'grey.900' }}

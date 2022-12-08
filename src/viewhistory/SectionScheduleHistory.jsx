@@ -46,31 +46,36 @@ function CustomToolbar() {
     {
       field: 'action',
       headerName: 'Actions',
-      width: 150,
+      flex: 1,
+      minWidth: 0,
       editable: false,
     },
     {
       field: 'editor_email',
       headerName: 'Editor',
-      width: 270,
+      flex: 1,
+      minWidth: 0,
       editable: false,
       },
       {
         field: 'editor_position',
         headerName: 'Editor Position',
-        width: 250,
+        flex: 1,
+        minWidth: 0,
       editable: false,
       },
       {
         field: 'edited_email',
         headerName: 'Username',
-        width: 300,
+        flex: 1,
+        minWidth: 0,
         editable: false,
       },
       {
         field: 'date_edited',
         headerName: 'Date Edited',
-        width: 170,
+        flex: 1,
+        minWidth: 0,
       },
   ];
 

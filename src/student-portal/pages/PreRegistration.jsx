@@ -5,7 +5,7 @@ import Skeleton from '@mui/material/Skeleton';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { StudentDrawerAppBar } from '../component/StudentDrawerAppBar';
-import { CssBaseline, FormControl, InputLabel, MenuItem, Paper,Alert, Select,Snackbar, Stack, Input,FormHelperText } from '@mui/material';
+import { CssBaseline, FormControl, InputLabel, MenuItem, Paper,Alert, Select,Snackbar, Stack, Input,FormHelperText, AlertTitle } from '@mui/material';
 import { Suspense } from 'react';
 import { basedUrl } from '../../base-url/based-url';
 import Stepper from '@mui/material/Stepper';
@@ -21,13 +21,20 @@ import Divider from '@mui/material/Divider';
 import SchedulesChoicesTable from '../component/SchedulesChoicesTable';
 import { ScheduleSelectionTable } from '../component/ScheduleSelectionTable';
 import { FeeTable } from '../component/FeeTable';
-
+import { RegularScheduleSelectionTable } from '../component/RegularScheduleSelectionTable';
+import { PUT_ALL_SCHEDULE, RESET_SCHEDULE } from '../../slice/AddSchedule/AddScheduleSlice';
+import { PUT_STUDENT } from '../../slice/StudentSession/studentSession';
+import { NightShelter } from '@mui/icons-material';
 
 export function PreRegistration(){
 const dispatch = useDispatch();
      //UseNavigate
      const navigate = useNavigate();
      //get student
+
+     const currentPage = useSelector(state =>  (state.studentSelectedPage.value));
+     const [currentAcademicYear, setCurrentAcademicYear] = useState(null);
+     const [currentSemester, setCurrentSemester] = useState(null);
      
      const studentCurrentPage = useSelector(state => (state.studentSelectedPage.value));
      const studentSession = useSelector(state => JSON.parse(state.student.session))
@@ -45,7 +52,13 @@ const schedule = useSelector(state => state.scheduleSelection.value);
       const [selectedSection, setSelectedSection] = useState(null);
       // const [sectionSchedule, setSectionSchedule] = useState({data:{}});
       const [hasChangedSection , setHasChangedSection] = useState(false);
-
+      const [selectedYear, setSelectedYear] = useState('1st year');
+      //Active academic year
+      const [activeAcademicYear, setActiveAcademicYear] = useState({data:null});
+      const [hasChangeAcadYear, setHasChangeAcadYear] = useState(false);
+      const [AcademicYear , setAcademicYear] = useState(studentSession.academicyear);
+      const [selectedSemester,  setSelectedSemester] = useState(studentSession.semester);
+      const [studentType, setStudentType] = useState(studentSession.type);
 
 // //Schedule transfer list
       const [checked, setChecked] = useState([]);
@@ -69,9 +82,91 @@ const handleReset = () => {
 };
 
 const handleChangeSelectedSection = (event) =>{
-
+  
   setSelectedSection((selectedSection) => selectedSection = event.target.value);
+
 }
+
+useEffect(() =>{
+  if(studentType === 'Regular' && hasChangedSection === true){
+    dispatch(PUT_ALL_SCHEDULE(left.data))
+    }
+  return () =>{
+
+  }
+},[left.data, hasChangedSection])
+
+useEffect(() =>{
+
+  return () =>{
+
+  }
+},[schedule])
+
+const handleChangeSelectedAcadYear = (event) =>{
+  setAcademicYear((AcademicYear) => AcademicYear = event.target.value);
+}
+
+const handleChangeSemester= (event) =>{
+  setSelectedSemester((selectedSemester) => selectedSemester = event.target.value);
+}
+
+const handleChangeSelectedType = (event) =>{
+  setStudentType((studentType) => studentType = event.target.value);
+}
+
+useEffect(() =>{
+
+  return () =>{
+
+  }
+},[selectedSemester])
+const getAllActiveAcademicYear = async () => {
+  try{ 
+    const data = new FormData();
+    //online api
+       const sendRequest = await fetch(basedUrl+"/all-academic-year-active.php",{
+          method: "POST",
+          body: data,
+      });
+      const getResponse = await sendRequest.json();
+      // isLoading(false)
+      console.log(getResponse)
+      if(getResponse.statusCode === 201){
+      
+      }else{
+          setActiveAcademicYear((activeAcademicYear =>  activeAcademicYear = {...activeAcademicYear, data : getResponse}))  
+      }
+  }catch(e){
+    console.error(e)
+  }
+}
+
+useEffect(() =>{
+  getAllActiveAcademicYear();
+  return () =>{}
+},[studentCurrentPage])
+
+useEffect(() =>{
+if(activeAcademicYear.data !== null){
+  setHasChangeAcadYear((hasChangeAcadYear) => hasChangeAcadYear = true);
+}
+  
+  return () =>{
+
+  }
+},[activeAcademicYear.data])
+
+useEffect(() =>{
+
+  dispatch(RESET_SCHEDULE())
+  return () => {}
+},[AcademicYear])
+
+useEffect(() =>{
+
+  return () =>{}
+},[hasChangeAcadYear])
 
 const getAllScheduleOfSection = async () =>{
   // isLoading(true)
@@ -199,9 +294,9 @@ const getAllScheduleOfSection = async () =>{
             onChange={handleChangeSelectedSection}
           >
        
-     
+  
          {props.activeSection.data.filter(section => {
-            return section.course === studentSession.course;
+            return section.course === studentSession.course && section.academic_year === currentAcademicYear && section.semester === currentSemester;
           }).map((section) =><MenuItem key = {section.id} value = {section.sectionandacademicyear} >{section.section_name} {section.academic_year}</MenuItem>)}
           
           </Select>
@@ -219,7 +314,15 @@ const getAllScheduleOfSection = async () =>{
     }
 
     const handleSubmit = async () =>{
+
+
       const data = new FormData();
+      let sectionandsemester = selectedSection+" "+currentSemester;
+      data.append('SectionAndYear', selectedSemester)
+      data.append('SectionAndSemester' , sectionandsemester);
+      data.append('Semester', currentSemester);
+      data.append('StudentNumber', studentSession.studentnumber);
+      data.append('AcademicYear' , currentAcademicYear);
       data.append('Schedule', JSON.stringify(schedule));
       data.append('Fee', JSON.stringify(studentFee));
       data.append('StudentNumber', studentSession['studentnumber']);
@@ -247,6 +350,216 @@ const getAllScheduleOfSection = async () =>{
         // setSnackbar({ children: "Field can't be empty", severity: 'error' });
       }
     }
+    useEffect(() =>{
+      return () => {}
+    },[snackbar])
+    const [checkIfPreregistered, setCheckifPreregisterd] = useState(true);
+    
+    
+
+
+    const getStatusPrereg = async () =>{
+      // isLoading(true)
+      try{ 
+        const data = new FormData();
+        data.append('StudentId', studentSession.studentnumber );
+        //online api
+           const sendRequest = await fetch(basedUrl+"/check-pre-registration-pending.php",{
+              method: "POST",
+              body: data,
+          });
+          const getResponse = await sendRequest.json();
+          console.log("Pumasok dito")
+          // isLoading(false)
+          if(getResponse.statusCode === 201){
+          
+          }else{
+            console.log(getResponse.content)
+            getResponse.content.map((content) =>{
+              if(content.status === 'pending'){
+                console.log("Pumasok ba dito")
+                setCheckifPreregisterd((checkIfPreregistered => checkIfPreregistered = false))
+              }
+            })
+            
+          }
+      }catch(e){
+        console.error(e)
+      }
+    }
+    useEffect(() =>{
+      getStatusPrereg();
+return () =>{
+
+}
+    },[studentCurrentPage])
+    
+    useEffect(() =>{
+
+      return () =>{}
+    },[checkIfPreregistered])
+
+   
+
+    const getAcadYear = async () =>{
+     try{ 
+    
+       //online api
+         const sendRequest = await fetch(basedUrl+"/get-active-academicyear.php");
+         const getResponse = await sendRequest.json();
+
+         if(getResponse.statusCode === 201){
+           console.log(getResponse.error)
+         }else{
+           //if succesfully retrieve data
+        console.log(getResponse)
+           setCurrentAcademicYear((currentAcademicYear) => currentAcademicYear = getResponse[0].academicyear);
+         }
+     }catch(e){
+       console.error(e)
+     }
+    }
+
+    const getSemester = async () =>{
+     try{ 
+    
+       //online api
+         const sendRequest = await fetch(basedUrl+"/get-active-semester.php");
+         const getResponse = await sendRequest.json();
+
+         if(getResponse.statusCode === 201){
+           console.log(getResponse.error)
+         }else{
+           //if succesfully retrieve data
+           console.log(getResponse)
+           setCurrentSemester((currentSemester) => currentSemester = getResponse[0].description);
+         }
+     }catch(e){
+       console.error(e)
+     }
+    }
+
+    useEffect(() =>{
+     getSemester();
+     getAcadYear();
+     return () =>{
+       
+     }
+    },[studentCurrentPage])
+    useEffect(() =>{
+console.log(currentSemester)
+       return () =>{
+
+       }
+    },[currentSemester])
+console.log(currentAcademicYear)
+    useEffect(() =>{
+     return () =>{}
+    },[currentAcademicYear])
+    
+    const handleChangeYear = (event) =>{
+      setSelectedYear(selectedYear => event.target.value)
+    }
+
+    const getSectionScheduleRegular = async () =>{
+      // isLoading(true)
+      if(selectedYear !== null){
+        try{ 
+          const data = new FormData();
+          data.append('Year', selectedYear);
+          data.append('AcademicYear',  currentAcademicYear);
+          data.append('Semester', currentSemester);
+          data.append('Course', studentSession.course);
+          
+  for (var pair of data.entries()) {
+    console.log(pair[0]+ ' - ' + pair[1]); 
+}
+          //online api
+             const sendRequest = await fetch(basedUrl+"/regular-schedule-table-registration.php",{
+                method: "POST",
+                body: data,
+            });
+            const getResponse = await sendRequest.json();
+            console.log(getResponse)
+            // isLoading(false)
+            if(getResponse.statusCode === 201){
+            
+            }else{
+              console.log(getResponse)
+            if(getResponse.length > 0){
+              setSelectedSection(selectedSection => selectedSection = getResponse[0].sectionacademicyear);
+              getResponse.map((item) =>(
+                setLeft((sectionSchedule) => sectionSchedule = {...sectionSchedule, data : getResponse})
+              ));
+            }else{
+              console.log("No  rows founds")
+            }
+            }
+        }catch(e){
+          console.error(e)
+        }
+      }
+     
+    }
+
+    useEffect(() =>{
+
+      return () =>{}
+    },[selectedSection])
+
+   
+
+    useEffect(() =>{
+
+      if(studentSession.type === 'Regular'){
+        getSectionScheduleRegular();
+      }
+      return () =>{
+
+      }
+    },[selectedYear, currentAcademicYear, currentAcademicYear])
+
+
+
+    const refreshStudentSession = async () =>{
+      // isLoading(true)
+      if(selectedYear !== null){
+        try{ 
+          const data = new FormData();
+          data.append('StudentNumber', studentSession.studentnumber);
+       
+  for (var pair of data.entries()) {
+    console.log(pair[0]+ ' - ' + pair[1]); 
+}
+          //online api
+             const sendRequest = await fetch(basedUrl+"/refresh-student-session.php",{
+                method: "POST",
+                body: data,
+            });
+            const getResponse = await sendRequest.json();
+            console.log(getResponse)
+            // isLoading(false)
+            if(getResponse.statusCode === 201){
+            
+            }else{
+              dispatch(PUT_STUDENT(getResponse.statusCode))
+            }
+        }catch(e){
+          console.error(e)
+        }
+      }
+     
+    }
+
+
+    useEffect(() =>{
+      refreshStudentSession();
+      return () =>{}
+    },[studentCurrentPage])
+
+    useEffect(() => {
+      return () =>{}
+    },[studentSession])
 
       return(
         <>
@@ -262,8 +575,16 @@ const getAllScheduleOfSection = async () =>{
 
 <div className="flex flex-col justify-evenly" style={{width:'100%'}}>
              <h2 className ='font-nunito font-bold'>Pre Registration</h2>
-             <Paper elevation={1} sx ={{width:'500', p:'1.5rem', m:1}} className ="rounded-xl">
-             <Box >
+             <Paper elevation={1} sx ={{width:'500', p:'1.5rem', m:'1rem'}} className ="rounded-xl">
+             {currentAcademicYear === studentSession.academicyear && currentSemester === studentSession.semester ? 
+             (<>
+        <Alert severity="info">
+        <AlertTitle>Notice</AlertTitle>
+        Hello, <strong>{studentSession.firstname+" "+studentSession.lastname}</strong>. You are already <i>enrolled</i> in the current school year; if there was a mistake or error in your schedule, please refer to our campus registrar. <strong> Thank you!</strong>
+      </Alert>
+      </>) :   ( checkIfPreregistered === true ? 
+             (     
+               <Box >       
       <Stepper activeStep={activeStep} orientation="vertical">
         {steps.map((step, index) => (
           <Step key={step.label}>
@@ -282,31 +603,66 @@ const getAllScheduleOfSection = async () =>{
             
               <Box sx={{ mb: 2 }}>
                 <div>
-                {hasChanged === true ? (activeStep === 0 ? (<>
+               {activeStep === 0 ? (<>
+                <Stack  spacing={2} >
+
+               
+                <FormControl  >    
+        <InputLabel id="demo-simple-select-label">Year*</InputLabel>
+            <Select
+            fullWidth
+            required
+            defaultValue={selectedYear}
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            name = "Year"
+            label="Year"
+            onChange={handleChangeYear}
+          >
+            <MenuItem key ={'1st year'} value = {'1st year'} >1st year</MenuItem>
+            <MenuItem key ={'2nd year'} value = {'2nd year'} >2nd year</MenuItem>
+            <MenuItem key ={'3rd year'} value = {'3rd year'} >3rd year</MenuItem>
+            <MenuItem key ={'4th year'} value = {'4th year'} >4th year</MenuItem>
+          </Select>
+      </FormControl>
+      </Stack>
+               </>) : null}
+               
+                {activeStep === 1 ? (hasChanged === true ? (studentSession.type === 'Irregular' ? (<>
                 <Stack spacing ={2}>
+               
                 <Typography variant ={'h5'}>Choices</Typography><SetSchedules activeSection = {activeSection} />
                 <Divider style ={{marginTop:'1.5rem'}}/>
                 <Typography variant ={'h5'}>Your selected schedule</Typography> 
-                <div style={{ height: 400, width: '100%' }}> 
-                <ScheduleSelectionTable />
+                <div style={{ height: 400, width: '100%' }}>
+                  {console.log(schedule)} 
+                {JSON.stringify(schedule) !== {} ? studentSession.type === 'Regular' ? <RegularScheduleSelectionTable /> :  <ScheduleSelectionTable /> : null}
                 </div>
-                </Stack></>) : null) : null}
+
+                </Stack></>) :  <Alert severity="info">
+        <AlertTitle>Notice</AlertTitle>
+        Hello, <strong>{studentSession.firstname+" "+studentSession.lastname}</strong>. You are a <i>regular student</i> Your section will be automatically selected. <strong> Thank you!</strong>
+      </Alert>) : null) : null}
                 
-                {activeStep === 1 ? (<>
+                {activeStep === 2 ? (<>
+                <Typography variant = {'h3'}>{schedule[0].section_name}</Typography>
                   <Stack spacing ={2}>
                   <Typography variant ={'h5'}>Account</Typography>
                   <FeeTable />
                   </Stack>
                 </>) : null}
 
-                {activeStep === 2 ? (<>
+                {activeStep === 3 ? (<>
                   <Stack spacing ={2}>
+                  
                   <Typography variant ={'h5'}>Account Summary</Typography>
+                  <Typography variant ={'h6'}>Schedule</Typography>
                   <Box sx ={{p:0}}>
                   <DataGrid
         components={{  LoadingOverlay: LinearProgress,}} rows={schedule} columns={schedColumns} autoHeight pageSize={5} 
       />
                   </Box>
+                  <Typography variant ={'h6'}>Fee</Typography>
                   <Box sx ={{p:0}}>
         <Box sx={{ width: '100%' }}>
       <DataGrid
@@ -365,7 +721,13 @@ components={{ LoadingOverlay: LinearProgress, Footer: CustomFooterStatusComponen
           </Button>
         </Paper>
       )}
-    </Box>
+    </Box>) :    <Alert severity="success">
+        <AlertTitle>Warning</AlertTitle>
+        Congratulations on reregistering; your pre-registration is being processed. Please wait for confirmation.<strong> Thank you!</strong>
+      </Alert>)
+      }
+           
+       
     </Paper>
 
 </div> 
@@ -402,6 +764,10 @@ const totalColumns = [
 
 
 const steps = [
+  {
+    label: 'Select your student information',
+    description: `Make sure you double check your student information before pressing continue`,
+  },
   {
     label: 'Select your schedules',
     description: `Make sure you double check your schedule before pressing continue`,
@@ -442,11 +808,18 @@ const feeColumns = [
 
 
 const schedColumns = [
-  { field: 'sched_code', headerName: 'Sched Code', width: 100 },
-  { field: 'subject_name', headerName: 'Subject Name', width: 130 },
-  { field: 'units', headerName: 'Units', width: 50 },
-  { field: 'schedule_day', headerName: 'Days', width: 150 },
-  { field: 'schedule_time', headerName: 'Time', width: 350 },
-  { field: 'semester', headerName: 'Semester', width: 180 },
-  { field: 'professor_initial', headerName: 'Professor', width: 150 },
+  { field: 'sched_code', headerName: 'Sched Code',  flex: 1,
+  minWidth: 0, maxWidth: 100, },
+  { field: 'subject_name', headerName: 'Subject Name',  flex: 1,
+  minWidth: 0, maxWidth: 150,},
+  { field: 'units', headerName: 'Units',  flex: 1,
+  minWidth: 0, maxWidth: 50,},
+  { field: 'schedule_day', headerName: 'Days',  flex: 1,
+  minWidth: 250,},
+  { field: 'schedule_time', headerName: 'Time',  flex: 1,
+  minWidth: 350,},
+  { field: 'semester', headerName: 'Semester',  flex: 1,
+  minWidth: 0, },
+  { field: 'professor_initial', headerName: 'Professor',  flex: 1,
+  minWidth: 0,},
 ];

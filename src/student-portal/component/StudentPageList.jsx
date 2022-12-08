@@ -14,6 +14,12 @@ import { useEffect } from 'react';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import { StudentSelectedLine } from './StudentSelectedLine';
 import DateRangeIcon from '@mui/icons-material/DateRange';
+import GradingIcon from '@mui/icons-material/Grading';
+import GradeIcon from '@mui/icons-material/Grade';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
+import { GRADES } from '../../slice/StudentPageSlice/StudentPageSlice';
+import { BALANCE, PROFILE } from '../../slice/StudentPageSlice/StudentPageSlice';
 
 export function StudentPageList(){
 
@@ -45,7 +51,7 @@ const currentPageStudent = useSelector(state => (state.studentSelectedPage.value
 
 useEffect(() => {
 if(currentPageStudent === 'pre_registration'){
-  navigate('/student-portal/pre-registration');
+  // navigate('/student-portal/pre-registration');
 }
 if(currentPageStudent === null){
   console.log(currentPageStudent)
@@ -221,6 +227,123 @@ return(
       </ListItemIcon>}
     
       { isOpen ?  <Typography className ='font-nunito text-lg' >Schedule</Typography>: <p></p> }  
+
+      </ListItemButton>
+      </Stack>
+    </ListItem>
+</Tooltip>
+
+<Tooltip title="Grades" placement="right-start">
+    <ListItem  disablePadding sx={{ display: 'block' }} className="transition ease-in-out delay-2 hover:bg-slate-300 duration-300">
+    <Stack direction="row" justifyContent="center" alignItems="center" spacing={0}>
+<StudentSelectedLine selected ={currentPageStudent === 'grades'}  />
+      <ListItemButton onClick ={ async ()=> { dispatch(GRADES()); navigate('/student-portal/grades');} } onMouseEnter = {handleDrawerOpen} 
+        sx={{
+          minHeight: 48,
+          justifyContent: isOpen ? 'initial' : 'center',
+          px: 2.5,
+        }}
+      >
+        
+        {currentPageStudent === 'grades' ?  <ListItemIcon
+          sx={{
+            minWidth: 0,
+            mr: isOpen ? 3 : 'auto',
+            justifyContent: 'center',
+            
+          }}
+         style = {{color: selectTheme}}
+        > <GradeIcon/>
+        </ListItemIcon> :  
+      <ListItemIcon
+        sx={{
+          minWidth: 0,
+          mr: isOpen ? 3 : 'auto',
+          justifyContent: 'center',
+          
+        }}
+      ><GradeIcon/>
+      </ListItemIcon>}
+    
+      { isOpen ?  <Typography className ='font-nunito text-lg' >Grades</Typography>: <p></p> }  
+
+      </ListItemButton>
+      </Stack>
+    </ListItem>
+</Tooltip>
+
+<Tooltip title="Balance" placement="right-start">
+    <ListItem  disablePadding sx={{ display: 'block' }} className="transition ease-in-out delay-2 hover:bg-slate-300 duration-300">
+    <Stack direction="row" justifyContent="center" alignItems="center" spacing={0}>
+<StudentSelectedLine selected ={currentPageStudent === 'balance'}  />
+      <ListItemButton onClick ={ async ()=> { dispatch(BALANCE()); navigate('/student-portal/balance');} } onMouseEnter = {handleDrawerOpen} 
+        sx={{
+          minHeight: 48,
+          justifyContent: isOpen ? 'initial' : 'center',
+          px: 2.5,
+        }}
+      >
+        
+        {currentPageStudent === 'balance' ?  <ListItemIcon
+          sx={{
+            minWidth: 0,
+            mr: isOpen ? 3 : 'auto',
+            justifyContent: 'center',
+            
+          }}
+         style = {{color: selectTheme}}
+        > <AccountBalanceWalletIcon/>
+        </ListItemIcon> :  
+      <ListItemIcon
+        sx={{
+          minWidth: 0,
+          mr: isOpen ? 3 : 'auto',
+          justifyContent: 'center',
+          
+        }}
+      ><AccountBalanceWalletIcon/>
+      </ListItemIcon>}
+    
+      { isOpen ?  <Typography className ='font-nunito text-lg' >Balance</Typography>: <p></p> }  
+
+      </ListItemButton>
+      </Stack>
+    </ListItem>
+</Tooltip>
+
+<Tooltip title="Profile" placement="right-start">
+    <ListItem  disablePadding sx={{ display: 'block' }} className="transition ease-in-out delay-2 hover:bg-slate-300 duration-300">
+    <Stack direction="row" justifyContent="center" alignItems="center" spacing={0}>
+<StudentSelectedLine selected ={currentPageStudent === 'profile'}  />
+      <ListItemButton onClick ={ async ()=> { dispatch(PROFILE()); navigate('/student-portal/profile');} } onMouseEnter = {handleDrawerOpen} 
+        sx={{
+          minHeight: 48,
+          justifyContent: isOpen ? 'initial' : 'center',
+          px: 2.5,
+        }}
+      >
+        
+        {currentPageStudent === 'profile' ?  <ListItemIcon
+          sx={{
+            minWidth: 0,
+            mr: isOpen ? 3 : 'auto',
+            justifyContent: 'center',
+            
+          }}
+         style = {{color: selectTheme}}
+        > <AccountCircleIcon/>
+        </ListItemIcon> :  
+      <ListItemIcon
+        sx={{
+          minWidth: 0,
+          mr: isOpen ? 3 : 'auto',
+          justifyContent: 'center',
+          
+        }}
+      ><AccountCircleIcon/>
+      </ListItemIcon>}
+    
+      { isOpen ?  <Typography className ='font-nunito text-lg' >Profile</Typography>: <p></p> }  
 
       </ListItemButton>
       </Stack>

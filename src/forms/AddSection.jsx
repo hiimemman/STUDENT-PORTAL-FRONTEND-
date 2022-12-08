@@ -56,7 +56,7 @@ const user = useSelector(state => JSON.parse(state.user.session));
   const [academicYear, setAcademicYear] = useState(null);
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [selectedYear, setSelectedYear] = useState(null);
-
+  const [semester, setSelectedSemester] = useState(null);
   //Open add form
 const  formOpenType = useSelector(state => state.addFormSection.value);
 
@@ -95,26 +95,25 @@ useEffect(() => {
 //start and end year listener to produce a school year
 
 useEffect(() => {
-  if(startYear !== null && endYear !== null){
-    setAcademicYear(startYear.toString().substr(12, 4)+" - "+endYear.toString().substr(12, 4));
-  }
+
 return () =>{
   //exit in memory
  }
-},[startYear, endYear]);
+},[academicYear]);
 
 
 
 //Generate section name
 const getSectionName =  async () => {
   console.log("Pumasok dito")
-  if(selectedCourse !== null && academicYear !== null && selectedYear !== null){
+  if(selectedCourse !== null && academicYear !== null && selectedYear !== null && semester !== null){
     const data = new FormData();
 
     //specific
     data.append('Course', selectedCourse);
     data.append('AcademicYear', academicYear);
     data.append('Year', selectedYear);
+    data.append('Semester', semester)
     //const
   
     for (var pair of data.entries()) {
@@ -149,6 +148,38 @@ useEffect(() => {
    }
  }, [academicYear])
 
+ useEffect(() => {
+  console.log(academicYear)
+  if(academicYear !== null){
+   getSectionName();
+  }
+   return () =>{
+     //exit in memory
+   }
+ }, [semester])
+
+ useEffect(() => {
+  console.log(academicYear)
+  if(academicYear !== null){
+   getSectionName();
+  }
+   return () =>{
+     //exit in memory
+   }
+ }, [selectedCourse])
+
+ selectedYear
+
+ useEffect(() => {
+  console.log(academicYear)
+  if(academicYear !== null){
+   getSectionName();
+  }
+   return () =>{
+     //exit in memory
+   }
+ }, [selectedYear])
+
 useEffect(() => {
 console.log(sectionName)
   return () =>{
@@ -171,6 +202,7 @@ const handleSubmitForm = async (event) =>{
     // data.append('StartYear', startYear.toString().substr(12, 4));
     // data.append('EndYear', endYear.toString().substr(12, 4));
     data.append('SectionAndYear', sectionName+" "+academicYear);
+    data.append('SectionAndSemester', sectionName+" "+academicYear+" "+semester);
     //const
     data.append('Action', 'Create');
     data.append('EditorPosition', user.position);
@@ -206,7 +238,10 @@ const handleSubmitForm = async (event) =>{
  
 }
  
+useEffect(() =>{
 
+  return () => {}
+},[semester])
 
   return(
     <>
@@ -278,6 +313,7 @@ const handleSubmitForm = async (event) =>{
                 id="demo-simple-select"
                 name = "Semester"
                 label="Semester"
+                onChange = {(event) => {setSelectedSemester(semester => semester = event.target.value)}}
                 >
                 <MenuItem value ={'1st semester'}>1st semester</MenuItem>
                 <MenuItem value ={'2nd semester'}>2nd semester</MenuItem>

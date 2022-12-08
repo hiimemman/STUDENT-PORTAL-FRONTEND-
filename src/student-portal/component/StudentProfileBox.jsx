@@ -73,8 +73,7 @@ const navigate = useNavigate();
           onClose={handleCloseUserMenu}
         >
       
-        <MenuItem className ='font-nunito'>Profile</MenuItem>
-        <MenuItem className ='font-nunito'>My account</MenuItem>
+        
         <MenuItem onClick ={logOut} className ='font-nunito'>Logout</MenuItem>
         </Menu>
       </Box>) : (<Skeleton variant="circular" width={40} height={40} />)}

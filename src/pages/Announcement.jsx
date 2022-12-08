@@ -89,7 +89,7 @@ return () =>{
              <TabContext value={value}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' } }>
             <TabList onChange={handleChange} aria-label="lab API tabs example" >
-                <Tab label="DATA TABLE" value="1" />
+                <Tab label="ANNOUNCEMENT TABLE" value="1" />
                 <Tab label="HISTORY" value="2" />
                 {console.log("thisissub" + JSON.stringify(subject))}
                 {subject !== null ? (<Tab value="3" label={

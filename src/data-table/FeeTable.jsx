@@ -298,7 +298,8 @@ const renderEditStatus = (params) => {
     {
         field: 'name',
         headerName: 'Name',
-        width: 550,
+        flex: 1,
+        minWidth: 0,
         editable: true,
       },
     //   {
@@ -310,7 +311,8 @@ const renderEditStatus = (params) => {
       {
         field: 'amount',
         headerName: 'Amount',
-        width: 400,
+        flex: 1,
+        minWidth: 0,
         type: 'number',
         editable: true,
       },
@@ -318,7 +320,8 @@ const renderEditStatus = (params) => {
         field: 'status',
         headerName: 'Status',
         renderEditCell: renderEditStatus,
-        width: 250,
+        flex: 1,
+        minWidth: 0,
         editable: true,
         renderCell: (cellValues) => {
           return(
@@ -434,13 +437,13 @@ const renderEditStatus = (params) => {
       </Stack>
     ), }} loading = {loading} rows = {rows} columns={columns}  experimentalFeatures={{ newEditingApi: true }} style ={{height:'500px'}}
      processRowUpdate={processRowUpdate}
-     onSelectionModelChange={(ids) => {
-      const selectedIDs = new Set(ids);
-      const selectedRowData = rows.filter((row) =>
-        selectedIDs.has(row.id.toString())
-      );
-      dispatch(PUT_SUBJECT(selectedRowData[0]))
-    }}
+    //  onSelectionModelChange={(ids) => {
+    //   const selectedIDs = new Set(ids);
+    //   const selectedRowData = rows.filter((row) =>
+    //     selectedIDs.has(row.id.toString())
+    //   );
+    //   dispatch(PUT_SUBJECT(selectedRowData[0]))
+    // }}
     /> 
  {!!snackbar && (
         <Snackbar open onClose={handleCloseSnackbar} autoHideDuration={6000}>

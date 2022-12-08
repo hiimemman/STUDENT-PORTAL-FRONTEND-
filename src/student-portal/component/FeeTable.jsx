@@ -10,19 +10,22 @@ const columns = [
     {
       field: 'name',
       headerName: 'Fee name',
-      width: 390,
+      flex: 1,
+      minWidth: 0,
       editable: false,
     },
     {
         field: 'amount',
         headerName: 'Amount',
-        width: 384,
+        flex: 1,
+        minWidth: 0,
         editable: false,
     },
     {
         field: 'subtotal',
         headerName: 'Subtotal',
-        width: 390,
+        flex: 1,
+        minWidth: 0,
         editable: false,
     },
   ];

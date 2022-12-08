@@ -9,15 +9,18 @@ import Box from '@mui/material/Box';
 import { Button } from '@mui/material';
 import { imageBaseUrl } from '../../base-url/based-url'; 
 import { Stack } from '@mui/system';
+import { Fade } from 'react-reveal';
+
 
 export function MainFeaturedPost(p) {
 
 
   return (
+    <>
     <Paper
       sx={{
         position: 'relative',
-        backgroundColor: 'grey.800',
+        backgroundColor: '#fff',
         color: '#fff',
         mb: 4,
         ml:-1,
@@ -26,10 +29,10 @@ export function MainFeaturedPost(p) {
         backgroundSize: 'cover',
         backgroundRepeat: 'no-repeat',
         backgroundPosition: 'center',
-        backgroundImage: `url(`+imageBaseUrl+`/temporary-background-book.jpg)`,
+       
         borderRadius: '0',
-        width:'100vw',
-        height:'100%',
+        width:'auto',
+        height:'auto',
       }}
 
     >
@@ -56,13 +59,18 @@ export function MainFeaturedPost(p) {
             }}
             className = "mt-40"
           >
-            <Typography component="h1" variant="h3" color="inherit" gutterBottom>
+         
+            <Fade bottom duration={800}>
+      
+            <Typography component="h1" variant="h3" color="black" gutterBottom>
               Asian Institute of Science and Technology
             </Typography>
-            <Typography variant="h5" color="inherit" paragraph>
+            <Typography variant="h5" color="black" paragraph>
             Asian Institute of  Science and Technology first come to existence as the Asian Institute of Electronics (AIE)
             </Typography>
-            <Button size="medium" variant ="outlined">Learn More</Button>
+            
+            <Button size="medium" variant ="contained">Learn More</Button>
+            </Fade>
           </Box>
         </Grid>
         <Grid item md ={6}>
@@ -83,6 +91,7 @@ export function MainFeaturedPost(p) {
    
     
     </Paper>
+    </>
   );
 }
 

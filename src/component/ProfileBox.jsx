@@ -53,7 +53,7 @@ const navigate = useNavigate();
       {user.firstname !== null ? (<Box sx={{ flexGrow: 0}} >
         <Tooltip title="Open settings">
           <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-            <Avatar alt={user.firstname} src= {imageBaseUrl+user.profile_url} />
+            <Avatar alt={user.firstname} src= {user.profile_url} />
           </IconButton>
         </Tooltip>
         <Menu
@@ -73,8 +73,7 @@ const navigate = useNavigate();
           onClose={handleCloseUserMenu}
         >
       
-        <MenuItem className ='font-nunito'>Profile</MenuItem>
-        <MenuItem className ='font-nunito'>My account</MenuItem>
+      
         <MenuItem onClick ={logOut} className ='font-nunito'>Logout</MenuItem>
         </Menu>
       </Box>) : (<Skeleton variant="circular" width={40} height={40} />)}
