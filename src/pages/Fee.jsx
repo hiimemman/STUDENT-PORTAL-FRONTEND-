@@ -93,12 +93,7 @@ return () =>{
                 <Tab label="FEE TABLE" value="1" />
                 <Tab label="STUDENT FEE" value="2" />
                 <Tab label="HISTORY" value="3" />
-                {console.log("thisissub" + JSON.stringify(subject))}
-                {subject !== null ? (<Tab value="4" label={
-                <Stack direction="row" spacing={2}>
-                <Typography>{subject.subject_code}</Typography>
-                </Stack>
-                } />) : (<></>)}
+
              </TabList>
             </Box>
         <TabPanel value="1"  style={{height: 'auto'}} sx ={{marginLeft:'-24px'}}>
@@ -116,9 +111,7 @@ return () =>{
               <FeeHistory />
             </Paper>
             </TabPanel>
-            <TabPanel value="4" sx ={{marginLeft:'-24px'}}>
-              <SubjectView />
-            </TabPanel>
+            
           </TabContext>
        </div>
        <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>

@@ -45,6 +45,9 @@ export function PageList(){
  
   const [selectTheme, setTheme] = useState('');
 
+    //Current session user
+    const user = useSelector(state => JSON.parse(state.user.session))
+
    //navigate
 const navigate = useNavigate();
 
@@ -178,7 +181,8 @@ return(
       </Stack>
     </ListItem>
 </Tooltip>
-
+{user.position === 'Admin' ? (
+  <>
 <ListItemButton onClick={handleClick}>
         <ListItemIcon>
           <PeopleAltIcon />
@@ -267,7 +271,7 @@ return(
     </ListItem>
 </Tooltip>
 </Collapse>
-
+</>) : null}
 <ListItemButton onClick={handleClickStudent}>
         <ListItemIcon>
           <SchoolIcon/>

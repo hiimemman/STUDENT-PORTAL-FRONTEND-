@@ -5,7 +5,7 @@ import Skeleton from '@mui/material/Skeleton';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { DrawerAppBar } from '../component/DrawerAppBar';
-import { CssBaseline, Paper, Stack, Grid } from '@mui/material';
+import { CssBaseline, Paper, Stack} from '@mui/material';
 import { DashboardCard } from '../component/DashboardCard/DashboardCard';
 import { Suspense } from 'react';;
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
@@ -20,6 +20,14 @@ import { basedUrl } from '../base-url/based-url';
 import { ChartJs } from '../component/ChartJs';
 import { DASHBOARD } from '../slice/PageSlice/PageSlice';
 import AnnouncementList from '../component/AnnouncementList';
+import Grid from '@mui/material/Unstable_Grid2';
+import List from '@mui/material/List';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import Divider from '@mui/material/Divider';
+import InboxIcon from '@mui/icons-material/Inbox';
+import DraftsIcon from '@mui/icons-material/Drafts';
 
 import { experimentalStyled as styled } from '@mui/material/styles';
 import Masonry from '@mui/lab/Masonry';
@@ -83,6 +91,8 @@ const [inactiveSection, setInactiveSection] = useState('');
 //chart data
 const [myChartData, setMyChartData ] = useState({data:[]});
 
+
+
 const [data, setData] = useState({
   labels: ['Employee', 'Professor', 'Student', 'Faculty', 'Course', 'Subject', 'Section'],
   datasets:[
@@ -120,6 +130,8 @@ useEffect(() =>{
    navigate('/LoginEmployee')
   } 
  },[navigate, user]);
+
+
 
  const getAllActiveEmployee = async () =>{
   try{ 
@@ -210,7 +222,7 @@ const getAllActiveCourse = async () =>{
       }else{
         //if succesfully retrieve data
  
-        setCourse(getResponse.length);
+        setCourse(getResponse);
       }
   }catch(e){
     console.error(e)
@@ -408,6 +420,9 @@ return () =>{
 }
  },[currentPage])
 
+ 
+
+
  useEffect(() =>{  
   setData((prev) =>  prev = {...prev ,  datasets:[
     {
@@ -441,6 +456,206 @@ return () =>{
   }
  },[data])
 
+ useEffect(() =>{
+return () => {}
+ },[course])
+
+
+
+
+
+
+ 
+ const [currentAcademicYear, setCurrentAcademicYear] = useState(null);
+ const [currentSemester, setCurrentSemester] = useState(null);
+
+ const getAcadYear = async () =>{
+  try{ 
+ 
+    //online api
+      const sendRequest = await fetch(basedUrl+"/get-active-academicyear.php");
+      const getResponse = await sendRequest.json();
+
+      if(getResponse.statusCode === 201){
+        console.log(getResponse.error)
+      }else{
+        //if succesfully retrieve data
+     console.log(getResponse)
+        setCurrentAcademicYear((currentAcademicYear) => currentAcademicYear = getResponse[0].academicyear);
+      }
+  }catch(e){
+    console.error(e)
+  }
+ }
+
+ const getSemester = async () =>{
+  try{ 
+ 
+    //online api
+      const sendRequest = await fetch(basedUrl+"/get-active-semester.php");
+      const getResponse = await sendRequest.json();
+
+      if(getResponse.statusCode === 201){
+        console.log(getResponse.error)
+      }else{
+        //if succesfully retrieve data
+        console.log(getResponse)
+        setCurrentSemester((currentSemester) => currentSemester = getResponse[0].description);
+      }
+  }catch(e){
+    console.error(e)
+  }
+ }
+
+ useEffect(() =>{
+  getSemester();
+  getAcadYear();
+  return () =>{
+    
+  }
+ },[currentPage])
+ useEffect(() =>{
+console.log(currentSemester)
+    return () =>{
+
+    }
+ },[currentSemester])
+console.log(currentAcademicYear)
+ useEffect(() =>{
+  return () =>{}
+ },[currentAcademicYear])
+
+ const [academicYearDatabase, setAcademicYearDatabase] = useState({});
+
+ const getAcadYearDB = async () =>{
+  try{ 
+ 
+    //online api
+      const sendRequest = await fetch(basedUrl+"/all-academic-year.php");
+      const getResponse = await sendRequest.json();
+
+      if(getResponse.statusCode === 201){
+        console.log(getResponse.error)
+      }else{
+        //if succesfully retrieve data
+        console.log(getResponse)
+        setAcademicYearDatabase((academicYearDatabase) => academicYearDatabase = getResponse);
+      }
+  }catch(e){
+    console.error(e)
+  }
+ }
+
+ 
+ useEffect(() =>{
+  getAcadYearDB();
+  return () =>{
+    
+  }
+ },[currentPage])
+
+ useEffect(() =>{
+return () => {}
+ },[academicYearDatabase])
+
+
+ function SelectedListItem() {
+  const [selectedIndex, setSelectedIndex] = useState(1);
+
+  const handleListItemClick = (event, index) => {
+    setSelectedIndex(index);
+  };
+
+  return (
+    <Box sx={{  width: '260px', bgcolor: 'background.paper' }}>
+       <Typography sx={{ mt: 4, mb: 2 }} variant="h6" component="div">
+            Academic year
+          </Typography>
+          <List component="nav" aria-label="main mailbox folders" sx={{
+        width: '100%',
+        maxWidth: 360,
+        bgcolor: 'background.paper',
+        position: 'relative',
+        overflow: 'auto',
+        maxHeight: 150,
+        '& ul': { padding: 0 },
+      }}>
+          {academicYearDatabase.length > 0 ? (academicYearDatabase.map((acadyear) =>{
+            return (
+              <>
+        <ListItemButton
+          selected={selectedIndex === acadyear.id}
+          onClick={(event) => handleListItemClick(event, acadyear.id)}
+          key ={acadyear}
+        >
+          <ListItemIcon>
+            <InboxIcon />
+          </ListItemIcon>
+          <ListItemText primary= {acadyear.academicyear} />
+        </ListItemButton>
+              </>
+            )
+          })) : null}
+      </List>
+    </Box>
+  );
+}
+
+function SelectedListItemSemester() {
+  const [selectedIndex, setSelectedIndex] = useState(1);
+
+  const handleListItemClick = (event, index) => {
+    setSelectedIndex(index);
+  };
+
+  return (
+    <Box sx={{  width: '260px', bgcolor: 'background.paper' }}>
+       <Typography sx={{ mt: 4, mb: 2 }} variant="h6" component="div">
+            Semester
+          </Typography>
+          <List component="nav" aria-label="main mailbox folders" sx={{
+        width: '100%',
+        maxWidth: 360,
+        bgcolor: 'background.paper',
+        position: 'relative',
+        overflow: 'auto',
+        maxHeight: 150,
+        '& ul': { padding: 0 },
+      }}>
+        
+        <ListItemButton
+          selected={selectedIndex === 0}
+          onClick={(event) => handleListItemClick(event, 0)}
+
+        >
+          <ListItemIcon>
+            <InboxIcon />
+          </ListItemIcon>
+          <ListItemText primary= '1st semester' />
+        </ListItemButton>
+
+        <ListItemButton
+          selected={selectedIndex === 1}
+          onClick={(event) => handleListItemClick(event, 1)}
+       
+        >
+          <ListItemIcon>
+            <InboxIcon />
+          </ListItemIcon>
+          <ListItemText primary= '2nd semester' />
+        </ListItemButton>
+           
+      </List>
+    </Box>
+  );
+}
+
+
+
+
+
+
+
     return(
       <>
       {user !== null ?  (
@@ -460,44 +675,32 @@ return () =>{
              {/* <section class="container px-6 py-4 mx-auto">
   <div class="grid gap-4 mb-4 md:grid-cols-2 lg:grid-cols-5"> */}
 
-<Masonry columns={{ xs: 1, sm: 1, md: 4, lg: 4 }} spacing={2}>
 
-                  <DashboardCard  title ={'EMPLOYEE'} content ={employee} icon ={<Avatar style ={{background: "rgba(0, 200, 152, 0.8)"}}>
-                  <PeopleAltIcon />
-                  </Avatar>}/>
-         
-          
-                  <DashboardCard  title ={'PROFESSOR'} content ={professor}icon ={<Avatar style ={{background: "rgba(0, 200, 152, 0.8)"}}>
-                  <HailIcon />
-          </Avatar>} />
-          
-     
-                  <DashboardCard  title ={'STUDENT'} content ={student} icon ={<Avatar style ={{background: "rgba(0, 200, 152, 0.8)"}}>
-                  <SchoolIcon />
-          </Avatar>}
-          />
-
-                
-        
-          <DashboardCard  title ={'COURSE'} content ={course} icon ={<Avatar style ={{background: "rgba(0, 200, 152, 0.8)"}}>
-            <LibraryBooksIcon />
-          </Avatar>} />
-
-
+    <Masonry columns={{ xs: 1, sm: 1, md: 4, lg: 4 }} spacing={2}>
+      {course.length > 0 ? (course.map((course) => {
+       return <DashboardCard  title ={course.course_name} acadyear = {currentAcademicYear} semester = {currentSemester} content ={'course'} icon ={<Avatar style ={{background: "rgba(0, 200, 152, 0.8)"}}>
+        <LibraryBooksIcon />
+      </Avatar>} />
+      })) : null
+     }
     </Masonry>
+   
           {/* </div>
 </section> */}
-
-
-          <Paper  elevation={1}  className="w-2/3" >
+<Grid container spacing={{ xs: 2, md: 2, lg: 2 }} columns={{ xs: 1, sm: 1, md: 1, lg: 2 }} >
+<Paper  elevation={1}  className="w-2/3" >
+     <ChartJs dataChart = {data}  />
+</Paper>
+<Grid>
+<SelectedListItem />
+<SelectedListItemSemester />
+</Grid>
+    
+</Grid>
      
-           <ChartJs dataChart = {data}  />
-        
-          </Paper>
-         
        
          
-      <Stack direction ="column" spacing ={2} className ="w-fit">
+      <Stack direction ="column" spacing ={2} style ={{marginTop: '1.5rem'}} className ="w-fit">
             <Typography variant ="h6">News and Updates</Typography>
           <AnnouncementList  />
           </Stack>
