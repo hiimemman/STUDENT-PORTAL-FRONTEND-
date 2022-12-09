@@ -612,7 +612,7 @@ console.log(currentAcademicYear)
             <Select
             fullWidth
             required
-            defaultValue={selectedYear}
+            defaultValue={'--select a value--'}
             labelId="demo-simple-select-label"
             id="demo-simple-select"
             name = "Year"

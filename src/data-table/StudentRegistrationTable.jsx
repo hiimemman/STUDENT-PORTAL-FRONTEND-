@@ -67,6 +67,8 @@ const columnsSched = [
 
 
 const columnsFee  = [
+  { field: 'name', headerName: 'Fee', flex: 1,
+  minWidth: 0,  },
   { field: 'amount', headerName: 'Amount', flex: 1,
   minWidth: 0,  },
   { field: 'subtotal', headerName: 'Subtotal',  flex: 1,
@@ -229,6 +231,7 @@ return () =>{}
         </center>
        <DataGrid autoHeight rows = {data[0].fee} columns={columnsFee}  
     /> 
+
        </Paper>
        </>
 ) : null}

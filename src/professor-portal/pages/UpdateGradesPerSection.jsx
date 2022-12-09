@@ -15,6 +15,9 @@ import { basedUrl } from '../../base-url/based-url';
 import { DashboardCard } from '../../component/DashboardCard/DashboardCard';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 
+import IconButton from '@mui/material/IconButton';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import EditIcon from '@mui/icons-material/Edit';
 import { GRADING } from '../../slice/ProfessorPageSlice/ProfessorPageSlice';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
@@ -29,6 +32,7 @@ import PropTypes from 'prop-types';
 import LinearProgress from '@mui/material/LinearProgress';
 import { Input } from 'postcss';
 
+import DialogContentText from '@mui/material/DialogContentText';
 
 
 
@@ -87,6 +91,148 @@ function computeMutation(newRow, oldRow) {
   }
   return null;
 }
+
+
+function LongMenu(props) {
+  const [open, setOpen] = useState(false);
+
+  //Snackbar
+  const [snackbar, setSnackbar] = useState(null);
+
+  const handleCloseSnackbar = () => setSnackbar(null);
+
+  const professorSession = useSelector(state => JSON.parse(state.professor.session));
+
+  const handleSubmit = async (event) =>{ 
+    event.preventDefault();
+    if(!errorPayment){
+      const data = new FormData(event.currentTarget);
+      data.append('ID', props.id.id)
+      data.append('Action', 'Update');
+      data.append('EditorPosition', 'Professor');
+      data.append('EditorEmail', professorSessionSession.email);
+      data.append('Category', 'Grade');
+      for (var pair of data.entries()) {
+        console.log(pair[0]+ ' - ' + pair[1]); 
+    }
+  try{
+    const sendRequest = await fetch(basedUrl+"/update-grade-per-student.php",{
+      method: "POST",
+      body: data,
+  });
+  
+  const getResponse = await sendRequest.json();
+  if(getResponse.statusCode !== 201){
+    setSnackbar({ children: 'Grade updated successfully', severity: 'success' });
+  }else{
+    setSnackbar({ children: 'Grades must be between 1.00 ~ 5.00', severity: 'error' });
+  }
+  } catch (error) {
+    setSnackbar({ children: "Can't access the server", severity: 'error' });
+  }
+    
+  }else{
+    setSnackbar({ children: 'Grades must be between 1.00 ~ 5.00', severity: 'error' });
+  }
+  }
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const [errorGrade, setErrorGrade] = useState(false);
+  const [gradeText, setGradeText] = useState('');
+  const [value, setValue] = useState("0.0");
+
+  const handleChangeGrade = (event) =>{
+    setValue(parseFloat(e.target.value).toFixed(1))
+    if(parseFloat(event.target.value) <= 0 || parseFloat(event.target.value) > 5){
+      setErrorGrade(errorGrade => errorGrade = true);
+      setGradeText((gradeText) => gradeText = 'grades must be between 1.00 ~ 5.00');
+    }else{
+      setErrorGrade(errorGrade => errorGrade = false);
+      setGradeText((gradeText) => gradeText = '');
+    }
+  }
+
+  useEffect(() =>{
+    return () =>{}
+  },[errorGrade])
+
+  useEffect(() =>{
+    return () =>{}
+  },[gradeText])
+
+  
+
+  
+  return (
+    <div>
+      <IconButton
+        aria-label="more"
+        id="long-button"
+        aria-controls={open ? 'long-menu' : undefined}
+        aria-expanded={open ? 'true' : undefined}
+        aria-haspopup="true"
+        onClick={handleClickOpen}
+      >
+        <EditIcon />
+         
+      </IconButton>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          Update {props.id.student_id} final grade in {props.id.subject_name}
+        </DialogTitle>
+        <Box component ="form" onSubmit = {handleSubmit}>
+        <DialogContent>
+          {/* <DialogContentText id="alert-dialog-description">
+            Let Google help apps determine location. This means sending anonymous
+            location data to Google, even when no apps are running.
+          </DialogContentText> */}
+           <TextField
+      
+         fullWidth
+         required
+         error = {errorGrade}
+         value={value}
+          type ="number"
+          id="Grade"
+          label="Update Grade"
+          name ="Grade"
+          inputProps={{
+            maxLength: 3,
+            step: "1"
+          }}
+          onChange = {handleChangeGrade}
+          helperText = {gradeText}
+        />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Disagree</Button>
+          <Button type ="submit" autoFocus>
+            Agree
+          </Button>
+        </DialogActions>
+        </Box>
+      </Dialog>
+      {!!snackbar && (
+        <Snackbar anchorOrigin={{ vertical:"top", horizontal: "center" }} open onClose={handleCloseSnackbar} autoHideDuration={6000}>
+          <Alert {...snackbar} onClose={handleCloseSnackbar} />
+        </Snackbar>
+      )}
+    </div>
+  );
+}
+
 export function UpdateGradesPerSection(){
   const {email, sectionandacademicyear} = useParams();
      //UseNavigate
@@ -320,41 +466,48 @@ const columns = [
     headerName: 'Full name',
     description: 'This column has a value getter and is not sortable.',
     sortable: true,
-    width: 140,
+    flex: 1,
+    minWidth: 90,
     valueGetter: (params) =>
       `${params.row.firstname || ''} ${params.row.middlename || ''} ${params.row.lastname || ''}`,
   },
   {
     field: 'subject_name',
     headerName: 'Subject code',
-    width: 200,
+    flex: 1,
+    minWidth: 50,
    editable: false,
   },
   {
     field: 'student_id',
     headerName: 'Student number',
-    width: 200,
+    flex: 1,
+    minWidth: 200,
    editable: false,
   },
   {
     field: 'description',
     headerName: 'Subject',
-    width: 250,
+    flex: 1,
+    minWidth: 300,
    editable: false,
   },
   {
     field: 'semester',
     headerName: 'Semester',
-    width: 200,
+    flex: 1,
+    minWidth: 100,
    editable: false,
   },
     {
         field: 'grade',
         headerName: 'Final grade',
-        width: 100,
+        flex: 1,
+        minWidth: 100,
         type: 'number',
         editable: true,
       },
+     
 ];
 
   const processRowUpdate = useCallback(

@@ -209,7 +209,7 @@ const gradesClick = (event) =>{
       
 {rows.length > 0 ? ( 
     rows.map((grades) =>
-<Button fullWidth style = {{marginBottom: '1rem'}}variant="outlined"  color ="success" startIcon={<FolderOpenIcon />} >
+<Button key ={grades.id} fullWidth style = {{marginBottom: '1rem'}}variant="outlined"  color ="success" startIcon={<FolderOpenIcon />} >
     <Typography variant ={'h6'}>
     {grades.sectionandsemester}
     </Typography>

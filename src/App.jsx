@@ -38,6 +38,7 @@ import { Grading } from './professor-portal/pages/Grading';
 import { UpdateGradesPerSection } from './professor-portal/pages/UpdateGradesPerSection';
 import { Semester } from './pages/Semester';
 import { StudentProfile } from './student-portal/pages/StudentProfile';
+import { ProfessorProfile } from './professor-portal/pages/ProfessorProfile';
 
 
 
@@ -196,6 +197,7 @@ return (
         <Route path = "/employee/section/student/:id"  element ={<StudentDetails />}/>
         <Route path = "/professor-portal" element ={<><ParticlesBackground /><ProfessorSignIn /></>} /> 
         <Route path ="/professor-portal/dashboard" element ={<><ProfessorDashboard /></>} />
+        <Route path ="/professor-portal/profile" element ={<><ProfessorProfile /></>} />
         <Route path ="/professor-portal/schedule" element ={<><ProfessorSchedule /></>} />
         <Route path ="/professor-portal/grading" element ={<><Grading /></>} />
         

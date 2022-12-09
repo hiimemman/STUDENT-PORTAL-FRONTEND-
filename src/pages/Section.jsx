@@ -103,7 +103,7 @@ console.log(value)
         <Box sx={{ borderBottom: 1, borderColor: 'divider' } }>
             <TabList onChange={handleChange} aria-label="lab API tabs example" >
                 <Tab label="SECTION TABLE" value="1" />
-                <Tab label="HISTORY" value="2" />
+                {/* <Tab label="HISTORY" value="2" /> */}
                 {console.log(section)}
                 {section !== null ? (<Tab value="3" label={
                 <Stack direction="row" spacing={2}>

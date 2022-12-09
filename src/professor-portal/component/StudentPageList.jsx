@@ -202,7 +202,7 @@ return(
     <ListItem  disablePadding sx={{ display: 'block' }} className="transition ease-in-out delay-2 hover:bg-slate-300 duration-300">
     <Stack direction="row" justifyContent="center" alignItems="center" spacing={0}>
 <StudentSelectedLine selected ={currentPageStudent === 'profile'}  />
-      <ListItemButton onClick ={ async ()=> { dispatch(PROFILE()); navigate('/student-portal/profile');} } onMouseEnter = {handleDrawerOpen} 
+      <ListItemButton onClick ={ async ()=> { dispatch(PROFILE()); navigate('/professor-portal/profile');} } onMouseEnter = {handleDrawerOpen} 
         sx={{
           minHeight: 48,
           justifyContent: isOpen ? 'initial' : 'center',

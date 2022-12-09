@@ -6,7 +6,7 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
 import { useSelector, useDispatch } from 'react-redux';
-import { REMOVE_STUDENT } from '../../slice/StudentSession/studentSession';
+import { REMOVE_PROFESSOR } from '../../slice/ProfessorSession/professorSession';
 import { useNavigate } from 'react-router-dom';
 import Skeleton from '@mui/material/Skeleton';
 import { imageBaseUrl } from '../../base-url/based-url';
@@ -38,7 +38,7 @@ const navigate = useNavigate();
             if(getResponse.statusCode === 200){
              console.log('Logout Succesfully')
              sessionStorage.removeItem('studentSession')
-              dispatch(REMOVE_STUDENT());
+              dispatch(REMOVE_PROFESSOR());
               navigate('/student-portal');
             }else{          
              console.error(getResponse.statusCode)

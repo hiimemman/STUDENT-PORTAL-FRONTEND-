@@ -36,7 +36,7 @@ export const pageState = createSlice({
             state.value = 'section'
         },
         FEE: (state) =>{
-            state.value = 'fee'
+            state.value = 'payments / report'
         },
         ACADEMICYEAR: (state) =>{
             state.value = 'academic year'

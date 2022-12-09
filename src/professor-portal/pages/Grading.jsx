@@ -122,38 +122,38 @@ export function Grading(){
 
       const handleCloseSnackbar = () => setSnackbar(null);
 
-      const getAllStudenSection = async () =>{
-        try{ 
-          const formData = new FormData();
+      // const getAllStudenSection = async () =>{
+      //   try{ 
+      //     const formData = new FormData();
 
-          formData.append('Email', studentSession.email);
+      //     formData.append('Email', studentSession.email);
      
-          //online api
-            const sendRequest = await fetch(basedUrl+"/get-schedule-per-professor.php",{
-              method: "POST",
-              body: formData,
-          });
-            const getResponse = await sendRequest.json();
+      //     //online api
+      //       const sendRequest = await fetch(basedUrl+"/get-schedule-per-professor.php",{
+      //         method: "POST",
+      //         body: formData,
+      //     });
+      //       const getResponse = await sendRequest.json();
 
-            if(getResponse.statusCode === 201){
-              console.log(getResponse.error)
-            }else{
-              //if succesfully retrieve data
+      //       if(getResponse.statusCode === 201){
+      //         console.log(getResponse.error)
+      //       }else{
+      //         //if succesfully retrieve data
            
-              setSectionProf((rows) => rows = getResponse.content);
-            }
-        }catch(e){
-          console.error(e)
-        }
-       }
+      //         setSectionProf((rows) => rows = getResponse.content);
+      //       }
+      //   }catch(e){
+      //     console.error(e)
+      //   }
+      //  }
 
        
-       useEffect(() =>{
-        getAllStudenSection();
-        return() =>{
+      //  useEffect(() =>{
+      //   getAllStudenSection();
+      //   return() =>{
 
-        }
-       },[currentPage])
+      //   }
+      //  },[currentPage])
 
        useEffect(() =>{
         return () =>{}
@@ -391,8 +391,9 @@ const renderEditStatus = (params) => {
     isLoading(true)
     try{ 
       const data = new FormData();
-      data.append('Email', studentSession.email);
-  
+      data.append('Username', studentSession.professor_username);
+      
+     
       //online api
          const sendRequest = await fetch(basedUrl+"/get-section-per-professor.php",{
             method: "POST",
@@ -445,7 +446,7 @@ const renderEditStatus = (params) => {
   <Paper elevation={1} sx ={{width:'500 ', p: '1.5rem', m:'1rem'}} className ="rounded-xl">
   {sectionProf.length > 0 ? ( 
     sectionProf.map((section) =>
-<Button key ={section} fullWidth style = {{marginBottom: '1rem'}}variant="outlined"  color ="success" startIcon={<TableViewIcon />} onClick ={ () => navigate(""+studentSession.professor_username+"/"+section.sectionacademicyear)} >
+<Button key ={section.id} fullWidth style = {{marginBottom: '1rem'}}variant="outlined"  color ="success" startIcon={<TableViewIcon />} onClick ={ () => navigate(""+studentSession.professor_username+"/"+section.sectionandsemester)} >
     <Typography variant ={'h6'}>
     {section.sectionacademicyear}
     </Typography>

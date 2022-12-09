@@ -312,18 +312,7 @@ const OverviewPanel = () =>{
     
   </Grid2>
          
-    <Divider sx={{marginTop: '1.5rem'}} />
-    <Container sx ={{m:'1rem',display:'flex', justifyContent:'center'}}>
-    {isLoading === true ?( <LoadingButton
-      color="secondary"
-      loading={isLoading}
-      loadingPosition="start"
-      startIcon={<SaveIcon />}
-      variant="contained"
-    >
-      Sending
-    </LoadingButton>) : (<Button type="submit" variant="contained" color="success">Save Changes</Button>)}
-    </Container>
+ 
          </Box>
     </Paper>    
   )
@@ -360,8 +349,8 @@ const handleChangeTab = (event, newValue) =>{
             <TabList onChange = {handleChangeTab} aria-label="lab API tabs example" className='mt-2 ml-2'>
                 <Tab label="OVERVIEW" value = {1} />
                 <Tab label="SCHEDULES" value= {2} />
-                <Tab label="STUDENTS" value= {3} />
-                <Tab label="HISTORY" value= {4} />
+                {/* <Tab label="STUDENTS" value= {3} /> */}
+                {/* <Tab label="HISTORY" value= {4} /> */}
              </TabList>
             
          

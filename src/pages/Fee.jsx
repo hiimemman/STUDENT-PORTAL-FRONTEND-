@@ -92,7 +92,7 @@ return () =>{
             <TabList onChange={handleChange} aria-label="lab API tabs example" >
                 <Tab label="FEE TABLE" value="1" />
                 <Tab label="STUDENT FEE" value="2" />
-                <Tab label="HISTORY" value="3" />
+                <Tab label="SALES REPORT" value="3" />
 
              </TabList>
             </Box>
@@ -108,7 +108,7 @@ return () =>{
             </TabPanel>
             <TabPanel value="3" sx ={{marginLeft:'-24px'}}>
             <Paper elevation={1} sx ={{width:'500 '}} className ="rounded-xl">
-              <FeeHistory />
+          
             </Paper>
             </TabPanel>
             

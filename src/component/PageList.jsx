@@ -605,9 +605,9 @@ return(
     </ListItem>
   </Tooltip>
   </Collapse>
-  <Tooltip title="Fees" placement="right-start">
+  <Tooltip title="Payments and reports" placement="right-start">
     <ListItem  disablePadding sx={{ display: 'block'}} className="transition ease-in-out delay-2 hover:bg-slate-300  duration-300">
-    <SelectedLine selected ={currentPage === 'fee'}  />
+    <SelectedLine selected ={currentPage === 'payments / report'}  />
       <ListItemButton onClick ={()=>{dispatch(FEE()); navigate('/employee/fee')}}  onMouseEnter = {handleDrawerOpen} 
         sx={{
           minHeight: 48,
@@ -615,7 +615,7 @@ return(
           px: 2.5,
         }}
       >
-          {currentPage === 'fee' ?  <ListItemIcon
+          {currentPage === 'payments / report' ?  <ListItemIcon
           sx={{
             minWidth: 0,
             mr: isOpen ? 3 : 'auto',
@@ -636,7 +636,7 @@ return(
       </ListItemIcon>}
 
         {/* <AttachMoneyIcon /> */}
-        { isOpen ?  <Typography className ='font-nunito text-lg' >Fee</Typography> : <p></p> }  
+        { isOpen ?  <Typography className ='font-nunito text-lg' >Payments / Reports</Typography> : <p></p> }  
       </ListItemButton>
     
     </ListItem>

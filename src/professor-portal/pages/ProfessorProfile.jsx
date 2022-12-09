@@ -14,19 +14,19 @@ import { useState, Suspense } from 'react';
 
 import { basedUrl } from '../../base-url/based-url';
 import { Typography } from '@mui/material';
-import { PROFILE } from '../../slice/StudentPageSlice/StudentPageSlice';
+
+import { PROFILE } from '../../slice/ProfessorPageSlice/ProfessorPageSlice';
 import Grid2 from '@mui/material/Unstable_Grid2'; // Grid2 version 2
 import { LoadingButton } from '@mui/lab';
 import SaveIcon from '@mui/icons-material/Save';
 
 
-import { PUT_STUDENT } from '../../slice/StudentSession/studentSession';
-
-export  function StudentProfile() {
+import { PUT_PROFESSOR } from '../../slice/ProfessorSession/professorSession';
+export  function ProfessorProfile() {
 //Selected Professor
 const professor = useSelector(state => state.professorSelected.value)
 
-const studentSession = useSelector(state => JSON.parse(state.student.session))
+const studentSession = useSelector(state => JSON.parse(state.professor.session))
 //get active faculty
 
 const [faculty, setFaculty] = useState({});
@@ -137,7 +137,7 @@ return () =>{
   const navigate = useNavigate();
   useEffect(() =>{
     if(studentSession === null){
-     navigate('/student-portal')
+     navigate('/professor-portal')
     } 
    },[studentSession])
 
@@ -237,7 +237,7 @@ return () =>{
       try{
         isLoading(true);
         //online api
-          const sendRequest = await fetch(basedUrl+"/change-confirmed-password-student.php",{
+          const sendRequest = await fetch(basedUrl+"/change-confirmed-password-professor.php",{
               method: "POST",
               body: data,
           });
@@ -302,7 +302,7 @@ return () =>{
     console.log(getResponse.information)
     if(getResponse.statusCode === 200){
     
-      dispatch(PUT_STUDENT(getResponse.information))
+      dispatch(PUT_PROFESSOR(getResponse.information))
     }else{
       
     }
@@ -335,7 +335,7 @@ return () =>{
     const getResponse = await sendRequest.json();
     console.log(getResponse.information)
     if(getResponse.statusCode === 200){
-     dispatch(PUT_STUDENT(getResponse.content));
+     dispatch(PUT_PROFESSOR(getResponse.content));
     }else{
       
      }
@@ -349,7 +349,7 @@ const checkCurrentPassword = async(event) =>{
     const data = new FormData();
     data.append('Email', studentSession.email)
     data.append('Password', event.target.value);
-    const sendRequest = await fetch(basedUrl+"/check-password-correct-student.php",{
+    const sendRequest = await fetch(basedUrl+"/check-password-correct-professor.php",{
       method: "POST",
       body: data,
   });
@@ -387,11 +387,7 @@ const handleImageLoad = (event) =>{
     <Box component="form" onSubmit={handleSubmitProfile} sx={{ mt: 1 }}>
       <Grid2 container sx={{ paddingRight: 10, }}>
    
-      <Stack direction="row" spacing={1} sx={{ width: '100%', marginBottom: '1.5rem' }}>
-          <Typography variant="overline" noWrap sx={{ fontSize: '15px', width: '15rem' }}>Student number:</Typography>
-    
-          <Typography variant="overline" noWrap sx={{ fontSize: '15px', width: '15rem' }}>{studentSession.studentnumber}</Typography>
-        </Stack>
+      
 
         <Stack direction="row" spacing={1} sx={{ width: '100%', marginBottom: '1.5rem' }}>
           <Typography variant="overline" noWrap sx={{ fontSize: '15px', width: '15rem' }}>Full name:</Typography>
@@ -399,26 +395,28 @@ const handleImageLoad = (event) =>{
           <Typography variant="overline" noWrap sx={{ fontSize: '15px', width: '15rem' }}>{studentSession.firstname+" "+studentSession.middlename+" "+studentSession.lastname}</Typography>
         </Stack>
 
-     
         <Stack direction="row" spacing={1} sx={{ width: '100%', marginBottom: '1.5rem' }}>
-          <Typography variant="overline" noWrap sx={{ fontSize: '15px', width: '15rem' }}>Birthday:</Typography>
+          <Typography variant="overline" noWrap sx={{ fontSize: '15px', width: '15rem' }}>Email:</Typography>
     
-          <Typography variant="overline" noWrap sx={{ fontSize: '15px', width: '15rem' }}>{studentSession.birthday}</Typography>
+          <Typography variant="overline" noWrap sx={{ fontSize: '15px', width: '15rem' }}>{studentSession.email}</Typography>
+        </Stack>
+      
+        <Stack direction="row" spacing={1} sx={{ width: '100%', marginBottom: '1.5rem' }}>
+          <Typography variant="overline" noWrap sx={{ fontSize: '15px', width: '15rem' }}>Faculty:</Typography>
+    
+          <Typography variant="overline" noWrap sx={{ fontSize: '15px', width: '15rem' }}>{studentSession.faculty}</Typography>
         </Stack>
 
         <Stack direction="row" spacing={1} sx={{ width: '100%', marginBottom: '1.5rem' }}>
-          <Typography variant="overline" noWrap sx={{ fontSize: '15px', width: '15rem' }}>Contact:</Typography>
+          <Typography variant="overline" noWrap sx={{ fontSize: '15px', width: '15rem' }}>Date Hired:</Typography>
     
-          <Typography variant="overline" noWrap sx={{ fontSize: '15px', width: '15rem' }}>{studentSession.contact}</Typography>
+          <Typography variant="overline" noWrap sx={{ fontSize: '15px', width: '15rem' }}>{studentSession.date_hired}</Typography>
         </Stack>
+        
+
+     
        
 
-        <Stack direction="row" spacing={1} sx={{ width: '100%', marginBottom: '1.5rem' }}>
-          <Typography variant="overline" noWrap sx={{ fontSize: '15px', width: '15rem' }}>Address:</Typography>
-    
-          <Typography variant="overline" noWrap sx={{ fontSize: '15px', width: '15rem' }}>{studentSession.address}</Typography>
-        </Stack>
-    
         <Alert severity="info" fullWidth>
         <AlertTitle>Notice</AlertTitle>
         Hello, <strong>{studentSession.firstname+" "+studentSession.lastname}</strong>.  if there was a error or you want to change your information, please refer to our campus registrar. <strong> Thank you!</strong>

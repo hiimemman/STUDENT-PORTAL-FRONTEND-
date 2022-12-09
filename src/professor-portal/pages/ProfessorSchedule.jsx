@@ -126,7 +126,7 @@ export function ProfessorSchedule(){
         try{ 
           const formData = new FormData();
 
-          formData.append('Email', studentSession.email);
+          formData.append('Username', studentSession.professor_username);
      
           //online api
             const sendRequest = await fetch(basedUrl+"/get-schedule-per-professor.php",{
@@ -419,7 +419,7 @@ const columns = [
      processRowUpdate={processRowUpdate}
     /> 
     </Paper>
-    zxvzxvzxvzxvzxvzxvzxvxvzxvz
+
  {!!snackbar && (
         <Snackbar open onClose={handleCloseSnackbar} autoHideDuration={6000}>
           <Alert {...snackbar} onClose={handleCloseSnackbar} />
