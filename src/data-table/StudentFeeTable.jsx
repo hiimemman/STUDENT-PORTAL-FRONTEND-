@@ -33,10 +33,24 @@ import LocalAtmIcon from '@mui/icons-material/LocalAtm';
 import AddCardIcon from '@mui/icons-material/AddCard';
 
 
+import InputAdornment from '@mui/material/InputAdornment';
+import AccountCircle from '@mui/icons-material/AccountCircle';
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
+
+const currencyFormatter = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'PHP',
+});
+
+const usdPrice = {
+  type: 'number',
+  width: 130,
+  valueFormatter: ({ value }) => currencyFormatter.format(value),
+  cellClassName: 'font-tabular-nums',
+};
 
 
 
@@ -51,7 +65,26 @@ const MenuProps = {
   },
 };
 
+function NumberFormatCustom(props) {
+  const { inputRef, onChange, ...other } = props;
 
+  return (
+    <NumberFormat
+      {...other}
+      getInputRef={inputRef}
+      onValueChange={values => {
+        onChange({
+          target: {
+            name: props.name,
+            value: values.value
+          }
+        });
+      }}
+      thousandSeparator
+      // isNumericString
+    />
+  );
+}
 
 
 const useFakeMutation = () => {
@@ -83,25 +116,27 @@ const columnsPaymentHistory = [
   minWidth: 0, },
   { field: 'semester', headerName: 'Semester', flex: 1,
   minWidth: 0, },
-  { field: 'totalfee', headerName: 'Total fee', type: "number",  flex: 1,
+  { field: 'totalfee', headerName: 'Total fee',...usdPrice,  flex: 1,
   minWidth: 0, },
-  { field: 'totalpaid', headerName: 'Total paid',  type: "number", flex: 1,
+  { field: 'totalpaid', headerName: 'Total paid',  ...usdPrice,  flex: 1,
   minWidth: 0,},
-  { field: 'balance', headerName: 'Balance', type: "number", flex: 1,
+  { field: 'balance', headerName: 'Balance', ...usdPrice, flex: 1,
   minWidth: 0,},
-  { field: 'payment', headerName: 'Payment',type: "number",  flex: 1,
+  { field: 'payment', headerName: 'Payment',...usdPrice,  flex: 1,
   minWidth: 0,},
   { field: 'date_edit', headerName: 'Date of Payment', type: "date", flex: 1,
   minWidth: 210,},
 ];
 
+
+
 const columnsFee  = [
   { field: 'name', headerName: 'Fee',  flex: 1,
   minWidth: 0, },
-  { field: 'amount', headerName: 'Amount',  type: "number", flex: 1,
+  { field: 'amount', headerName: 'Amount',  ...usdPrice, flex: 1,
   minWidth: 0, },
-  { field: 'subtotal', headerName: 'Sub total', type: "number",  flex: 1,
-  minWidth: 0, },
+  { field: 'subtotal',  flex: 1,
+  minWidth: 0, ...usdPrice  },
   { field: 'added_at', headerName: 'Date', type: "date", flex: 1,
   minWidth: 210,},
 ];
@@ -189,6 +224,7 @@ useEffect(() =>{
     {
       console.log(history)
       x = parseFloat(x) + 1;
+      console.log(history.after_edit)
       let content = JSON.parse(history.after_edit);
       content['id'] = x;
       content['date_edit'] = history.date_edited;
@@ -342,19 +378,26 @@ return () => {}
         </center>
         <Divider style = {{marginTop:'.5rem', marginBottom: '.5rem'}}/>
        <Typography variant ="h6" className = "font-mono font-extrabold" >
-        TOTAL FEE: ₱ {data[0].balance[0].totalfee}</Typography>
+        TOTAL FEE: ₱ {parseFloat(data[0].balance[0].totalfee).toFixed(2)}</Typography>
         <Typography variant ="h6" className = "font-mono font-extrabold" >
-        TOTAL PAID: ₱ {data[0].balance[0].totalpaid}</Typography>
+        TOTAL PAID: ₱ {parseFloat(data[0].balance[0].totalpaid).toFixed(2)}</Typography>
         <Divider style = {{marginTop:'.5rem', marginBottom: '.5rem'}}/>
         <Typography variant ="h6" className = "font-mono font-extrabold" >
-        BALANCE: ₱ {data[0].balance[0].balance}</Typography>
+        BALANCE: ₱ {parseFloat(data[0].balance[0].balance).toFixed(2)}</Typography>
         <Divider style = {{marginTop:'.5rem', marginBottom: '.5rem'}}/>
         <TextField
         style ={{marginTop: '.5rem'}}
          fullWidth
          required
+         InputProps={{
+          startAdornment: (
+            <InputAdornment position="start">
+              ₱
+            </InputAdornment>
+          ),
+        }}
          error = {errorPayment}
-          type ="number"
+          type ="text"
           id="Payment"
           label="Add Payment"
           name ="Payment"
@@ -634,6 +677,7 @@ const renderEditStatus = (params) => {
         headerName: 'Total fee',
         flex: 1,
         minWidth: 0,
+        ...usdPrice,
         editable: false,
       },
      
@@ -642,6 +686,7 @@ const renderEditStatus = (params) => {
         headerName: 'Balance',
         flex: 1,
         minWidth: 0,
+        ...usdPrice,
         editable: false,
       },
       {
@@ -649,6 +694,7 @@ const renderEditStatus = (params) => {
         headerName: 'Total paid',
         flex: 1,
         minWidth: 0,
+        ...usdPrice,
         editable: true,
       },
       {

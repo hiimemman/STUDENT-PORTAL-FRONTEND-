@@ -504,7 +504,7 @@ const [course, setCourse] = useState({data: []});
 const [section, setSection] = useState({data: []});
 const [fourDigits, setFourDigits] = useState({data: '0000'});
 const [updatedFaculty, setUpdatedFaculty] = useState(false);
-const currentYear = new Date().getFullYear().toString().substr(0, 2);
+const currentYear = new Date().getFullYear().toString().substr(2, 4);
 
 //  Get all users api
 
@@ -544,20 +544,20 @@ useEffect( () => {
        //  console.log(getResponse)
        if(parseFloat(getResponse.statusCode) < 10){
        
-        setFourDigits((fourDigits) => fourDigits = {...fourDigits, data: '000'+getResponse.statusCode});  
+        setFourDigits((fourDigits) => fourDigits = {...fourDigits, data: '000'+(parseFloat(getResponse.statusCode)+1)});  
         return;
        }
        
        if(parseFloat(getResponse.statusCode) < 100){
-        setFourDigits((fourDigits) => fourDigits = {...fourDigits, data: '00'+getResponse.statusCode});  
+        setFourDigits((fourDigits) => fourDigits = {...fourDigits, data: '00'+(parseFloat(getResponse.statusCode)+1)});  
         return;
        }
        if(parseFloat(getResponse.statusCode) < 1000){   
-        setFourDigits((fourDigits) => fourDigits = {...fourDigits, data: '0'+getResponse.statusCode});  
+        setFourDigits((fourDigits) => fourDigits = {...fourDigits, data: '0'+(parseFloat(getResponse.statusCode)+1)});  
         return;
        }
        if(parseFloat(getResponse.statusCode) > 999){
-        setFourDigits((fourDigits) => fourDigits = {...fourDigits, data: getResponse.statusCode});  
+        setFourDigits((fourDigits) => fourDigits = {...fourDigits, data: (parseFloat(getResponse.statusCode)+1)});  
         return;
        }
       }
@@ -690,7 +690,7 @@ useEffect(() =>{
       <GridToolbarDensitySelector />
       <GridToolbarExport />
     </GridToolbarContainer>
-    {updatedFaculty === true ? (<AddStudent open = {formOpenType === 'student'} faculty = {faculty.data} fourDigits ={fourDigits.data} currentYear = {currentYear} courses ={course} sections ={section} academicyear = {academicyear.data}/>) : (<></>)}
+    {updatedFaculty === true ? (<AddStudent open = {formOpenType === 'student'} faculty = {faculty.data} fourDigits ={fourDigits.data} currentYear = {currentYear} courses ={course} sections ={section} academ0cy2ar = {academicyear.data}/>) : (<></>)}
   </>
   );
 }

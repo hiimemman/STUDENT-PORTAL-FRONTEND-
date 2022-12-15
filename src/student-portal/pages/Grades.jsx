@@ -272,3 +272,4 @@ const columns = [
       editable: false,
     },
 ];
+

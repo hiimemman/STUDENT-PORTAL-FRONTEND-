@@ -1,16 +1,13 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, current } from '@reduxjs/toolkit'
 
 const initialState = {
-    value:[],
+    value:[]
  }
  
  export const scheduleSelection = createSlice({
      name:'scheduleSelection',
      initialState,
      reducers:{
-        PUT_SCHEDULE: (state, action) =>{
-           state.value = [...state.value, action.payload];
-        },
         REMOVE_SCHEDULE: (state, action) =>{
          state.value = state.value.filter(items => items.id !== action.payload);
       },
@@ -20,11 +17,23 @@ const initialState = {
       RESET_SCHEDULE: (state, action) =>{
          state.value = initialState;
       },
+      PUT_SCHEDULE: (state, action) =>{
+         console.log(typeof state.value.value)
+         if(state.value.value !== undefined){
+            console.log("test1")
+            state.value = [...state.value.value, action.payload];
+         }else{
+            console.log("test2")
+            state.value = [...state.value, action.payload];
+         }
+           
+          
+      },
      },
  })
  
  
  // Action creators are generated for each case reducer function
- export const { PUT_SCHEDULE, REMOVE_SCHEDULE,PUT_ALL_SCHEDULE,RESET_SCHEDULE } = scheduleSelection.actions
+ export const { REMOVE_SCHEDULE,PUT_ALL_SCHEDULE,RESET_SCHEDULE, PUT_SCHEDULE } = scheduleSelection.actions
  
  export default scheduleSelection.reducer

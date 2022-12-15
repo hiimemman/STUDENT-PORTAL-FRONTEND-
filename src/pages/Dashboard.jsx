@@ -692,8 +692,8 @@ function SelectedListItemSemester() {
      <ChartJs dataChart = {data}  />
 </Paper>
 <Grid>
-<SelectedListItem />
-<SelectedListItemSemester />
+{/* <SelectedListItem />
+<SelectedListItemSemester /> */}
 </Grid>
     
 </Grid>

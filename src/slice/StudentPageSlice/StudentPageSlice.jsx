@@ -12,7 +12,7 @@ export const studentPageState = createSlice({
        state.value = 'dashboard'
         },
         PRE_REGISTRATION: (state) =>{    
-            state.value = 'pre_registration'
+            state.value = 'pre registration'
         },
         CURRICULUM: (state) =>{    
             state.value = 'curriculum'

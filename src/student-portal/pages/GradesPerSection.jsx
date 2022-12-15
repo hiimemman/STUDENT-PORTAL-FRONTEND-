@@ -22,7 +22,7 @@ import { basedUrl } from '../../base-url/based-url';
 import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SendIcon from '@mui/icons-material/Send';
-import { DataGrid, GridToolbarContainer, useGridApiContext, GridToolbarColumnsButton, GridToolbarFilterButton, GridToolbarDensitySelector, GridToolbarExport  } from '@mui/x-data-grid';
+import { DataGrid, GridToolbarContainer, useGridApiContext, GridToolbarColumnsButton, GridToolbarFilterButton, GridToolbarDensitySelector, GridToolbarExport ,GridFooterContainer, GridFooter } from '@mui/x-data-grid';
 import LinearProgress from '@mui/material/LinearProgress';
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import Alert from '@mui/material/Alert';
@@ -167,8 +167,19 @@ export function GradesPerSection(){
     return () =>{}
   },[changeRows])
 
-  function CustomFooterStatusComponent (){
-    return(<></>)
+  
+function CustomFooter (props) {
+
+  return (
+    <GridFooterContainer>
+      {/* Add what you want here */}
+
+      <Typography variant ="h6" style ={{marginLeft: '.5rem'}}>Grade point average: {props.CustomFooter}</Typography>
+      {/* <GridFooter sx={{
+        border: 'none', // To delete double border.
+        }} /> */}
+    </GridFooterContainer>
+  );
 }
 
 function handleClick(event) {
@@ -223,10 +234,11 @@ console.log(sectionandsemester)
     </Typography>, 
       </Breadcrumbs>
 
-*/} <DataGrid  components={{ LoadingOverlay: LinearProgress, Footer: CustomFooterStatusComponent}} loading = {loading} rows = {rows} columns={columns} autoHeight style ={{marginTop: '1.5rem'}}
+*/} <DataGrid 
+components={{ LoadingOverlay: LinearProgress, Toolbar: CustomToolbarSubject, Footer: CustomFooter,}} loading = {loading} rows = {rows} columns={columns} autoHeight style ={{marginTop: '1.5rem'}}
+componentsProps = {{footer : {CustomFooter : gpa.toFixed(2)}}}
 /> 
-      <Typography variant ="h6" className="m-4">Grade point average: {gpa.toFixed(2)}
-      </Typography>
+      
       <Divider  className ="m-4"/>
       <Typography   variant = "h6">Legends</Typography>
 <Stack direction ="row" divider={<Divider orientation="vertical" flexItem />} spacing = {6}>
@@ -328,3 +340,63 @@ const columns = [
 
 
 
+
+//Toolbar
+function CustomToolbarSubject() {
+  //Open add form
+  const  formOpenType = useSelector(state => state.addFormSub.value);
+  //dispatch from redux
+const dispatch = useDispatch();
+const [courses, setCourses] = useState({data: []});
+const [updatedCourse, setUpdatedCourse] = useState(false);
+//  Get all users api
+ useEffect( () => {
+  console.log('UseEffect called')
+  const getAllData = async () =>{
+     try{ 
+       //online api
+         const sendRequest = await fetch(basedUrl+"/course-active.php");
+         const getResponse = await sendRequest.json();
+    
+         if(getResponse.statusCode === 201){
+         
+         }else{
+           //if succesfully retrieve data'
+          //  console.log(getResponse)
+           setCourses({data: getResponse});
+            
+         }
+     }catch(e){
+       console.error(e)
+     }
+   }
+   getAllData();
+ }, [formOpenType]);
+
+ useEffect(() => {
+  if(courses.data.length > 0){
+    console.log("Courses data = "+JSON.stringify(courses));
+    setUpdatedCourse(true)
+  }
+ }, [formOpenType, courses]);
+
+
+  return (<>
+    <GridToolbarContainer sx={{justifyContent: 'flex-end'}}>
+      <GridToolbarExport 
+      printOptions={{
+      fileName: 'StudentGrade',
+      hideToolbar: true,
+  }}
+
+  csvOptions={{
+    fileName: 'StudentGrade',
+    delimiter: ';',
+    utf8WithBom: true,
+  }}
+  />
+    </GridToolbarContainer>
+
+  </>
+  );
+}

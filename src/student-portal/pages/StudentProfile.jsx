@@ -421,7 +421,7 @@ const handleImageLoad = (event) =>{
     
         <Alert severity="info" fullWidth>
         <AlertTitle>Notice</AlertTitle>
-        Hello, <strong>{studentSession.firstname+" "+studentSession.lastname}</strong>.  if there was a error or you want to change your information, please refer to our campus registrar. <strong> Thank you!</strong>
+        Hello, <strong>{studentSession.firstname+" "+studentSession.lastname}</strong>.  if there was a error or you want to change your information, please send an email to <u className='font-extrabold'>aisatcollegedasma18@gmail.com.</u> <strong> Thank you!</strong>
       </Alert>
       
 

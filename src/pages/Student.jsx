@@ -207,7 +207,7 @@ getAllActiveCourse();
         <Box sx={{ borderBottom: 1, borderColor: 'divider' } }>
             <TabList onChange={handleChange} aria-label="lab API tabs example" >
                 <Tab label="STUDENT TABLE" value="1" />
-                <Tab label="HISTORY" value="2" />
+                {/* <Tab label="HISTORY" value="2" /> */}
                 {student !== null ? (<Tab value="3" label={
                 <Stack direction="row" spacing={2}>
                  <Avatar src={imageBaseUrl+student.profile_url} sx={{ width: 30, height: 30  }}/>

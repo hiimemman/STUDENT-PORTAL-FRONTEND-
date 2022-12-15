@@ -534,18 +534,23 @@ const columns = [
   const handleYes = async () => {
     const { newRow, oldRow, reject, resolve } = promiseArguments;
 
-
+console.log("Pumasok dito")
 
     try {
       // Make the HTTP request to save in the backend
       const dataUpdate = new FormData();
       dataUpdate.append('ID', newRow['id']);
       dataUpdate.append('Grade', newRow['grade']);
+      dataUpdate.append('StudentNumber', newRow['student_id']);
       dataUpdate.append('Action', 'Update');
       dataUpdate.append('EditorPosition', 'professor');
       dataUpdate.append('EditorEmail', studentSession.email);
       dataUpdate.append('Category', 'Grades');
       const response = await mutateRow(newRow);
+      for (var pair of dataUpdate.entries()) {
+        console.log(pair[0]+ ', ' + pair[1]); 
+    }
+    
       const sendRequest = await fetch(basedUrl+"/update-grade-per-student.php",{
         method: "POST",
         body: dataUpdate,

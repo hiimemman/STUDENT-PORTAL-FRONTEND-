@@ -48,6 +48,13 @@ function LongMenu(props) {
     setAnchorEl(null);
   };
 
+  useEffect(() =>{
+  
+   return () =>{
+
+   } 
+  },[schedule])
+
   return (
     <div>
       <IconButton
@@ -119,6 +126,8 @@ function LongMenu(props) {
 
   return (
     <div style={{ width: '100%'}}>
+      {console.log('Pumasok dito')}
+      {console.log(schedule.value)}
       <DataGrid
         components={{Toolbar: CustomToolbarSection,  LoadingOverlay: LinearProgress,}} rows={schedule} columns={columns} autoHeight pageSize={5} 
       />

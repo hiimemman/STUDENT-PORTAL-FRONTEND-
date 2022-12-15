@@ -29,7 +29,7 @@ const handleCloseAddScheduleForm = () => {
 };
 
 useEffect(() =>{
-console.log(open)
+
     return () =>{}
 },[open])
 
@@ -49,25 +49,36 @@ const handleChangeScheduleCode = async (event) =>{
         body: data,
     });
     
-    for (var pair of data.entries()) {
-      console.log(pair[0]+ ' - ' + pair[1]); 
-    }
+    // for (var pair of data.entries()) {
+    //   console.log(pair[0]+ ' - ' + pair[1]); 
+    // }
     const getResponse = await sendRequest.json();
-    console.log(getResponse)
+ 
     if(getResponse.statusCode === 200){
       setErrorScheduleCode((prev) => prev = false);
-      if(schedule.filter(item => item.id === getResponse.scheduleData.id).length > 0){
-        setErrorScheduleCode((prev) => prev = true);
-        setScheduleCodeHelperText((prev) => prev = "Schedule code has already been added to your schedule!");
-      }else{
-        if(schedule.filter(item => item.subject_name === getResponse.scheduleData.subject_name).length > 0){
+      
+      if(schedule.length > 0){
+
+        
+        if(schedule.filter(item => item.id === getResponse.scheduleData.id).length > 0){
           setErrorScheduleCode((prev) => prev = true);
-          setScheduleCodeHelperText((prev) => prev = "This subject has already been added to your schedule!");
+          setScheduleCodeHelperText((prev) => prev = "Schedule code has already been added to your schedule!");
         }else{
-          dispatch(PUT_SCHEDULE(getResponse.scheduleData));
-        handleCloseAddScheduleForm();
+          if(schedule.filter(item => item.subject_name === getResponse.scheduleData.subject_name).length > 0){
+            setErrorScheduleCode((prev) => prev = true);
+            setScheduleCodeHelperText((prev) => prev = "This subject has already been added to your schedule!");
+          }else{
+            dispatch(PUT_SCHEDULE(getResponse.scheduleData));
+          handleCloseAddScheduleForm();
+          }
         }
+
+      }else{
+   
+            dispatch(PUT_SCHEDULE(getResponse.scheduleData));
+          handleCloseAddScheduleForm();
       }
+      
     }else{
       setErrorScheduleCode((prev) => prev = true);
       setScheduleCodeHelperText((prev) => prev = "Schedule code doesn't exist!")

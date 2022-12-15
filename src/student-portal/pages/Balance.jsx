@@ -36,6 +36,21 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
 
 
+
+
+const currencyFormatter = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'PHP',
+});
+
+const usdPrice = {
+  type: 'number',
+  width: 130,
+  valueFormatter: ({ value }) => currencyFormatter.format(value),
+  cellClassName: 'font-tabular-nums',
+};
+
+
 export function Balance(){
 
      //UseNavigate
@@ -230,32 +245,41 @@ const columns = [
   {
     field: 'academicyear',
     headerName: 'Academic Year',
-    width: 250,
+    flex: 1,
+    minWidth: 150,
    editable: false,
   },
   {
     field: 'semester',
     headerName: 'Semester',
-    width: 250,
+    flex: 1,
+    minWidth: 150,
+    
    editable: false,
   },
   {
     field: 'totalfee',
     headerName: 'Total Fee',
-    width: 250,
+    flex: 1,
+    minWidth: 250,
+    ...usdPrice,
    editable: false,
   },
   
   {
     field: 'totalpaid',
     headerName: 'Total Paid',
-    width: 250,
+    flex: 1,
+    minWidth: 250,
+    ...usdPrice,
    editable: false,
   },
   {
     field: 'balance',
     headerName: 'Balance',
-    width: 250,
+    flex: 1,
+    minWidth: 250,
+    ...usdPrice,
    editable: false,
   },
 ];

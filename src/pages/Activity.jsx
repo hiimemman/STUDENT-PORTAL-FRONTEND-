@@ -17,13 +17,12 @@ import Avatar from "@mui/material/Avatar";
 import { SubjectHistory } from '../viewhistory/SubjectHistory';
 import { Typography } from '@mui/material';
 import { SubjectView } from '../viewprofile/SubjectView';
-import { FEE } from '../slice/PageSlice/PageSlice';
-import { FeeTable } from '../data-table/FeeTable';
+import { ACTIVITY } from '../slice/PageSlice/PageSlice';
 import { FeeHistory } from '../viewhistory/FeeHistory';
-import { StudentFeeTable } from '../data-table/StudentFeeTable';
-import { SalesReportTable } from '../data-table/SalesReportTable';
+import { AnnouncementTable } from '../data-table/AnnouncementTable';
+import { ActivityTable } from '../data-table/ActivityTable';
 
-export  function Fee() {
+export  function Activity() {
 //Selected Subject
 const subject = useSelector(state => state.subjectSelected.value)
 
@@ -53,7 +52,7 @@ const handleClose = (event, reason) => {
 useEffect(() =>{
 let isCancelled = false;
 
-dispatch(FEE())
+dispatch(ACTIVITY())
 return () =>{
   isCancelled = true;
 }
@@ -87,33 +86,27 @@ return () =>{
 } >
   
        <div className="flex flex-col justify-evenly" style={{width:'100%'}}>
-             <h2 className ='font-nunito font-bold'>Subjects</h2>
+             <h2 className ='font-nunito font-bold'>Activity Log</h2>
           
              <TabContext value={value}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' } }>
             <TabList onChange={handleChange} aria-label="lab API tabs example" >
-                <Tab label="FEE TABLE" value="1" />
-                <Tab label="STUDENT FEE" value="2" />
-                <Tab label="HISTORY" value="3" />
-
+                <Tab label="ACTIVITY TABLE" value="1" />
              </TabList>
             </Box>
         <TabPanel value="1"  style={{height: 'auto'}} sx ={{marginLeft:'-24px'}}>
         <Paper elevation={1} sx ={{width:'500 '}} className ="rounded-xl">
-          <FeeTable />
+            <ActivityTable />
           </Paper>
           </TabPanel>
-          <TabPanel value="2" sx ={{marginLeft:'-24px'}}>
+            <TabPanel value="2" sx ={{marginLeft:'-24px'}}>
             <Paper elevation={1} sx ={{width:'500 '}} className ="rounded-xl">
-              <StudentFeeTable />
+              <FeeHistory />
             </Paper>
             </TabPanel>
             <TabPanel value="3" sx ={{marginLeft:'-24px'}}>
-            <Paper elevation={1} sx ={{width:'500 '}} className ="rounded-xl">
-          <SalesReportTable />
-            </Paper>
+              <SubjectView />
             </TabPanel>
-            
           </TabContext>
        </div>
        <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>

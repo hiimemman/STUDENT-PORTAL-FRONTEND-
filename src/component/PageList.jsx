@@ -14,7 +14,7 @@ import GroupsIcon from '@mui/icons-material/Groups';
 import AnnouncementIcon from '@mui/icons-material/Announcement';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import HandymanIcon from '@mui/icons-material/Handyman';
-import {DASHBOARD, EMPLOYEE,PROFESSOR, STUDENT, SUBJECT, COURSE, FACULTY, SECTION, FEE,ACADEMICYEAR, ANNOUNCEMENT,PROFILE,STUDENTREGISTRATION, SEMESTER, NULL} from '../slice/PageSlice/PageSlice';
+import {DASHBOARD, EMPLOYEE,PROFESSOR, STUDENT, SUBJECT, COURSE, FACULTY, SECTION, FEE,ACADEMICYEAR, ANNOUNCEMENT,PROFILE,STUDENTREGISTRATION, SEMESTER,ACTIVITY, NULL} from '../slice/PageSlice/PageSlice';
 import EventNoteIcon from '@mui/icons-material/EventNote';
 import SchoolIcon from '@mui/icons-material/School';
 import BiotechIcon from '@mui/icons-material/Biotech';
@@ -37,7 +37,7 @@ import SendIcon from '@mui/icons-material/Send';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import StarBorder from '@mui/icons-material/StarBorder';
-
+import DescriptionIcon from '@mui/icons-material/Description';
 export function PageList(){
 
  //check current theme
@@ -605,9 +605,9 @@ return(
     </ListItem>
   </Tooltip>
   </Collapse>
-  <Tooltip title="Payments and reports" placement="right-start">
+  <Tooltip title="Payment" placement="right-start">
     <ListItem  disablePadding sx={{ display: 'block'}} className="transition ease-in-out delay-2 hover:bg-slate-300  duration-300">
-    <SelectedLine selected ={currentPage === 'payments / report'}  />
+    <SelectedLine selected ={currentPage === 'payment'}  />
       <ListItemButton onClick ={()=>{dispatch(FEE()); navigate('/employee/fee')}}  onMouseEnter = {handleDrawerOpen} 
         sx={{
           minHeight: 48,
@@ -615,7 +615,7 @@ return(
           px: 2.5,
         }}
       >
-          {currentPage === 'payments / report' ?  <ListItemIcon
+          {currentPage === 'payment' ?  <ListItemIcon
           sx={{
             minWidth: 0,
             mr: isOpen ? 3 : 'auto',
@@ -636,7 +636,7 @@ return(
       </ListItemIcon>}
 
         {/* <AttachMoneyIcon /> */}
-        { isOpen ?  <Typography className ='font-nunito text-lg' >Payments / Reports</Typography> : <p></p> }  
+        { isOpen ?  <Typography className ='font-nunito text-lg' >Payment</Typography> : <p></p> }  
       </ListItemButton>
     
     </ListItem>
@@ -676,6 +676,43 @@ return(
 
         {/* <AttachMoneyIcon /> */}
         { isOpen ?  <Typography className ='font-nunito text-lg' >Announcement</Typography> : <p></p> }  
+      </ListItemButton>
+    
+    </ListItem>
+  </Tooltip>
+
+  <Tooltip title="Activity Log" placement="right-start">
+    <ListItem  disablePadding sx={{ display: 'block'}} className="transition ease-in-out delay-2 hover:bg-slate-300  duration-300">
+    <SelectedLine selected ={currentPage === 'activity log'}  />
+      <ListItemButton onClick ={()=>{dispatch(ACTIVITY()); navigate('/employee/activity')}}  onMouseEnter = {handleDrawerOpen} 
+        sx={{
+          minHeight: 48,
+          justifyContent: isOpen ? 'initial' : 'center',
+          px: 2.5,
+        }}
+      >
+          {currentPage === 'activity log' ?  <ListItemIcon
+          sx={{
+            minWidth: 0,
+            mr: isOpen ? 3 : 'auto',
+            justifyContent: 'center',
+            
+          }}
+         style = {{color: selectTheme}}
+        >   <DescriptionIcon />
+        </ListItemIcon> :  
+      <ListItemIcon
+        sx={{
+          minWidth: 0,
+          mr: isOpen ? 3 : 'auto',
+          justifyContent: 'center',
+          
+        }}
+      >   <DescriptionIcon />
+      </ListItemIcon>}
+
+        {/* <AttachMoneyIcon /> */}
+        { isOpen ?  <Typography className ='font-nunito text-lg' >Activity Log</Typography> : <p></p> }  
       </ListItemButton>
     
     </ListItem>

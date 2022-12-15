@@ -59,7 +59,7 @@ useEffect(() =>{
         {props.icon}
       </div>
       <div>
-        <p class="mb-2 text-sm font-medium text-white">{props.title}</p>
+        <p class="mb-2 text-sm font-medium text-white">{props.title} Course Total GPA</p>
         {console.log(courseGpa)}
         {courseGpa > 1 ? ( <p class="text-2xl font-normal text-white">{courseGpa.toFixed(2)}</p>) : <p class="text-2xl font-normal text-white">Not available</p>}
        

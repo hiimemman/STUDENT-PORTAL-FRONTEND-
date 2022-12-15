@@ -36,7 +36,7 @@ export const pageState = createSlice({
             state.value = 'section'
         },
         FEE: (state) =>{
-            state.value = 'payments / report'
+            state.value = 'payment'
         },
         ACADEMICYEAR: (state) =>{
             state.value = 'academic year'
@@ -53,6 +53,10 @@ export const pageState = createSlice({
         HOMEPAGE: (state) =>{
             state.value = 'homepage'
         },
+
+        ACTIVITY: (state) =>{
+            state.value = 'activity log'
+        },
         
         NULL: (state) =>{
             state.value = initialState;
@@ -62,7 +66,7 @@ export const pageState = createSlice({
 
 
 // Action creators are generated for each case reducer function
-export const { DASHBOARD, EMPLOYEE, PROFESSOR, STUDENT, SUBJECT,FACULTY,COURSE,ACADEMICYEAR, SECTION,FEE, ANNOUNCEMENT, PROFILE,HOMEPAGE, STUDENTREGISTRATION, SEMESTER, NULL } = pageState.actions
+export const { DASHBOARD, EMPLOYEE, PROFESSOR, STUDENT, SUBJECT,FACULTY,COURSE,ACADEMICYEAR, SECTION,FEE, ANNOUNCEMENT, PROFILE,HOMEPAGE, STUDENTREGISTRATION, SEMESTER, ACTIVITY, NULL } = pageState.actions
 
 export default pageState.reducer
 

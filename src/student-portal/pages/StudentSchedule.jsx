@@ -139,13 +139,19 @@ export function StudentSchedule(){
         Assigned shedule, instructor and other information in the table may change without prior notice.
       </Alert>
       {console.log(rows.length)}
-      {rows.length < 0 ?  'No schedule found' : <DataGrid
+      {rows.length < 0 ?  'No schedule found' : studentSession.type === 'Regular' ? (<DataGrid
 components={{ LoadingOverlay: LinearProgress, Footer: CustomFooterStatusComponent}}
 loading = {loading}
         rows={rows}
         columns={columns}
        autoHeight
-      />}
+      />) : <DataGrid
+      components={{ LoadingOverlay: LinearProgress, Footer: CustomFooterStatusComponent}}
+      loading = {loading}
+              rows={rows}
+              columns={columnsIrreg}
+             autoHeight
+            />}
         
              </Paper>
 </div> 
@@ -189,6 +195,55 @@ const columns = [
       flex: 1,
       minWidth: 350,
       editable: false,
+    },
+    {
+      field: 'section_name',
+      headerName: 'Section',
+      flex: 1,
+  minWidth: 0,
+      editable: false,
+    },
+    {
+      field: 'professor_initial',
+      headerName: 'Professor',
+      flex: 1,
+  minWidth: 0,
+      editable: false,
+    },
+];
+
+
+const columnsIrreg = [
+  {
+    field: 'subject_name',
+    headerName: 'Subject code',
+    flex: 1,
+    minWidth: 0,
+   editable: false,
+  },
+  {
+    field: 'description',
+    headerName: 'Description',
+    flex: 1,
+    minWidth: 300,
+   editable: false,
+  },
+  
+    {
+      field: 'schedule_day',
+      headerName: 'Days',
+      flex: 1,
+      minWidth: 0, 
+      editable: false,
+      valueGetter: (params) => 'TBA'
+    },
+    {
+      field: 'schedule_time',
+      headerName: 'Time',
+      flex: 1,
+      minWidth: 350,
+      editable: false,
+      valueGetter: (params) => 'TBA'
     },
     {
       field: 'section_name',

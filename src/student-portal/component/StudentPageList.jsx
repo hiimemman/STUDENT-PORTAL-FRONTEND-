@@ -119,7 +119,7 @@ return(
     <Tooltip title="Pre registration" placement="right-start">
     <ListItem  disablePadding sx={{ display: 'block' }} className="transition ease-in-out delay-2 hover:bg-slate-300 duration-300">
     <Stack direction="row" justifyContent="center" alignItems="center" spacing={0}>
-<StudentSelectedLine selected ={currentPageStudent === 'pre_registration'}  />
+<StudentSelectedLine selected ={currentPageStudent === 'pre registration'}  />
       <ListItemButton onClick ={ async ()=> { dispatch(PRE_REGISTRATION()); navigate('/student-portal/pre-registration');} } onMouseEnter = {handleDrawerOpen} 
         sx={{
           minHeight: 48,
@@ -128,7 +128,7 @@ return(
         }}
       >
         
-        {currentPageStudent === 'pre_registration' ?  <ListItemIcon
+        {currentPageStudent === 'pre registration' ?  <ListItemIcon
           sx={{
             minWidth: 0,
             mr: isOpen ? 3 : 'auto',

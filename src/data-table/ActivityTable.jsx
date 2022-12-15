@@ -1,5 +1,3 @@
-
-import * as React from 'react';
 import { DataGrid, GridToolbarContainer, useGridApiContext, GridToolbarColumnsButton, GridToolbarFilterButton, GridToolbarDensitySelector, GridToolbarExport  } from '@mui/x-data-grid';
 import LinearProgress from '@mui/material/LinearProgress';
 import Select from '@mui/material/Select';
@@ -7,36 +5,19 @@ import PropTypes from 'prop-types';
 import Avatar from "@mui/material/Avatar";
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
-import { Alert, Chip, Dialog, DialogActions, DialogContent, DialogTitle, InputLabel, MenuItem, OutlinedInput, Snackbar, Typography, Box, Paper,Stack } from '@mui/material';
+import { Alert, Chip, Dialog, DialogActions, DialogContent, DialogTitle, InputLabel, MenuItem, OutlinedInput, Snackbar } from '@mui/material';
 import { useEffect, useState, useCallback, useRef } from 'react';
 import Button from '@mui/material/Button';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { useSelector, useDispatch } from 'react-redux';
 import { basedUrl } from '../base-url/based-url'
-import { PUT_REGISTRATION } from '../slice/FormSelectedRow/RegistrationSelected';
+import { PUT_STUDENT } from '../slice/FormSelectedRow/StudentSelected';
 import { imageBaseUrl } from '../base-url/based-url';
-import {ADDSTUDENT} from '../slice/AddFormSlice/AddStudentSlice/AddStudentSlice'
+import { ADDANNOUNCEMENT } from '../slice/AddFormSlice/AddAnnouncementSlice/AddAnnouncementSlice';
 import { AddStudent } from '../forms/AddStudent';
-import PendingIcon from '@mui/icons-material/Pending'; 
-import { useNavigate} from 'react-router-dom';
-import IconButton from '@mui/material/IconButton';
-import VisibilityIcon from '@mui/icons-material/Visibility';
+import { AddAnnouncement } from '../forms/AddAnnouncement';
 
-
-
-import ListItemText from '@mui/material/ListItemText';
-import ListItem from '@mui/material/ListItem';
-import List from '@mui/material/List';
-import Divider from '@mui/material/Divider';
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import Slide from '@mui/material/Slide';
-import Masonry from '@mui/lab/Masonry';
-
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
-
+ 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -49,31 +30,7 @@ const MenuProps = {
 };
 
 
-const columnsSched = [
-  { field: 'sched_code', headerName: 'Sched Code', flex: 1,
-  minWidth: 0,  },
-  { field: 'subject_name', headerName: 'Subject Name',  flex: 1,
-  minWidth: 0, },
-  { field: 'units', headerName: 'Units', flex: 1,
-  minWidth: 0, },
-  { field: 'schedule_day', headerName: 'Days',  flex: 1,
-  minWidth: 0, },
-  { field: 'schedule_time', headerName: 'Time',  flex: 1,
-  minWidth: 0,},
-  { field: 'semester', headerName: 'Semester',  flex: 1,
-  minWidth: 0,},
 
-];
-
-
-const columnsFee  = [
-  { field: 'name', headerName: 'Fee', flex: 1,
-  minWidth: 0,  },
-  { field: 'amount', headerName: 'Amount', flex: 1,
-  minWidth: 0,  },
-  { field: 'subtotal', headerName: 'Subtotal',  flex: 1,
-  minWidth: 0, },
-];
 
 const useFakeMutation = () => {
   return useCallback(
@@ -92,158 +49,30 @@ const useFakeMutation = () => {
 };
 
 function computeMutation(newRow, oldRow) {
+  if (newRow.image_url !== oldRow.image_url) {
+   
+    return `Image url from '${oldRow.image_url}' to '${newRow.image_url}'`;
+  }
+  if (newRow.title !== oldRow.title) {
+   
+    return `Title from '${oldRow.title}' to '${newRow.title}'`;
+  }
+  if (newRow.category !== oldRow.category) {
+   
+    return `Category from '${oldRow.category}' to '${newRow.category}'`;
+  }
+  if (newRow.message !== oldRow.message) {
+   
+    return `Message from '${oldRow.message}' to '${newRow.message}'`;
+  }
   if (newRow.status !== oldRow.status) {
    
     return `Status from '${oldRow.status}' to '${newRow.status}'`;
   }
-
-  if (newRow.contact !== oldRow.contact) {
-   
-    return `Contact from '${oldRow.contact}' to '${newRow.contact}'`;
-  }
   return null;
 }
 
-function LongMenu(props) {
-  const [open, setOpen] = useState(false);
-
-  const [data, setData ] = useState({});
-
- 
-
-  const getAllData = async () =>{
-
-
-    try{ 
-      const data = new FormData();
-      data.append('ID', props.id.id);
-      data.append('StudentNumber', props.id.student_id);
-      data.append('SectionAndSemester', props.id.sectionandsemester)
-      //online api
-        const sendRequest = await fetch(basedUrl+"/view-student-pre-registration.php",{
-          method: "POST",
-          body: data,
-      });
-        const getResponse = await sendRequest.json();
-    
-
-        if(getResponse.statusCode === 201){
-        
-        }else{
-          //if succesfully retrieve data
-          setData(data => data = [getResponse])
-        }
-    }catch(e){
-      console.error(e)
-    }
-  }
-
-useEffect(() =>{
-  console.log(data)
-return () =>{}
-},[data])
-  useEffect(() =>{
-
-    return () =>{
-
-    }
-  },[open])
-
-  const handleClickOpen = () => {
-    getAllData();
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  return (
-    <div>
-      <IconButton
-        aria-label="more"
-        id="long-button"
-        aria-controls={open ? 'long-menu' : undefined}
-        aria-expanded={open ? 'true' : undefined}
-        aria-haspopup="true"
-        onClick={handleClickOpen}
-      >
-        <VisibilityIcon />
-         
-      </IconButton>
-    
-      <Dialog
-        fullScreen
-        open={open}
-        onClose={handleClose}
-        TransitionComponent={Transition}
-      >
-        <AppBar sx={{ position: 'relative' }}>
-          <Toolbar>
-            <IconButton
-              edge="start"
-              color="inherit"
-              onClick={handleClose}
-              aria-label="close"
-            >
-              <CloseIcon />
-            </IconButton>
-            <Box sx={{ ml: 2, flex: 1 }} component="div">
-            <img src= {imageBaseUrl+"homepage-logo.svg"} alt="SVG as an image" style ={{maxWidth:"100px"}} component="div" />
-    
-            </Box>
-            <Button autoFocus color="inherit" onClick={handleClose}>
-              Close
-            </Button>
-          </Toolbar>
-        </AppBar>
-        {console.log(data)}
-       {data.length > 0 ? (<>
-       <Paper elevation={1} sx ={{width:'500 ', m: '1.5rem', p: '1.5rem'}} className ="rounded-xl">
-        <center>
-        <Typography variant ="h5" className="font-extrabold">STUDENT INFORMATION</Typography>
-        </center>
-       <Typography variant ="h6" className = "font-mono font-extrabold" >
-        Student number: {data[0].student[0].studentnumber}</Typography>
-        <Stack direction ="row" spacing ={1}>
-       <Typography variant ="h6" className = "font-mono font-extrabold">Full name: {data[0].student[0].firstname}</Typography>
-       <Typography variant ="h6" className = "font-mono font-extrabold">{data[0].student[0].middlename}</Typography>
-       <Typography variant ="h6" className = "font-mono font-extrabold">{data[0].student[0].lastname}</Typography>
-       </Stack>
-       <Typography variant ="h6" className = "font-mono font-extrabold">Birthday: {data[0].student[0].birthday}</Typography>
-       <Typography variant ="h6" className = "font-mono font-extrabold">Course: {data[0].student[0].course}</Typography>
-       <Typography variant ="h6" className = "font-mono font-extrabold">Email: {data[0].student[0].email}</Typography>
-       <Typography variant ="h6" className = "font-mono font-extrabold">Type: {data[0].student[0].type}</Typography>
-       <Typography variant ="h6" className = "font-mono font-extrabold">Contact number: {data[0].student[0].contact}</Typography>
-       
-       </Paper>
-       <Paper elevation={1} sx ={{width:'500 ', m: '1.5rem', p: '1.5rem'}} className ="rounded-xl">
-        <center>
-        <Typography variant = "h5" className='font-extrabold'>SCHEDULE</Typography>
-        </center>
-       <DataGrid autoHeight rows = {data[0].sched} columns={columnsSched}  
-    /> 
-       </Paper>
-      
-       <Paper elevation={1} sx ={{width:'500 ', m: '1.5rem', p: '1.5rem'}} className ="rounded-xl">
-       <center>
-        <Typography variant = "h5" className ="font-extrabold">FEE</Typography>
-        </center>
-       <DataGrid autoHeight rows = {data[0].fee} columns={columnsFee}  
-    /> 
-
-       </Paper>
-       </>
-) : null}
-      
-
-      </Dialog>
-       
-    </div>
-  );
-}
-
-export function StudentRegistrationTable() {  
+export function ActivityTable() {  
     //dispatch from redux
     const dispatch = useDispatch();
     const [rows, setRows] = useState([]);
@@ -260,7 +89,7 @@ export function StudentRegistrationTable() {
   const handleCloseSnackbar = () => setSnackbar(null);
 
     //Open add form
-const  formOpenType = useSelector(state => state.addFormStudent.value);
+const  formOpenType = useSelector(state => state.addFormAnnouncement.value);
 
 //Current User Session
 const user = useSelector(state => JSON.parse(state.user.session));
@@ -275,9 +104,8 @@ const [updatedCourse, setUpdateCourse] = useState('');
     try{ 
     
       //online api
-        const sendRequest = await fetch(basedUrl+"/student-registration-table.php");
+        const sendRequest = await fetch(basedUrl+"/get-all-history.php");
         const getResponse = await sendRequest.json();
-        console.log(getResponse)
         isLoading(false)
         if(getResponse.statusCode === 201){
         
@@ -285,21 +113,6 @@ const [updatedCourse, setUpdateCourse] = useState('');
           //if succesfully retrieve data
           isLoading(false)
           setRows((prev) => prev = getResponse);
-        }
-    }catch(e){
-      console.error(e)
-    }
-    try{ 
-      //online api
-        const sendRequest = await fetch(basedUrl+"/course-table.php");
-        const getResponse = await sendRequest.json();
-   
-        if(getResponse.statusCode === 201){
-        
-        }else{
-          //if succesfully retrieve data'
-           setCourses(getResponse);
-           
         }
     }catch(e){
       console.error(e)
@@ -360,9 +173,6 @@ EditSemester.propTypes = {
    */
   value: PropTypes.any,
 };
-
-
-
 
 const renderEditSemester = (params) => {
   return <EditSemester {...params} />;
@@ -447,14 +257,13 @@ function EditStatus(props) {
       value={value}
       onChange={handleChange}
 
-      sx={{ height: 1 , width: 250}}
+      sx={{ height: 1 , width: 260}}
 
       autoFocus
     >
       
-      <MenuItem value ={'confirmed'}><CheckIcon/>confirmed</MenuItem>
-      {/* <MenuItem value ={'pending'}><PendingIcon />pending</MenuItem>
-      <MenuItem value = {'decline'}><CloseIcon />decline</MenuItem> */}
+      <MenuItem value ={'active'}><CheckIcon/>active</MenuItem>
+      <MenuItem value = {'inactive'}><CloseIcon />inactive</MenuItem>
     </Select>
     </>
   
@@ -482,86 +291,88 @@ const renderEditStatus = (params) => {
 };
 //End of edit status via cell
 
+
+//Edit status via cell
+function EditCategory(props) {
+    const { id, value, field } = props;
+    const apiRef = useGridApiContext();
+    
+    const handleChange = async(event) =>{
+      
+      await apiRef.current.setEditCellValue({ id, field, value: event.target.value });
+        apiRef.current.stopCellEditMode({ id, field });
+    
+  }
   
+    return (
+      <>
+       <Select
+        value={value}
+        onChange={handleChange}
+  
+        sx={{ height: 1 , width: 260}}
+  
+        autoFocus
+      >
+        
+        <MenuItem value ={'Announcement'}>Announcement</MenuItem>
+        <MenuItem value = {'News and Updates'}>News and Updates</MenuItem>
+      </Select>
+      </>
+    
+    );
+  }
+  
+  EditCategory.propTypes = {
+    /**
+     * The column field of the cell that triggered the event.
+     */
+    field: PropTypes.string.isRequired,
+    /**
+     * The grid row id.
+     */
+    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    /**
+     * The cell value.
+     * If the column has `valueGetter`, use `params.row` to directly access the fields.
+     */
+    value: PropTypes.any,
+  };
+  
+  const renderEditCategory = (params) => {
+    return <EditCategory {...params} />;
+  };
+  //End of edit category via cell
  
-  const columns = [
+const columns = [
+  
     {
-        field: 'profile_url',
-        headerName: 'Avatar',
+        field: 'action',
+        headerName: 'Action',
         flex: 1,
         minWidth: 0,
-        maxWidth: 100,
-        renderCell: (params) => {
-          return (
-            <>
-              <Avatar src={imageBaseUrl+params.value} />
-            </>
-          );
-        }
-      },
-      {
-        field: 'fullName',
-        headerName: 'Full name',
-        description: 'This column has a value getter and is not sortable.',
-        sortable: true,
-        flex: 1,
-        minWidth: 0,
-        valueGetter: (params) =>
-          `${params.row.firstname || ''} ${params.row.middlename || ''} ${params.row.lastname || ''}`,
-      },
-    {
-            field: 'student_id',
-            headerName: 'Student Id',
-            flex: 1,
-            minWidth: 100,
-            type: "number",
-            editable: false,
+        editable: false,
     },
     {
-      field: 'academicyear',
-      headerName: 'Academic Year',
-      flex: 1,
-      minWidth: 0,
-      editable: false,
-},
+        field: 'category',
+        headerName: 'Category',
+        flex: 1,
+        minWidth: 0,
+        editable: false,
+    },
     {
-        field: 'sectionandsemester',
-        headerName: 'Section and Semester',
+        field: 'editor_position',
+        headerName: 'Position',
         flex: 1,
-        minWidth: 350,
+        minWidth: 0,
         editable: false,
-},
-
-      {
-        field: 'status',
-        headerName: 'Status',
-        renderEditCell: renderEditStatus,
-        flex: 1,
-        minWidth: 150,
-        maxWidth: 150,
-        editable: true,
-        renderCell: (cellValues) => {
-          return(
-          <>
-        {cellValues.value == "confirmed" ? (<Chip icon={<CheckIcon/>} label="confirmed  " color ="success" size = "small" variant = "outlined"/>) : null}
-        {cellValues.value == "pending" ? (<Chip icon={<PendingIcon/>} label="pending" color ="info" size = "small" variant = "outlined"/>) : null}
-        {cellValues.value == "decline" ? (<Chip icon={<CloseIcon/>} label="decline" color ="error" size = "small" variant = "outlined"/>) : null}
-          </>
-          );//end of return
-        }
-      },
-      {
-        field: 'id',
-        headerName: 'Actions',
-        width: 100,
+    },
+    {
+        field: 'editor_email',
+        headerName: 'Editor',
+           flex: 1,
+        minWidth: 0,
         editable: false,
-        renderCell: (cellValues) => {
-          return(
-          <>
-        <LongMenu id ={cellValues.row} />
-          </>
-          );//end of return
-        }
       },
   ];
 
@@ -592,23 +403,18 @@ const renderEditStatus = (params) => {
     try {
       // Make the HTTP request to save in the backend
       const dataUpdate = new FormData();
-      console.log(newRow['student_id'])
       dataUpdate.append('ID', newRow['id']);
+      dataUpdate.append('ImageUrl', newRow['image_url']);
+      dataUpdate.append('Title', newRow['title']);
+      dataUpdate.append('Category', newRow['category']);
+      dataUpdate.append('Message', newRow['message']);
       dataUpdate.append('Status', newRow['status']);
-      dataUpdate.append('Section', newRow['sectionandsemester']);
-      dataUpdate.append('StudentId', newRow['student_id']);
-      dataUpdate.append('Semester', newRow['semester']);
-      dataUpdate.append('AcademicYear', newRow['academicyear']);
       dataUpdate.append('Action', 'Update');
       dataUpdate.append('EditorPosition', user.position);
       dataUpdate.append('EditorEmail', user.email);
-      dataUpdate.append('Category', 'StudentRegistration');
+      dataUpdate.append('Category', 'Announcement');
       const response = await mutateRow(newRow);
-      for(var pair of dataUpdate.entries()) {
-        console.log(pair[0]+ ', '+ pair[1]); 
-    }
-
-      const sendRequest = await fetch(basedUrl+"/student-registration-edit.php",{
+      const sendRequest = await fetch(basedUrl+"/announcement-update.php",{
         method: "POST",
         body: dataUpdate,
     });
@@ -645,7 +451,7 @@ const renderEditStatus = (params) => {
     }
     const { newRow, oldRow } = promiseArguments;
     const mutation = computeMutation(newRow, oldRow);
-    console.log(rows)
+
     return (
       <Dialog
         maxWidth="xs"
@@ -670,15 +476,8 @@ const renderEditStatus = (params) => {
   return(
     <>
      {renderConfirmDialog()}
-    <DataGrid components={{ Toolbar: CustomToolbarProfessor, LoadingOverlay: LinearProgress, }} loading = {loading} rows = {rows} columns={columns}  experimentalFeatures={{ newEditingApi: true }} style ={{height:'500px'}}
-     processRowUpdate={processRowUpdate}
-     onSelectionModelChange={(ids) => {
-      const selectedIDs = new Set(ids);
-      const selectedRowData = rows.filter((row) =>
-        selectedIDs.has(row.id.toString())
-      );
-      dispatch(PUT_REGISTRATION(selectedRowData[0]))
-    }}
+    <DataGrid components={{ Toolbar: CustomToolbarProfessor, LoadingOverlay: LinearProgress, }} loading = {loading} rows = {rows} columns={columns}  
+    style ={{height:'500px'}}
     /> 
  {!!snackbar && (
         <Snackbar open onClose={handleCloseSnackbar} autoHideDuration={6000}>
@@ -692,7 +491,7 @@ const renderEditStatus = (params) => {
  //Toolbar
  function CustomToolbarProfessor() {
   //Open add form
-  const  formOpenType = useSelector(state => state.addFormStudent.value);
+  const  formOpenType = useSelector(state => state.addFormAnnouncement.value);
   //dispatch from redux
 const dispatch = useDispatch();
 const [faculty, setFaculty] = useState({data: []});
@@ -878,7 +677,6 @@ useEffect(() =>{
   },[formOpenType])
 
   return (<>
-
     <GridToolbarContainer>
       <GridToolbarColumnsButton />
       <GridToolbarFilterButton />

@@ -39,6 +39,7 @@ import { UpdateGradesPerSection } from './professor-portal/pages/UpdateGradesPer
 import { Semester } from './pages/Semester';
 import { StudentProfile } from './student-portal/pages/StudentProfile';
 import { ProfessorProfile } from './professor-portal/pages/ProfessorProfile';
+import { Activity } from './pages/Activity';
 
 
 
@@ -183,6 +184,7 @@ return (
         <Route path ="/employee/announcement" element = {<><Announcement /></>}></Route>
         <Route path ="/employee/semester" element = {<><Semester /></>}></Route>
         <Route path ="/employee/profile" element = {<><Profile /></>}></Route>
+        <Route path ="/employee/activity" element = {<><Activity /></>}></Route>
         <Route path = "/student-portal" element ={<><ParticlesBackground /><StudentSignIn /></>} />
 
         <Route path ="/student-portal/dashboard" element ={<><StudentDashboard /></>} />.

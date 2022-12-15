@@ -25,6 +25,13 @@ import { imageBaseUrl } from '../../base-url/based-url';
 import HomeIcon from '@mui/icons-material/Home';
 import { IconButton } from '@mui/material';
 
+
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
@@ -50,7 +57,85 @@ const dispatch = useDispatch();
   //snackbar status
   const [loginStatus, setStatus] = useState("failed");// default is failed for login atttempt alert
  
+  
+  const [openForgotPassword, setOpenForgotPassword] = useState(false);
 
+  const [errorForgotEmail, setErrorForgotEmail] = useState(false);
+
+  
+  const [forgotEmailText, setForgotEmailText] = useState('');
+
+  const [forgotEmail, setForgotEmail] = useState(null);
+  
+  const [resetStep, setResetStep] = useState(0);
+
+  const [resetCode, setResetCode] = useState('000000');
+
+  const handleSendCode = async (event) =>{
+    event.preventDefault();
+    let min = 100000;
+    let max = 999999;
+    let code = Math.round(Math.random() * (max - min) + min);
+    console.log(event.currentTarget)
+    const data = new FormData(event.currentTarget);
+    data.append('ResetCode', code);
+    setResetCode(resetCode => resetCode = code);
+    for (var pair of data.entries()) {
+      console.log(pair[0]+ ' - ' + pair[1]); 
+      try{
+        const sendRequest = await fetch("https://my-aisat-portal.herokuapp.com/employee/backend/employee-send-code-email.php",{
+          method: "POST",
+          body: data,
+      });
+  
+      const getResponse = await sendRequest.json();
+      console.log(getResponse.statusCode)
+      if(getResponse.statusCode === 200){
+      setResetStep(resetStep => resetStep = resetStep +1);
+      }else{
+        
+      }
+      }catch(e){
+      
+      }  
+      
+  }
+  }
+
+  const handleChangeEmail = async (event) =>{
+    if((event.target.value).toString().length <= 0 || !validator.isEmail(event.target.value)){
+      setErrorForgotEmail(errorForgotEmail => errorForgotEmail = true);
+      setForgotEmailText(forgotEmailText => forgotEmailText = 'Invalid Email address')
+      // setValidEmail(false);
+      // setEmailHelperText('Invalid Email');
+    }else{
+      
+      try{
+        const data = new FormData();
+        data.append('Email', event.target.value);
+        const sendRequest = await fetch("https://my-aisat-portal.herokuapp.com/employee/backend/exist-employee-email.php",{
+          method: "POST",
+          body: data,
+      });
+  
+      const getResponse = await sendRequest.json();
+      console.log(getResponse.statusCode)
+      if(getResponse.statusCode === 200){
+        setErrorForgotEmail(errorForgotEmail => errorForgotEmail = true);
+        setForgotEmailText(forgotEmailText => forgotEmailText = 'Email does not exist')
+        // setValidEmail(true);
+      }else{
+        setErrorForgotEmail(errorForgotEmail => errorForgotEmail = false);
+        setForgotEmailText(forgotEmailText => forgotEmailText = '')
+        // setValidEmail(false);
+        // setEmailHelperText('Email already exist!');
+      }
+      }catch(e){
+        setErrorForgotEmail(errorForgotEmail => errorForgotEmail = true);
+        setForgotEmailText(forgotEmailText => forgotEmailText = 'There was a problem with the server')
+      }  
+    }
+  }
   //Message of snackbar
   const [loginMessage, setMessage ] = useState("Try again");// Default message of alert
   const handleSubmit = async (event) => {
@@ -129,6 +214,15 @@ const dispatch = useDispatch();
 
 
  
+  const handleClickOpenForgot = () => {
+    setOpenForgotPassword(true);
+  };
+
+  const handleCloseForgot = () => {
+    setOpenForgotPassword(false);
+  };
+
+
 
 
     return(
@@ -221,9 +315,9 @@ const dispatch = useDispatch();
               <Grid container>
                 <Grid item xs>
 
-                  {/* <Link href="#" variant="body2">
-                    Forgot password?
-                  </Link> */}
+                <Button variant="text" onClick ={handleClickOpenForgot}>
+                  Forgot password?
+                  </Button>
                 </Grid>
                 {/* <Grid item>
                   <Link href="#" variant="body2">
@@ -234,6 +328,38 @@ const dispatch = useDispatch();
             </Box>
              </Box>
             </Paper>
+            <Dialog open={openForgotPassword} onClose={handleCloseForgot} >
+              {resetStep === 0 ? ( <Box component="form" onSubmit={handleSendCode}>
+        <DialogTitle>Recover password</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+          Enter your email address here to recover your account.
+          </DialogContentText>
+          <TextField
+            autoFocus
+            required
+            error = {errorForgotEmail}
+            margin="dense"
+            id="Email"
+            name ="Email"
+            label="Email Address"
+            type="email"
+            fullWidth
+            variant="standard"
+            onChange = {handleChangeEmail}
+            helperText = {forgotEmailText}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseForgot}>Cancel</Button>
+          <Button type ="submit" disabled ={errorForgotEmail} variant ="contained" color ="success" >Send Code</Button>
+        </DialogActions>
+             </Box>) : null}
+             
+             {resetStep === 1 ? ( <>
+             </>) : null}
+
+      </Dialog>
           </div>
           {/* Snackbar */}
             <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>

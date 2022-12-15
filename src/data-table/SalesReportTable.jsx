@@ -1,11 +1,11 @@
-import { DataGrid, GridToolbarContainer, useGridApiContext, GridToolbarColumnsButton, GridToolbarFilterButton, GridToolbarDensitySelector, GridToolbarExport  } from '@mui/x-data-grid';
+import { DataGrid, GridToolbarContainer, useGridApiContext, GridToolbarColumnsButton, GridToolbarFilterButton, GridToolbarDensitySelector, GridToolbarExport,GridFooterContainer, GridFooter  } from '@mui/x-data-grid';
 import LinearProgress from '@mui/material/LinearProgress';
 import Select from '@mui/material/Select';
 import PropTypes from 'prop-types';
 import Avatar from "@mui/material/Avatar";
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
-import { Alert, Chip, Dialog, DialogActions, DialogContent, DialogTitle, InputLabel, MenuItem, OutlinedInput, Snackbar } from '@mui/material';
+import { Alert, Chip, Dialog, DialogActions, DialogContent, DialogTitle, InputLabel, MenuItem, OutlinedInput, Snackbar,  Typography } from '@mui/material';
 import { useEffect, useState, useCallback, useRef } from 'react';
 import Button from '@mui/material/Button';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
@@ -20,6 +20,17 @@ import { PUT_SUBJECT } from '../slice/FormSelectedRow/SubjectSelected';
 import { NoRowBackground } from '../component/NoRowBackground';
 import { AddFee } from '../forms/AddFee';
 
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
+
 
 const currencyFormatter = new Intl.NumberFormat('en-US', {
   style: 'currency',
@@ -31,20 +42,6 @@ const usdPrice = {
   width: 130,
   valueFormatter: ({ value }) => currencyFormatter.format(value),
   cellClassName: 'font-tabular-nums',
-};
-
-
-
-
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
 };
 
 
@@ -82,7 +79,7 @@ function computeMutation(newRow, oldRow) {
   return null;
 }
 
-export function FeeTable() {  
+export function SalesReportTable() {  
     //dispatch from redux
     const dispatch = useDispatch();
     const [rows, setRows] = useState([]);
@@ -108,6 +105,8 @@ const [courses, setCourses] = useState(null);
 
 const [updatedCourse, setUpdateCourse] = useState('');
 
+const [totalPayment, setTotalPayment] = useState(0);
+
   // Get all users api
   useEffect( () => {
    const getAllData = async () =>{
@@ -115,7 +114,7 @@ const [updatedCourse, setUpdateCourse] = useState('');
       try{ 
       
         //online api
-          const sendRequest = await fetch(basedUrl+"/fee-table.php");
+          const sendRequest = await fetch(basedUrl+"/get-all-payment-history.php");
           const getResponse = await sendRequest.json();
           isLoading(false)
           if(getResponse.statusCode === 201){
@@ -123,7 +122,20 @@ const [updatedCourse, setUpdateCourse] = useState('');
           }else{
             //if succesfully retrieve data
             isLoading(false)
-            setRows(getResponse);
+      
+        
+           let content = getResponse.map((res) => {
+            console.log(res.after_edit)
+            let con = JSON.parse(res.after_edit);
+            
+            console.log(res.after_edit)
+            return con;
+           })
+           setRows(rows => rows = content)
+
+        //    console.log(content)
+        //    setRows(rows => rows = [...rows , res.after_edit] })
+            
           }
       }catch(e){
         console.error(e)
@@ -137,7 +149,7 @@ const [updatedCourse, setUpdateCourse] = useState('');
           
           }else{
             //if succesfully retrieve data'
-            console.log(getResponse)
+       
              setCourses(getResponse);
              
           }
@@ -148,7 +160,23 @@ const [updatedCourse, setUpdateCourse] = useState('');
     getAllData();
   }, [formOpenType]);
  
+useEffect(() =>{
 
+  let totalpaymenttable = 0;
+
+  rows.map((row) => {totalpaymenttable = parseFloat(totalpaymenttable) + parseFloat(row.payment);
+  })
+
+  setTotalPayment(totalPayment => totalPayment = totalpaymenttable);
+
+return () =>{
+  
+}
+},[rows])
+
+useEffect(() =>{
+return () => {}
+},[totalPayment])
 
    //Edit semester via cell
 function EditSemester(props) {
@@ -312,11 +340,11 @@ const renderEditStatus = (params) => {
  
   const columns = [
     {
-        field: 'name',
-        headerName: 'Name',
+        field: 'studentnumber',
+        headerName: 'Student Number',
         flex: 1,
         minWidth: 0,
-        editable: true,
+        editable: false,
       },
     //   {
     //     field: 'type',
@@ -325,31 +353,39 @@ const renderEditStatus = (params) => {
     //     editable: false,
     //   },
       {
-        field: 'amount',
-        headerName: 'Amount',
+        field: 'payment',
+        headerName: 'Payment',
         flex: 1,
         minWidth: 0,
         ...usdPrice,
-        editable: true,
+        editable: false,
       },
       {
-        field: 'status',
-        headerName: 'Status',
-        renderEditCell: renderEditStatus,
+        field: 'added_at',
+        headerName: 'Date paid',
         flex: 1,
         minWidth: 0,
-        
-        editable: true,
-        renderCell: (cellValues) => {
-          return(
-          <>
-        {cellValues.value == "active" ? (<Chip icon={<CheckIcon/>} label="active  " color ="success" size = "small" variant = "outlined"/>) : (<Chip icon={<CloseIcon/>} label="inactive" color ="error" size = "small" variant = "outlined"/>)}
-
-          </>
-          );//end of return
-        }
+        type: 'date',
+        editable: false,
       },
+      // {
+      //   field: 'status',
+      //   headerName: 'Status',
+      //   renderEditCell: renderEditStatus,
+      //   flex: 1,
+      //   minWidth: 0,
+      //   editable: true,
+      //   renderCell: (cellValues) => {
+      //     return(
+      //     <>
+      //   {cellValues.value == "active" ? (<Chip icon={<CheckIcon/>} label="active  " color ="success" size = "small" variant = "outlined"/>) : (<Chip icon={<CloseIcon/>} label="inactive" color ="error" size = "small" variant = "outlined"/>)}
+
+      //     </>
+      //     );//end of return
+      //   }
+      // },
   ];
+
 
   const processRowUpdate = useCallback(
     (newRow, oldRow) =>
@@ -448,11 +484,13 @@ const renderEditStatus = (params) => {
   return(
     <>
      {renderConfirmDialog()}
-    <DataGrid components={{ Toolbar: CustomToolbarSubject, LoadingOverlay: LinearProgress,NoResultsOverlay: () => (
+     
+    <DataGrid  components={{ Toolbar: CustomToolbarSubject, Footer: CustomFooter, LoadingOverlay: LinearProgress,NoResultsOverlay: () => (
       <Stack height="100%" alignItems="center" justifyContent="center">
         <NoRowBackground  />
       </Stack>
-    ), }} loading = {loading} rows = {rows} columns={columns}  experimentalFeatures={{ newEditingApi: true }} style ={{height:'500px'}}
+    ), }} loading = {loading} rows = {rows} columns={columns}  style ={{height:'500px'}}
+    componentsProps = {{footer : {CustomFooter : '1231'}}}
      processRowUpdate={processRowUpdate}
     //  onSelectionModelChange={(ids) => {
     //   const selectedIDs = new Set(ids);
@@ -461,7 +499,9 @@ const renderEditStatus = (params) => {
     //   );
     //   dispatch(PUT_SUBJECT(selectedRowData[0]))
     // }}
+   
     /> 
+    
  {!!snackbar && (
         <Snackbar open onClose={handleCloseSnackbar} autoHideDuration={6000}>
           <Alert {...snackbar} onClose={handleCloseSnackbar} />
@@ -481,7 +521,7 @@ const [courses, setCourses] = useState({data: []});
 const [updatedCourse, setUpdatedCourse] = useState(false);
 //  Get all users api
  useEffect( () => {
-  console.log('UseEffect called')
+
   const getAllData = async () =>{
      try{ 
        //online api
@@ -505,7 +545,7 @@ const [updatedCourse, setUpdatedCourse] = useState(false);
 
  useEffect(() => {
   if(courses.data.length > 0){
-    console.log("Courses data = "+JSON.stringify(courses));
+   
     setUpdatedCourse(true)
   }
  }, [formOpenType, courses]);
@@ -514,13 +554,27 @@ const [updatedCourse, setUpdatedCourse] = useState(false);
   return (<>
 
     <GridToolbarContainer>
-       <Button variant="text" color ="success" startIcon = {<PersonAddIcon />} onClick = {() => dispatch(ADDFEE())}> Add</Button>
-      <GridToolbarColumnsButton />
+       <GridToolbarColumnsButton />
       <GridToolbarFilterButton />
       <GridToolbarDensitySelector />
       <GridToolbarExport />
     </GridToolbarContainer>
-    <AddFee open = {formOpenType === 'fee'} />
+    
   </>
+  );
+}
+
+
+function CustomFooter (props) {
+
+  return (
+    <GridFooterContainer>
+      {/* Add what you want here */}
+
+      <Typography variant ="h6" style ={{marginLeft: '.5rem'}}>Total Amount: ₱ {props.CustomFooter}</Typography>
+      {/* <GridFooter sx={{
+        border: 'none', // To delete double border.
+        }} /> */}
+    </GridFooterContainer>
   );
 }

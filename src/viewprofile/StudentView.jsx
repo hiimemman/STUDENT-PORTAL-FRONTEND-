@@ -275,6 +275,7 @@ const OverviewPanel = () =>(
           <Typography variant="overline" noWrap sx={{ fontSize: '15px', width: '15rem' }}>Course:  </Typography>
           <FormControl fullWidth variant="standard" sx={{ fontSize: '15px', width: '50rem' }}>
             <Select
+            disabled
               required
               id="Course"
               name="Course"
@@ -375,7 +376,7 @@ const handleChangeTab = (event, newValue) =>{
           
             <TabList onChange = {handleChangeTab} aria-label="lab API tabs example" className='mt-2 ml-2'>
                 <Tab label="OVERVIEW" value = {1} />
-                <Tab label="SCHEDULES" value= {2} />
+                {/* <Tab label="SCHEDULES" value= {2} /> */}
                 
              </TabList>
             
@@ -388,9 +389,9 @@ const handleChangeTab = (event, newValue) =>{
                 <OverviewPanel />
              </TabPanel>
              
-             <TabPanel value  = {2} sx ={{p:0, marginTop:'1.5rem'}}>
+             {/* <TabPanel value  = {2} sx ={{p:0, marginTop:'1.5rem'}}>
                <SchedulePanel />
-             </TabPanel>
+             </TabPanel> */}
       </TabContext>        
       <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
              <Alert onClose={handleClose} severity= {loginStatus} sx={{ width: '100%' }}>
