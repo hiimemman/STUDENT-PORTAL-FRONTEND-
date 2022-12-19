@@ -6,6 +6,20 @@ import { useSelector, useDispatch } from 'react-redux';
 import { basedUrl } from '../../base-url/based-url';
 import {PUT_FEE, PUT_TOTAL} from '../../slice/AddFeeSlice/AddFeeSlice'
 
+
+const currencyFormatter = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'PHP',
+});
+
+const usdPrice = {
+  type: 'number',
+  width: 130,
+  valueFormatter: ({ value }) => currencyFormatter.format(value),
+  cellClassName: 'font-tabular-nums',
+};
+
+
 const columns = [
     {
       field: 'name',
@@ -19,6 +33,8 @@ const columns = [
         headerName: 'Amount',
         flex: 1,
         minWidth: 0,
+        ...usdPrice,
+
         editable: false,
     },
     {
@@ -26,6 +42,7 @@ const columns = [
         headerName: 'Subtotal',
         flex: 1,
         minWidth: 0,
+        ...usdPrice,
         editable: false,
     },
   ];
@@ -41,6 +58,7 @@ const columns = [
         field: 'amount',
         headerName: 'Amount',
         width: 384,
+        ...usdPrice,
         editable: false,
     },
   ];

@@ -39,7 +39,9 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
 import { gridColumnsTotalWidthSelector } from '@mui/x-data-grid';
-
+import { FunctionalComponent } from './FunctionalComponent';
+import moment from 'moment';
+import styles from '../component/styles/styles.css'
 
 export function GradesPerSection(){
     const {studentnumber, sectionandsemester} = useParams();
@@ -129,12 +131,17 @@ export function GradesPerSection(){
               setRows(getResponse.content);
               let gpacontent = 0;
               let sum = 0;
-      
+              let countZero = 0;
               getResponse.content.map(grades =>{
-                sum = parseFloat(sum) + parseFloat(grades.grade)
+                if(parseFloat(grades.grade) > 0){
+                  sum = parseFloat(sum) + parseFloat(grades.grade)
+                }else{
+                  countZero = parseFloat(countZero) + 1;
+                }
+               
                
               })
-              gpacontent = parseFloat(sum) / getResponse.content.length;
+              gpacontent = parseFloat(sum) / (getResponse.content.length - parseFloat(countZero));
               setGpa((gpa) => gpa = gpacontent);
             }
         }catch(e){
@@ -192,11 +199,116 @@ function handleClick(event) {
     return <Slide direction="up" ref={ref} {...props} />;
   });
 
-const gradesClick = (event) =>{
 
+  const currentTime = moment();
+const contentOfPrint = () =>{
+  return (
+    <>
+    <div className="flex flex-col justify-evenly" style={{width:'100%'}}>
+
+               <Paper elevation={1} sx ={{width:'500 ', p: '1.5rem', m:'1rem'}} className ="rounded-xl">
+                
+               
+               <Stack direction={'row'} spacing = {2}   style={{ justifyContent: 'space-between', alignItems: 'flex-start' }}>
+               
+               <Typography variant ="h6">{studentSession.firstname+" "+studentSession.middlename+" "+studentSession.lastname}</Typography>
+               
+               <Typography variant ="h6" >{currentTime.format('MMMM Do YYYY')}</Typography>
+               </Stack>
+
+               <Stack direction={'row'} spacing = {2}   style={{ justifyContent: 'space-between', alignItems: 'flex-start' }}>
+               
+               <Typography variant ="h6">{studentSession.studentnumber}</Typography>
+               
+               <Typography variant ="h6" >{sectionandsemester}</Typography>
+               </Stack>
+               <center>
+                <Typography variant ="h4" style ={{fontWeight: '600',fontFamily: 'Times New Roman' }}>CERTIFICATE OF GRADES</Typography>
+                </center>
+             <DataGrid 
+    components={{  Footer: CustomFooter,}} loading = {loading} rows = {rows} columns={columns}
+   
+    autoHeight style ={{marginTop: '1.5rem'}}
+    componentsProps = {{footer : {CustomFooter : gpa.toFixed(2)}}}
+    /> 
+ 
+             </Paper>
+             </div> 
+             <div style={{ pageBreakAfter: "always" }}> 
+             <Divider className ="m-4" />
+             </div>
+             <div style={{ pageBreakAfter: "always" }}> 
+           
+             <Paper elevation={1} sx ={{width:'500 ', p: '1.5rem', m:'1rem'}} className ="rounded-xl">
+             <Typography   variant = "h6">Legends</Typography>
+    <Stack direction ="row" divider={<Divider orientation="vertical" flexItem />} spacing = {6}>
+    
+    
+    
+    <Stack >
+    <Stack spacing = {2}>
+          <Typography variant ="body" className ="mt-4 font-serif ">1.00 - Excellent = 96.72 - 100</Typography>
+        </Stack> 
+        <Stack spacing = {2}>
+          <Typography variant ="body" className ="mt-4 font-serif">1.25 - Superior = 93.38 - 96.71</Typography>
+        </Stack>
+        
+        <Stack spacing = {2}>
+          <Typography variant ="body" className ="mt-4 font-serif">1.50 - Very Good = 90.04 - 93.37</Typography>
+        </Stack>
+    
+        <Stack spacing = {2}>
+          <Typography variant ="body" className ="mt-4 font-serif">1.75 - Good = 86.70 - 90.03</Typography>
+        </Stack>
+    </Stack>
+    
+    <Stack spacing = {2}>
+    
+        <Stack spacing = {2}>
+          <Typography variant ="body" className ="mt-4 font-serif">2.00 - Very Satisfactory = 83.36 - 86.69</Typography>
+        </Stack>
+    
+        <Stack spacing = {2}>
+          <Typography variant ="body" className ="mt-4 font-serif">2.25 - Satisfactory = 80.02 - 83.35</Typography>
+        </Stack>
+    
+        <Stack spacing = {2}>
+          <Typography variant ="body" className ="mt-4 font-serif">2.50 - Moderately Satisfactory = 76.68 - 80.01</Typography>
+        </Stack>
+    
+     
+        </Stack>   
+      
+    <Stack >
+      
+    <Stack spacing = {2}>
+          <Typography variant ="body" className ="mt-4 font-serif">2.75 - Fair = 73.34 - 76.67</Typography>
+        </Stack>
+    
+        <Stack spacing = {2}>
+          <Typography variant ="body" className ="mt-4 font-serif">3.00 - Passed = 70.00 - 73.33</Typography>
+        </Stack>
+    
+        <Stack spacing = {2}>
+          <Typography variant ="body" className ="mt-4 font-serif">4.00 - Conditional Failure = 66.77 - 69.99</Typography>
+        </Stack>
+        <Stack spacing = {2}>
+          <Typography variant ="body" className ="mt-4 font-serif">5.00 - Failed = 66.77</Typography>
+        </Stack>
+    </Stack>
+    
+    </Stack>
+    
+              </Paper>
+              <center style ={{margin:'.5rem'}}>
+      <Typography variant ="body">***Nothing Follows***</Typography>
+    </center>
+              </div>
+    
+  </>
+  )
 }
-console.log(sectionandsemester)
-    return(
+    return( 
         <>
         {studentSession !== null ?  (
         <Box sx={{ display: 'flex' }}>
@@ -211,34 +323,20 @@ console.log(sectionandsemester)
 <div className="flex flex-col justify-evenly" style={{width:'100%'}}>
              <h2 className ='font-nunito font-bold'>Grades</h2>
              <Paper elevation={1} sx ={{width:'500 ', p: '1.5rem', m:'1rem'}} className ="rounded-xl">
-             <Typography variant ="h6">{sectionandsemester}</Typography>
-               {/* <Breadcrumbs
-        separator={<NavigateNextIcon fontSize="small" />}
-        aria-label="breadcrumb"
-        color="text.primary"
-      >
-        <Link underline="hover" key="1" color="inherit" href="/" onClick={() => navigate("/student-portal/grades", {replace: true})}>
-      Grades
-    </Link>,
-    <Link
-      underline="hover"
-      key="2"
-      color="inherit"
-      href="/material-ui/getting-started/installation/"
-      onClick={handleClick}
-    >
-      Core
-    </Link>,
-    <Typography key="3" color="text.primary">
-      Breadcrumb
-    </Typography>, 
-      </Breadcrumbs>
+          
+             <FunctionalComponent content = {contentOfPrint()}/>
 
-*/} <DataGrid 
+       {/* <DataGrid 
 components={{ LoadingOverlay: LinearProgress, Toolbar: CustomToolbarSubject, Footer: CustomFooter,}} loading = {loading} rows = {rows} columns={columns} autoHeight style ={{marginTop: '1.5rem'}}
 componentsProps = {{footer : {CustomFooter : gpa.toFixed(2)}}}
-/> 
-      
+/>  */}
+
+
+ 
+
+
+
+{/* 
       <Divider  className ="m-4"/>
       <Typography   variant = "h6">Legends</Typography>
 <Stack direction ="row" divider={<Divider orientation="vertical" flexItem />} spacing = {6}>
@@ -299,9 +397,9 @@ componentsProps = {{footer : {CustomFooter : gpa.toFixed(2)}}}
 </Stack>
 
 <Stack>
-  </Stack>      
+  </Stack>       */}
 
-
+  
     
            </Paper>
 </div> 
@@ -334,6 +432,13 @@ const columns = [
         headerName: 'Grade',
         width: 350,
         editable: false,
+        valueGetter: (params) => {
+          if(parseFloat(params.value) <= 0){
+            return 'No grades'
+          }else{
+            return params.value
+          }
+        }
       },
 ];
 
@@ -396,7 +501,6 @@ const [updatedCourse, setUpdatedCourse] = useState(false);
   }}
   />
     </GridToolbarContainer>
-
   </>
   );
 }

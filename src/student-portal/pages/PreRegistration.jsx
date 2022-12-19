@@ -26,6 +26,19 @@ import { PUT_ALL_SCHEDULE, RESET_SCHEDULE } from '../../slice/AddSchedule/AddSch
 import { PUT_STUDENT } from '../../slice/StudentSession/studentSession';
 import { NightShelter } from '@mui/icons-material';
 
+const currencyFormatter = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'PHP',
+});
+
+const usdPrice = {
+  type: 'number',
+  width: 130,
+  valueFormatter: ({ value }) => currencyFormatter.format(value),
+  cellClassName: 'font-tabular-nums',
+};
+
+
 export function PreRegistration(){
 const dispatch = useDispatch();
      //UseNavigate
@@ -302,7 +315,7 @@ const getAllScheduleOfSection = async () =>{
           </Select>
       </FormControl>
      {/* < ScheduleTransferList /> */}
-{hasChangedSection === true ?  <SchedulesChoicesTable rows = {left.data} /> : null}
+{hasChangedSection === true ?  <SchedulesChoicesTable rows = {left.data} type ={studentSession.type} /> : null}
     </Stack>
         
             </>
@@ -658,9 +671,7 @@ console.log(currentAcademicYear)
                   <Typography variant ={'h5'}>Account Summary</Typography>
                   <Typography variant ={'h6'}>Schedule</Typography>
                   <Box sx ={{p:0}}>
-                  <DataGrid
-        components={{  LoadingOverlay: LinearProgress,}} rows={schedule} columns={schedColumns} autoHeight pageSize={5} 
-      />
+                  {JSON.stringify(schedule) !== {} ? studentSession.type === 'Regular' ? <RegularScheduleSelectionTable /> :  <ScheduleSelectionTable /> : null}
                   </Box>
                   <Typography variant ={'h6'}>Fee</Typography>
                   <Box sx ={{p:0}}>
@@ -747,17 +758,22 @@ components={{ LoadingOverlay: LinearProgress, Footer: CustomFooterStatusComponen
     )
 }
 
+
+
 const totalColumns = [
   {
     field: 'description',
     headerName: 'Description',
-    width: 390,
+    flex: 1,
+  minWidth: 0,
     editable: false,
   },
   {
       field: 'amount',
       headerName: 'Amount',
-      width: 384,
+      flex: 1,
+      minWidth: 0,
+      ...usdPrice,
       editable: false,
   },
 ];
@@ -788,19 +804,23 @@ const feeColumns = [
   {
     field: 'name',
     headerName: 'Fee name',
-    width: 390,
+    flex: 1,
+    minWidth: 0,
     editable: false,
   },
   {
       field: 'amount',
       headerName: 'Amount',
-      width: 384,
-      editable: false,
+      ...usdPrice,
+      flex: 1,
+  minWidth: 0,
   },
   {
       field: 'subtotal',
       headerName: 'Subtotal',
-      width: 390,
+      flex: 1,
+      minWidth: 0,
+      ...usdPrice,
       editable: false,
   },
 ];
