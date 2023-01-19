@@ -42,6 +42,7 @@ import { gridColumnsTotalWidthSelector } from '@mui/x-data-grid';
 import { FunctionalComponent } from './FunctionalComponent';
 import moment from 'moment';
 import styles from '../component/styles/styles.css'
+import imageLogo from '/aisat-original-logo.png';
 
 export function GradesPerSection(){
     const {studentnumber, sectionandsemester} = useParams();
@@ -206,74 +207,112 @@ const contentOfPrint = () =>{
     <>
     <div className="flex flex-col justify-evenly" style={{width:'100%'}}>
 
-               <Paper elevation={1} sx ={{width:'500 ', p: '1.5rem', m:'1rem'}} className ="rounded-xl">
-                
-               
+               <Paper elevation={0} sx ={{width:'500 ', p: '1.5rem', m:'1rem'}} className ="rounded-xl">
+      {rows.length > 0 ? (   <Box>
+
+        <center>
+          <Stack direction ="row" spacing ={2} style ={{display: 'flex', justifyContent: 'center'}}>
+          <img src = {imageLogo} style ={{maxWidth: '85px', maxHeight: '85px'}}alt ="logo not found" />
+          <Stack direction ="column" spacing = {0} >
+          <Typography variant ="h4" style ={{fontWeight: '600',fontFamily: 'Times New Roman', marginTop: '1.5rem'}}>ASIAN INSTITUTE OF SCIENCE AND TECHNOLOGY</Typography>
+        
+          <Typography variant ="h6" style ={{fontWeight: '600',fontFamily: 'Times New Roman', marginBottom: '1.5rem'}}>AISAT Bldg., Emilio Aguinaldo Highway, City of Dasmariñas, Cavite
+</Typography>
+          </Stack>
+       
+       
+          </Stack>
+         
+        </center>
+
+                 
                <Stack direction={'row'} spacing = {2}   style={{ justifyContent: 'space-between', alignItems: 'flex-start' }}>
-               
-               <Typography variant ="h6">{studentSession.firstname+" "+studentSession.middlename+" "+studentSession.lastname}</Typography>
-               
-               <Typography variant ="h6" >{currentTime.format('MMMM Do YYYY')}</Typography>
+               <Stack direction={'row'} spacing ={1}>
+                <Typography variant ="h8" style ={{color: '#292524'}}>Student Name: </Typography>
+               <Typography variant ="body" style ={{color: '#44403c'}} >{studentSession.firstname+" "+studentSession.middlename+" "+studentSession.lastname}</Typography>
+               </Stack>
+
+               <Stack direction={'row'} spacing ={1}>
+                <Typography variant ="h8" style ={{color: '#292524'}}>Academic year and Semester: </Typography>
+                <Typography variant ="body" style ={{color: '#44403c'}}  >{rows[0].academic_year+" "+rows[0].semester}</Typography>
+                </Stack>
+
+             
+              
                </Stack>
 
                <Stack direction={'row'} spacing = {2}   style={{ justifyContent: 'space-between', alignItems: 'flex-start' }}>
+               <Stack direction={'row'} spacing ={1}>
+                <Typography variant ="h8" style ={{color: '#292524'}}>Student Number: </Typography>
+                <Typography variant ="body" style ={{color: '#44403c'}} >{studentSession.studentnumber}</Typography>
+                </Stack>
                
-               <Typography variant ="h6">{studentSession.studentnumber}</Typography>
+                <Stack direction={'row'} spacing ={1}>
+                <Typography variant ="h8" style ={{color: '#292524'}}>Course and Section: </Typography>
+                <Typography variant ="body" style ={{color: '#44403c'}} >{rows[0].section_name}</Typography>
+                </Stack>
                
-               <Typography variant ="h6" >{sectionandsemester}</Typography>
                </Stack>
+            
+         
+               
+               </Box>) : null}          
+     
+               
                <center>
-                <Typography variant ="h4" style ={{fontWeight: '600',fontFamily: 'Times New Roman' }}>CERTIFICATE OF GRADES</Typography>
+                <Typography variant ="h5" style ={{fontWeight: '600',fontFamily: 'Times New Roman' }}>CERTIFICATE OF GRADES</Typography>
                 </center>
+
+               
              <DataGrid 
-    components={{  Footer: CustomFooter,}} loading = {loading} rows = {rows} columns={columns}
+    components={{ LoadingOverlay: LinearProgress, Footer: CustomFooter,}} loading = {loading} rows = {rows} columns={columns}
    
-    autoHeight style ={{marginTop: '1.5rem'}}
+    autoHeight style ={{marginTop: '.5rem'}}
     componentsProps = {{footer : {CustomFooter : gpa.toFixed(2)}}}
     /> 
- 
+ <center style ={{margin:'.5rem'}}>
+      <Typography variant ="body" style ={{color: '#44403c'}} >***Nothing Follows***</Typography>
+    </center>
              </Paper>
              </div> 
-             <div style={{ pageBreakAfter: "always" }}> 
-             <Divider className ="m-4" />
-             </div>
+          
              <div style={{ pageBreakAfter: "always" }}> 
            
-             <Paper elevation={1} sx ={{width:'500 ', p: '1.5rem', m:'1rem'}} className ="rounded-xl">
-             <Typography   variant = "h6">Legends</Typography>
+             <Paper elevation={0} sx ={{width:'500 ', p: '1.5rem', m:'1rem'}} className ="rounded-xl">
+             <Typography   variant = "body">LEGENDS</Typography>
     <Stack direction ="row" divider={<Divider orientation="vertical" flexItem />} spacing = {6}>
     
     
     
     <Stack >
     <Stack spacing = {2}>
-          <Typography variant ="body" className ="mt-4 font-serif ">1.00 - Excellent = 96.72 - 100</Typography>
+          <Typography variant ="body" style ={{color: '#44403c', fontSize: '15px'}}  className ="mt-4 font-serif ">1.00 - Excellent = 96.72 - 100</Typography>
         </Stack> 
         <Stack spacing = {2}>
-          <Typography variant ="body" className ="mt-4 font-serif">1.25 - Superior = 93.38 - 96.71</Typography>
+          <Typography variant ="body" style ={{color: '#44403c', fontSize: '15px'}}  className ="mt-4 font-serif">1.25 - Superior = 93.38 - 96.71</Typography>
         </Stack>
         
         <Stack spacing = {2}>
-          <Typography variant ="body" className ="mt-4 font-serif">1.50 - Very Good = 90.04 - 93.37</Typography>
+          <Typography variant ="body" style ={{color: '#44403c', fontSize: '15px'}}  className ="mt-4 font-serif">1.50 - Very Good = 90.04 - 93.37</Typography>
         </Stack>
     
         <Stack spacing = {2}>
-          <Typography variant ="body" className ="mt-4 font-serif">1.75 - Good = 86.70 - 90.03</Typography>
+          <Typography variant ="body" style ={{color: '#44403c', fontSize: '15px'}}  className ="mt-4 font-serif">1.75 - Good = 86.70 - 90.03</Typography>
         </Stack>
     </Stack>
     
     <Stack spacing = {2}>
     
         <Stack spacing = {2}>
-          <Typography variant ="body" className ="mt-4 font-serif">2.00 - Very Satisfactory = 83.36 - 86.69</Typography>
+          <Typography variant ="body" style ={{color: '#44403c', fontSize: '15px'}}  className ="mt-4 font-serif">2.00 - Very Satisfactory = 83.36 - 86.69</Typography>
         </Stack>
     
         <Stack spacing = {2}>
-          <Typography variant ="body" className ="mt-4 font-serif">2.25 - Satisfactory = 80.02 - 83.35</Typography>
+          <Typography variant ="body" style ={{color: '#44403c', fontSize: '15px'}}  className ="mt-4 font-serif">2.25 - Satisfactory = 80.02 - 83.35</Typography>
         </Stack>
     
         <Stack spacing = {2}>
-          <Typography variant ="body" className ="mt-4 font-serif">2.50 - Moderately Satisfactory = 76.68 - 80.01</Typography>
+          <Typography variant ="body" style ={{color: '#44403c', fontSize: '15px'}}  className ="mt-4 font-serif">2.50 - Moderately Satisfactory = 76.68 - 80.01</Typography>
         </Stack>
     
      
@@ -282,29 +321,43 @@ const contentOfPrint = () =>{
     <Stack >
       
     <Stack spacing = {2}>
-          <Typography variant ="body" className ="mt-4 font-serif">2.75 - Fair = 73.34 - 76.67</Typography>
+          <Typography variant ="body" style ={{color: '#44403c', fontSize: '15px'}}  className ="mt-4 font-serif">2.75 - Fair = 73.34 - 76.67</Typography>
         </Stack>
     
         <Stack spacing = {2}>
-          <Typography variant ="body" className ="mt-4 font-serif">3.00 - Passed = 70.00 - 73.33</Typography>
+          <Typography variant ="body" style ={{color: '#44403c', fontSize: '15px'}}  className ="mt-4 font-serif">3.00 - Passed = 70.00 - 73.33</Typography>
         </Stack>
     
         <Stack spacing = {2}>
-          <Typography variant ="body" className ="mt-4 font-serif">4.00 - Conditional Failure = 66.77 - 69.99</Typography>
+          <Typography variant ="body" style ={{color: '#44403c', fontSize: '15px'}}  className ="mt-4 font-serif">4.00 - Conditional Failure = 66.77 - 69.99</Typography>
         </Stack>
         <Stack spacing = {2}>
-          <Typography variant ="body" className ="mt-4 font-serif">5.00 - Failed = 66.77</Typography>
+          <Typography variant ="body" style ={{color: '#44403c', fontSize: '15px'}}  className ="mt-4 font-serif">5.00 - Failed = 66.77</Typography>
         </Stack>
     </Stack>
     
     </Stack>
     
               </Paper>
-              <center style ={{margin:'.5rem'}}>
-      <Typography variant ="body">***Nothing Follows***</Typography>
-    </center>
+
+              <Divider className ="m-4" />
+              <Typography variant ="body2" style ={{margin:'1.5rem', color: '#78716c'}} >Note: Not valid without school dry seal and registrar's signature</Typography>
+              <Stack direction={'row'} spacing = {2}  style={{ justifyContent: 'space-between', alignItems: 'flex-end', margin:'1.5rem' }}>
+               <Typography></Typography>
+                <Stack direction ="column" spacing ={1} style = {{marginTop:'5rem'}}>
+                
+                <Typography variant='overline'><Divider style={{ background: 'black' }} ></Divider></Typography>
+              <Typography  variant ="overline" >Campus Registrar Signature</Typography>
+              </Stack>
+                </Stack>
+               
+             
+    {/* <div style ={{display:'flex', alignItems: 'flex-end'}}>
+    <Typography variant ="body" style ={{color: '#44403c', fontSize: '15px'}}   >{currentTime.format('MMMM Do YYYY')}</Typography>
+    </div> */}
+   
               </div>
-    
+             
   </>
   )
 }
@@ -338,40 +391,40 @@ componentsProps = {{footer : {CustomFooter : gpa.toFixed(2)}}}
 
 {/* 
       <Divider  className ="m-4"/>
-      <Typography   variant = "h6">Legends</Typography>
+      <Typography   variant = "body">Legends</Typography>
 <Stack direction ="row" divider={<Divider orientation="vertical" flexItem />} spacing = {6}>
 
 
 
 <Stack >
 <Stack spacing = {2}>
-        <Typography variant ="body" className ="mt-4 font-serif ">1.00 - Excellent = 96.72 - 100</Typography>
+        <Typography variant ="body" style ={{color: '#44403c'}}  className ="mt-4 font-serif ">1.00 - Excellent = 96.72 - 100</Typography>
       </Stack> 
       <Stack spacing = {2}>
-        <Typography variant ="body" className ="mt-4 font-serif">1.25 - Superior = 93.38 - 96.71</Typography>
+        <Typography variant ="body" style ={{color: '#44403c'}}  className ="mt-4 font-serif">1.25 - Superior = 93.38 - 96.71</Typography>
       </Stack>
       
       <Stack spacing = {2}>
-        <Typography variant ="body" className ="mt-4 font-serif">1.50 - Very Good = 90.04 - 93.37</Typography>
+        <Typography variant ="body" style ={{color: '#44403c'}}  className ="mt-4 font-serif">1.50 - Very Good = 90.04 - 93.37</Typography>
       </Stack>
 
       <Stack spacing = {2}>
-        <Typography variant ="body" className ="mt-4 font-serif">1.75 - Good = 86.70 - 90.03</Typography>
+        <Typography variant ="body" style ={{color: '#44403c'}}  className ="mt-4 font-serif">1.75 - Good = 86.70 - 90.03</Typography>
       </Stack>
 </Stack>
 
 <Stack spacing = {2}>
 
       <Stack spacing = {2}>
-        <Typography variant ="body" className ="mt-4 font-serif">2.00 - Very Satisfactory = 83.36 - 86.69</Typography>
+        <Typography variant ="body" style ={{color: '#44403c'}}  className ="mt-4 font-serif">2.00 - Very Satisfactory = 83.36 - 86.69</Typography>
       </Stack>
 
       <Stack spacing = {2}>
-        <Typography variant ="body" className ="mt-4 font-serif">2.25 - Satisfactory = 80.02 - 83.35</Typography>
+        <Typography variant ="body" style ={{color: '#44403c'}}  className ="mt-4 font-serif">2.25 - Satisfactory = 80.02 - 83.35</Typography>
       </Stack>
 
       <Stack spacing = {2}>
-        <Typography variant ="body" className ="mt-4 font-serif">2.50 - Moderately Satisfactory = 76.68 - 80.01</Typography>
+        <Typography variant ="body" style ={{color: '#44403c'}}  className ="mt-4 font-serif">2.50 - Moderately Satisfactory = 76.68 - 80.01</Typography>
       </Stack>
 
    
@@ -379,18 +432,18 @@ componentsProps = {{footer : {CustomFooter : gpa.toFixed(2)}}}
 
 <Stack >
 <Stack spacing = {2}>
-        <Typography variant ="body" className ="mt-4 font-serif">2.75 - Fair = 73.34 - 76.67</Typography>
+        <Typography variant ="body" style ={{color: '#44403c'}}  className ="mt-4 font-serif">2.75 - Fair = 73.34 - 76.67</Typography>
       </Stack>
 
       <Stack spacing = {2}>
-        <Typography variant ="body" className ="mt-4 font-serif">3.00 - Passed = 70.00 - 73.33</Typography>
+        <Typography variant ="body" style ={{color: '#44403c'}}  className ="mt-4 font-serif">3.00 - Passed = 70.00 - 73.33</Typography>
       </Stack>
 
       <Stack spacing = {2}>
-        <Typography variant ="body" className ="mt-4 font-serif">4.00 - Conditional Failure = 66.77 - 69.99</Typography>
+        <Typography variant ="body" style ={{color: '#44403c'}}  className ="mt-4 font-serif">4.00 - Conditional Failure = 66.77 - 69.99</Typography>
       </Stack>
       <Stack spacing = {2}>
-        <Typography variant ="body" className ="mt-4 font-serif">5.00 - Failed = 66.77</Typography>
+        <Typography variant ="body" style ={{color: '#44403c'}}  className ="mt-4 font-serif">5.00 - Failed = 66.77</Typography>
       </Stack>
 </Stack>
 
@@ -418,19 +471,23 @@ const columns = [
   {
     field: 'subject_name',
     headerName: 'Subject code',
-    width: 400,
+    flex: 1,
+    minWidth: 150,
    editable: false,
   },
   {
     field: 'description',
     headerName: 'Description',
-    width: 450,
+    flex: 1,
+    minWidth: 450,
    editable: false,
   },
+  
     {
         field: 'grade',
         headerName: 'Grade',
-        width: 350,
+        flex: 1,
+    minWidth: 150,
         editable: false,
         valueGetter: (params) => {
           if(parseFloat(params.value) <= 0){
