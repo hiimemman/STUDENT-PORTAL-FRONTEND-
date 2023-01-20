@@ -14,17 +14,16 @@ import { useState, Suspense } from 'react';
 import Badge from '@mui/material/Badge';
 import MailIcon from '@mui/icons-material/Mail';
 import Avatar from "@mui/material/Avatar";
-import { SubjectHistory } from '../viewhistory/SubjectHistory';
+
 import { Typography } from '@mui/material';
 import { SubjectView } from '../viewprofile/SubjectView';
-import { FEE } from '../slice/PageSlice/PageSlice';
-import { FeeTable } from '../data-table/FeeTable';
+
+import { ACADEMICYEAR } from '../slice/PageSlice/PageSlice';
+
 import { FeeHistory } from '../viewhistory/FeeHistory';
-import { StudentFeeTable } from '../data-table/StudentFeeTable';
-import { SalesReportTable } from '../data-table/SalesReportTable';
+import { AcademicYearTable } from '../data-table/AcademicYearTable';
 
-
-export  function Fee() {
+export  function Reports() {
 //Selected Subject
 const subject = useSelector(state => state.subjectSelected.value)
 
@@ -54,7 +53,7 @@ const handleClose = (event, reason) => {
 useEffect(() =>{
 let isCancelled = false;
 
-dispatch(FEE())
+dispatch(ACADEMICYEAR())
 return () =>{
   isCancelled = true;
 }
@@ -93,28 +92,29 @@ return () =>{
              <TabContext value={value}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' } }>
             <TabList onChange={handleChange} aria-label="lab API tabs example" >
-                <Tab label="FEE TABLE" value="1" />
-                <Tab label="STUDENT FEE" value="2" />
-                <Tab label="SALES REPORT" value="3" />
-
+                <Tab label="ACADEMIC YEAR TABLE" value="1" />
+                <Tab label="HISTORY" value="2" />
+                {console.log("thisissub" + JSON.stringify(subject))}
+                {subject !== null ? (<Tab value="3" label={
+                <Stack direction="row" spacing={2}>
+                <Typography>{subject.subject_code}</Typography>
+                </Stack>
+                } />) : (<></>)}
              </TabList>
             </Box>
         <TabPanel value="1"  style={{height: 'auto'}} sx ={{marginLeft:'-24px'}}>
         <Paper elevation={1} sx ={{width:'500 '}} className ="rounded-xl">
-          <FeeTable />
+          <AcademicYearTable />
           </Paper>
           </TabPanel>
-          <TabPanel value="2" sx ={{marginLeft:'-24px'}}>
+            <TabPanel value="2" sx ={{marginLeft:'-24px'}}>
             <Paper elevation={1} sx ={{width:'500 '}} className ="rounded-xl">
-              <StudentFeeTable />
+              <FeeHistory />
             </Paper>
             </TabPanel>
             <TabPanel value="3" sx ={{marginLeft:'-24px'}}>
-            <Paper elevation={1} sx ={{width:'500 '}} className ="rounded-xl">
-          <SalesReportTable />
-            </Paper>
+              <SubjectView />
             </TabPanel>
-            
           </TabContext>
        </div>
        <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>

@@ -40,6 +40,7 @@ import { Semester } from './pages/Semester';
 import { StudentProfile } from './student-portal/pages/StudentProfile';
 import { ProfessorProfile } from './professor-portal/pages/ProfessorProfile';
 import { Activity } from './pages/Activity';
+import { Reports } from './pages/Reports';
 
 
 
@@ -185,6 +186,7 @@ return (
         <Route path ="/employee/semester" element = {<><Semester /></>}></Route>
         <Route path ="/employee/profile" element = {<><Profile /></>}></Route>
         <Route path ="/employee/activity" element = {<><Activity /></>}></Route>
+        <Route path ="/employee/reports" element = {<><Reports /></>}></Route>
         <Route path = "/student-portal" element ={<><ParticlesBackground /><StudentSignIn /></>} />
 
         <Route path ="/student-portal/dashboard" element ={<><StudentDashboard /></>} />.

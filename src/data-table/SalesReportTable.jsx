@@ -19,6 +19,7 @@ import { Suspense } from 'react';
 import { PUT_SUBJECT } from '../slice/FormSelectedRow/SubjectSelected';
 import { NoRowBackground } from '../component/NoRowBackground';
 import { AddFee } from '../forms/AddFee';
+import moment from 'moment';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -129,6 +130,7 @@ const [totalPayment, setTotalPayment] = useState(0);
             let con = JSON.parse(res.after_edit);
             
             console.log(res.after_edit)
+            con['added_at'] = moment(con['added_at']).format("MMMM D, YYYY hh:mm A");
             return con;
            })
            setRows(rows => rows = content)
@@ -175,6 +177,7 @@ return () =>{
 },[rows])
 
 useEffect(() =>{
+  console.log(rows)
 return () => {}
 },[totalPayment])
 
@@ -346,12 +349,27 @@ const renderEditStatus = (params) => {
         minWidth: 0,
         editable: false,
       },
-    //   {
-    //     field: 'type',
-    //     headerName: 'Type',
-    //     width: 380,
-    //     editable: false,
-    //   },
+      {
+        field: 'semester',
+        headerName: 'Semester',
+        flex: 1,
+        minWidth: 0,
+        editable: false,
+      },
+      {
+        field: 'academicyear',
+        headerName: 'AcademicYear',
+        flex: 1,
+        minWidth: 0,
+        editable: false,
+      },
+      {
+        field: 'sectionandsemester',
+        headerName: 'Section',
+        flex: 1,
+        minWidth: 0,
+        editable: false,
+      },
       {
         field: 'payment',
         headerName: 'Payment',
@@ -364,7 +382,7 @@ const renderEditStatus = (params) => {
         field: 'added_at',
         headerName: 'Date paid',
         flex: 1,
-        minWidth: 0,
+        minWidth: 300,
         type: 'date',
         editable: false,
       },
