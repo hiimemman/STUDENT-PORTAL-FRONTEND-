@@ -6,5 +6,5 @@
 
 //localhost server
 
-export const basedUrl = "http://localhost/STUDENT-PORTAL-BACKEND-/employee/backend/";
-export const imageBaseUrl = "http://localhost/STUDENT-PORTAL-BACKEND-/uploads/";
+export const basedUrl = "http://localhost:8080/STUDENT-PORTAL-BACKEND-/employee/backend/";
+export const imageBaseUrl = "http://localhost:8080/STUDENT-PORTAL-BACKEND-/uploads/";
